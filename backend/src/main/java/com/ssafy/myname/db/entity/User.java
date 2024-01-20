@@ -51,7 +51,7 @@ public class User {
 
     @NotNull
     @ColumnDefault("0")
-    private int point;
+    private int coin;
 
     @CreationTimestamp // insert시 시간저장
     @Column(name = "join_date")
@@ -69,6 +69,9 @@ public class User {
     @ColumnDefault("'USER'")
     private Roles role;
 
+    @Column(length = 11, unique = true)
+    private String phone;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couple_id")
     private Couple couple;
@@ -77,10 +80,14 @@ public class User {
     @NotNull
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'READY'")
-    private MatchStatus matchStatus;
-//
+    private MatchStatus matchStatus; // 매칭 여부.
+
     @NotNull @ColumnDefault("0")
     private int reportPoint;
+
+    @Column(length = 50, unique = true)
+    @NotNull
+    private String email;
 
     @OneToMany(mappedBy = "receiver")
     private List<Alarm> myAlarms = new ArrayList<>();
@@ -111,7 +118,7 @@ public class User {
                 ", area='" + area + '\'' +
                 ", religion='" + religion + '\'' +
                 ", job='" + job + '\'' +
-                ", point=" + point +
+                ", coin=" + coin +
                 ", joinDate=" + joinDate +
                 ", updateDate=" + updateDate +
                 ", isLeave=" + isLeave +

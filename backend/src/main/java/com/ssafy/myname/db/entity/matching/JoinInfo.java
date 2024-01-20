@@ -2,12 +2,16 @@ package com.ssafy.myname.db.entity.matching;
 
 import com.ssafy.myname.db.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @Setter
 @Entity
+@DynamicInsert
 public class JoinInfo {
 
     @Id
@@ -17,6 +21,10 @@ public class JoinInfo {
 
     @Lob
     private String record; // stt 음성 기록.
+
+    @NotNull
+    @ColumnDefault("0")
+    private int like_cnt;
 
     // 매칭번호.
     @OneToOne(fetch = FetchType.LAZY)

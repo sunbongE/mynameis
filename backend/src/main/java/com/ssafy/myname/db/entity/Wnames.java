@@ -1,9 +1,6 @@
 package com.ssafy.myname.db.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
@@ -11,7 +8,7 @@ import lombok.Getter;
 public class Wnames {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = 5)
     private String name;
 }
