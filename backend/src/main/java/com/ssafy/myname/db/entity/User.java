@@ -54,14 +54,18 @@ public class User {
     private int coin;
 
     @CreationTimestamp // insert시 시간저장
-    @Column(name = "join_date")
+    @Column(name = "join_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime joinDate;
 
     @UpdateTimestamp // update문 적용시 자동으로 현재시간 입력.
     @Column(name = "update_date")
     private LocalDateTime updateDate;
+
+    @ColumnDefault("false")
     @Column(name = "is_leave")
     private boolean isLeave;
+
+    @ColumnDefault("false")
     @Column(name = "is_valid")
     private boolean isValid;
 

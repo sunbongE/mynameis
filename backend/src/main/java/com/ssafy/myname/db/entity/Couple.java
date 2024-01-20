@@ -21,7 +21,7 @@ public class Couple {
     private Long coupleId;
 
     @CreationTimestamp
-    @Column(name = "matching_date")
+    @Column(name = "matching_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime matchingDate;
 
     @OneToMany(mappedBy = "couple")

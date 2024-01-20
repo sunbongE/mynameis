@@ -24,7 +24,7 @@ public class Chat {
     })
     private ChatJoinInfo chatJoinInfo;
 
-    @Column(name = "regist_date")
+    @Column(name = "regist_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime registDate;
 
     @Column(name = "is_read")

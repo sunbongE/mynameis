@@ -18,6 +18,7 @@ public class Record {
     private Room room;
 
     @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;

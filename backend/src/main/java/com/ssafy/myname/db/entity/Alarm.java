@@ -30,7 +30,7 @@ public class Alarm {
 
     @NotNull
     @CreationTimestamp // insert문 적용시 자동으로 현재시간 입력.
-    @Column(name = "create_date")
+    @Column(name = "create_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createDate;
 
     @NotNull

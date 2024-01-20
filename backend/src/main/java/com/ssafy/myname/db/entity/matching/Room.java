@@ -28,7 +28,7 @@ public class Room { // 매칭방
     private int cnt;
 
     @CreationTimestamp // insert할때 현재시각 입력. 자동으로..
-    @Column(name = "start_date")
+    @Column(name = "start_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime startDate;
 
     @Column(name = "end_date")

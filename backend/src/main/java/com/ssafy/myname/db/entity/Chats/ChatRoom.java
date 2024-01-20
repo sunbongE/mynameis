@@ -22,7 +22,7 @@ public class ChatRoom {
     private String title;
     private String content;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @CreationTimestamp
     private LocalDateTime createDate;
 
