@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class Mnames {
 
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Id
     @Column(length = 5)
     private String name;
 }

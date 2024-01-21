@@ -8,7 +8,6 @@ import lombok.Getter;
 public class Wnames {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = 5)
     private String name;
 }
