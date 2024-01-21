@@ -27,6 +27,6 @@ public class Social {
     private String socialToken;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_pk")
+    @JoinColumn(name = "user_id")
     private User user;
 }

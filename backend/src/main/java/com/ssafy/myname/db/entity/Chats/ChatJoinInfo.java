@@ -22,9 +22,9 @@ public class ChatJoinInfo {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-    @MapsId("userPk")
+    @MapsId("userId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_pk")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "chatJoinInfo")

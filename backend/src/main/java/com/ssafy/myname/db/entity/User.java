@@ -23,12 +23,8 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_pk")
-    private Long userPk;
-
-    @NotNull
-    @Column(name = "user_id", length = 20, unique = true)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id", length = 20)
     private String userId;
 
     private String password;
@@ -70,7 +66,7 @@ public class User {
     private boolean isValid;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'USER'")
+    @ColumnDefault("'ROLE_USER'")
     private Roles role;
 
     @Column(length = 11, unique = true)
@@ -113,8 +109,7 @@ public class User {
     @Override
     public String toString() {
         return "Users{" +
-                "userPk=" + userPk +
-                ", userId='" + userId + '\'' +
+                " userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", birth='" + birth + '\'' +
