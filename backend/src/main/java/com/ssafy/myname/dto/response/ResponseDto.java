@@ -1,4 +1,4 @@
-package com.ssafy.myname.response;
+package com.ssafy.myname.dto.response;
 
 import com.ssafy.myname.commons.ResponseCode;
 import com.ssafy.myname.commons.ResponseMessage;

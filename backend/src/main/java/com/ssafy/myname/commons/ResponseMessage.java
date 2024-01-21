@@ -1,13 +1,14 @@
 package com.ssafy.myname.commons;
 
-public interface ResponseCode {
+public interface ResponseMessage {
 
-    String SUCCESS = "SU";
-    String VALIDATION_FAIL = "VF";
+    String SUCCESS = "Success.";
+    String VALIDATION_FAIL = "Validation_fail.";
+    String DUPLICATE_ID = "Duplicate_id.";
 
-    String SING_IN_FAIL ="SF";
+    String SING_IN_FAIL ="Login information mismatch.";
 
-    String CERTIFICATION_FAIL = "CF";
-    String DATABASE_ERROR = "DE";
+    String CERTIFICATION_FAIL = "Certification failed.";
+    String DATABASE_ERROR = "Database error.";
 
 }

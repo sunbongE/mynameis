@@ -1,4 +1,4 @@
-package com.ssafy.myname.user.dto;
+package com.ssafy.myname.dto;
 
 public class userDto {
 }
