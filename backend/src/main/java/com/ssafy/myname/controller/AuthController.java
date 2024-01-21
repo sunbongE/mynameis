@@ -1,15 +1,25 @@
 package com.ssafy.myname.controller;
 
+import com.ssafy.myname.dto.request.auth.CheckCertificationReqDto;
+import com.ssafy.myname.dto.request.auth.EmailCertificationRequestDto;
 import com.ssafy.myname.dto.request.auth.IdCheckRequestDto;
+import com.ssafy.myname.dto.request.auth.SignUpReqDto;
+import com.ssafy.myname.dto.response.auth.CheckCertificationResDto;
+import com.ssafy.myname.dto.response.auth.EmailCertificationResponseDto;
 import com.ssafy.myname.dto.response.auth.IdCheckResponseDto;
+import com.ssafy.myname.dto.response.auth.SignUpResDto;
 import com.ssafy.myname.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -23,4 +33,29 @@ public class AuthController {
         ResponseEntity<? super IdCheckResponseDto> response = authService.idCheck(requestBody);
         return response;
     }
+    @PostMapping("/email-certification")
+    public ResponseEntity<? super EmailCertificationResponseDto> emailcertification(
+            @RequestBody @Valid EmailCertificationRequestDto requestBody
+            ){
+        ResponseEntity<? super EmailCertificationResponseDto> response =
+                authService.emilCertification(requestBody);
+        return response;
+    }
+
+    @PostMapping("/check-certification")
+    public ResponseEntity<? super CheckCertificationResDto> checkCertification(
+            @RequestBody @Valid CheckCertificationReqDto requestBody
+            ) {
+        ResponseEntity<? super CheckCertificationResDto> response = authService.checkCertification(requestBody);
+        return response;
+    }
+    @PostMapping("/sign-up")
+    public ResponseEntity<? super SignUpResDto> signUp(
+            @RequestBody @Valid SignUpReqDto reqBody
+            ){
+
+        ResponseEntity<? super SignUpResDto> response = authService.signUp(reqBody);
+        return response;
+    }
+
 }

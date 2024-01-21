@@ -9,6 +9,8 @@ public interface ResponseCode {
     String SING_IN_FAIL ="SF";
 
     String CERTIFICATION_FAIL = "CF";
-    String DATABASE_ERROR = "DE";
+
+    String MAIL_FAIL ="MF";
+    String DATABASE_ERROR = "DBE";
 
 }

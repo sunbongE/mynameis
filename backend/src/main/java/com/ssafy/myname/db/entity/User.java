@@ -2,9 +2,11 @@ package com.ssafy.myname.db.entity;
 
 import com.ssafy.myname.db.entity.Chats.ChatJoinInfo;
 import com.ssafy.myname.db.entity.matching.JoinInfo;
+import com.ssafy.myname.dto.request.auth.SignUpReqDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +25,6 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id", length = 20)
     private String userId;
 
@@ -77,7 +78,6 @@ public class User {
     private Couple couple;
 
     @Column(length = 20)
-    @NotNull
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'READY'")
     private MatchStatus matchStatus; // 매칭 여부.
@@ -105,11 +105,24 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<JoinInfo> joinInfos = new ArrayList<>();
 
+    public User() {
+    }
+
+    public User(SignUpReqDto dto) {
+        this.userId = dto.getUserId();
+        this.password = dto.getPassword();
+        this.name = dto.getName();
+        this.birth = dto.getBirth();
+        this.gender = dto.getGender();
+        this.email = dto.getEmail();
+    }
+
     // 출력
+
     @Override
     public String toString() {
-        return "Users{" +
-                " userId='" + userId + '\'' +
+        return "User{" +
+                "userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", birth='" + birth + '\'' +
@@ -123,8 +136,10 @@ public class User {
                 ", isLeave=" + isLeave +
                 ", isValid=" + isValid +
                 ", role=" + role +
-                ", myAlarms=" + myAlarms +
-                ", tags=" + tags +
+                ", phone='" + phone + '\'' +
+                ", matchStatus=" + matchStatus +
+                ", reportPoint=" + reportPoint +
+                ", email='" + email + '\'' +
                 '}';
     }
 }
