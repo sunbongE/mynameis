@@ -1,13 +1,7 @@
 package com.ssafy.myname.controller;
 
-import com.ssafy.myname.dto.request.auth.CheckCertificationReqDto;
-import com.ssafy.myname.dto.request.auth.EmailCertificationRequestDto;
-import com.ssafy.myname.dto.request.auth.IdCheckRequestDto;
-import com.ssafy.myname.dto.request.auth.SignUpReqDto;
-import com.ssafy.myname.dto.response.auth.CheckCertificationResDto;
-import com.ssafy.myname.dto.response.auth.EmailCertificationResponseDto;
-import com.ssafy.myname.dto.response.auth.IdCheckResponseDto;
-import com.ssafy.myname.dto.response.auth.SignUpResDto;
+import com.ssafy.myname.dto.request.auth.*;
+import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,4 +52,11 @@ public class AuthController {
         return response;
     }
 
+    @PostMapping("/sign-in")
+    public ResponseEntity<? super SignInResDto> signIn(
+            @RequestBody @Valid SignInReqDto reqBody
+    ){
+        ResponseEntity<? super SignInResDto> response = authService.signIn(reqBody);
+        return  response;
+    }
 }

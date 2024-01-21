@@ -5,16 +5,11 @@ import com.ssafy.myname.db.entity.Certification;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CertificationRepository;
 import com.ssafy.myname.db.repository.UserRepository;
-import com.ssafy.myname.dto.request.auth.CheckCertificationReqDto;
-import com.ssafy.myname.dto.request.auth.EmailCertificationRequestDto;
-import com.ssafy.myname.dto.request.auth.IdCheckRequestDto;
-import com.ssafy.myname.dto.request.auth.SignUpReqDto;
+import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
-import com.ssafy.myname.dto.response.auth.CheckCertificationResDto;
-import com.ssafy.myname.dto.response.auth.EmailCertificationResponseDto;
-import com.ssafy.myname.dto.response.auth.IdCheckResponseDto;
-import com.ssafy.myname.dto.response.auth.SignUpResDto;
+import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.provider.EmailProvider;
+import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -33,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final CertificationRepository certificationRepository;
     private final EmailProvider emailProvider;
+    private final JwtProvider jwtProvider;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
@@ -139,6 +135,31 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return SignUpResDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super SignInResDto> signIn(SignInReqDto dto) {
+        String token = null;
+
+        try{
+
+            String userId = dto.getUserId();
+            User user = userRepository.findByUserId(userId);
+            if(user==null) return SignInResDto.fail();
+
+            String password = dto.getPassword();
+            String encodedPassword =user.getPassword();
+            boolean isMatched = passwordEncoder.matches(password, encodedPassword);
+            if(!isMatched) return SignInResDto.fail();
+
+            token =jwtProvider.create(userId);
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return SignInResDto.success(token);
     }
 
     private  boolean isExistUserId(String userId){
