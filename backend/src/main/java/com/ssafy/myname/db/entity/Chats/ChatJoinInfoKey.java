@@ -11,28 +11,27 @@ public class ChatJoinInfoKey implements Serializable {
     @Column(name = "chat_room_id")
     private Long chatRoomId;
 
-    @Column(name = "user_pk")
-    private Long userPk;
+    @Column(name = "user_id")
+    private String userId;
 
     public ChatJoinInfoKey() {
     }
 
-    public ChatJoinInfoKey(Long chatRoomId, Long userPk) {
+    public ChatJoinInfoKey(Long chatRoomId, String userId) {
         this.chatRoomId = chatRoomId;
-        this.userPk = userPk;
+        this.userId = userId;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ChatJoinInfoKey chatJoinInfoKey = (ChatJoinInfoKey) o;
-        return Objects.equals(chatRoomId, chatJoinInfoKey.chatRoomId) && Objects.equals(userPk, chatJoinInfoKey.userPk);
+        ChatJoinInfoKey that = (ChatJoinInfoKey) o;
+        return Objects.equals(chatRoomId, that.chatRoomId) && Objects.equals(userId, that.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatRoomId, userPk);
+        return Objects.hash(chatRoomId, userId);
     }
 }

@@ -20,7 +20,7 @@ public class Chat {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "chat_room_id"),
-            @JoinColumn(name = "user_pk")
+            @JoinColumn(name = "user_id")
     })
     private ChatJoinInfo chatJoinInfo;
 

@@ -23,7 +23,7 @@ public class Report {
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_pk")
+    @JoinColumn(name = "user_id")
     private User user; // 신고당한 사람
 
 

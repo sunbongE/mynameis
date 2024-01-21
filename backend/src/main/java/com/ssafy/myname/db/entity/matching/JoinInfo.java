@@ -33,7 +33,7 @@ public class JoinInfo {
 
     // 회원 기본키
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_pk")
+    @JoinColumn(name = "user_id")
     private User user;
 
 }

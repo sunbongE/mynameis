@@ -23,6 +23,6 @@ public class Tags {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_pk")
+    @JoinColumn(name = "user_id")
     private User user;
 }
