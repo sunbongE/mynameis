@@ -36,13 +36,11 @@ const Main = () => {
   ]);
   return (
     <MainContainer>
-      <VoteCountHeart color='pink' count={1} />
-      <VoteCountHeart color='purple' count={1} />
-      {/* <div style={{ display: 'flex', columnGap: '30px' }}>
-        <ReviewCard color='pink' review={reviews[0]} />
-        <ReviewCard color='dpink' review={reviews[1]} />
-        <ReviewCard color='pink' review={reviews[2]} />
-      </div> */}
+      <div>
+        <VoteCountHeart color='pink' count={1} />
+        <VoteCountHeart color='purple' count={1} />
+      </div>
+      <ReviewCard color='pink' review={reviews[0]} />
     </MainContainer>
   );
 };

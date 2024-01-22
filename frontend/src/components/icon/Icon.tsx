@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Heart_Pink, Heart_Purple } from '../../config/IconName';
 
 interface IconProps {
   width?: string | '100%';
@@ -29,11 +28,10 @@ const StyledChildrenContainer = styled.div`
 `;
 
 const Icon = (props: IconProps) => {
-  const iconSrc = props.src === 'pink' ? Heart_Pink : Heart_Purple;
   return (
     <StyledIconContainer {...props}>
-      <StyledIcon src={iconSrc} />
-      <StyledChildrenContainer>{props.children}</StyledChildrenContainer>
+      <StyledIcon src={props.src} />
+      {props.children && <StyledChildrenContainer>{props.children}</StyledChildrenContainer>}
     </StyledIconContainer>
   );
 };
