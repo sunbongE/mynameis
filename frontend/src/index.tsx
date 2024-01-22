@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Router from './router';
 import reportWebVitals from './reportWebVitals';
-import GlobalStyle from './globalStyle';
-import {RecoilRoot} from "recoil";
+import GlobalStyle from './styles/globalStyle';
+import './styles/fonts/font.css';
+import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
