@@ -21,7 +21,6 @@ const ReviewCardContainer = styled.div<ReviewCardProps, any>`
   background: ${(props) => (props.color === 'pink' ? '#E8B8C5' : '#E1A3B3')};
   display: flex;
   flex-direction: column;
-
   padding: 80px 50px 0 50px;
 `;
 
