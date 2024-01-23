@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ReviewCard from '../../components/reviewCard/ReviewCard';
 import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
-
+import Toast from '../../components/toast/Toast';
 const MainContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -41,6 +41,11 @@ const Main = () => {
         <VoteCountHeart color='purple' count={1} />
       </div>
       <ReviewCard color='pink' review={reviews[0]} />
+      <div>
+        <Toast children={<p>누군가 당신을 투표했습니다!</p>} />
+        <Toast children={<p>영자님이 당신을 투표했습니다!</p>} />
+        <Toast children={<p>투표를 완료하였습니다!</p>} />
+      </div>
     </MainContainer>
   );
 };
