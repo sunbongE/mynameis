@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ReviewCard from '../../components/reviewCard/ReviewCard';
 import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
+import Footer from '../../components/Footer';
+import NoticeBox from '../../components/noticeBox/NoticeBox';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -35,13 +37,22 @@ const Main = () => {
     },
   ]);
   return (
-    <MainContainer>
-      <div>
-        <VoteCountHeart color='pink' count={1} />
-        <VoteCountHeart color='purple' count={1} />
-      </div>
-      <ReviewCard color='pink' review={reviews[0]} />
-    </MainContainer>
+    <>
+      <MainContainer>
+        <div>
+          <VoteCountHeart color='pink' count={1} />
+          <VoteCountHeart color='purple' count={1} />
+        </div>
+        <ReviewCard color='pink' review={reviews[0]} />
+      </MainContainer>
+
+      <NoticeBox noticeText='공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.' />
+      <NoticeBox
+        noticeText='
+      참여자 분들의 얼굴이 공개되었습니다! 1명당 5분씩 자유롭게 질문 시간을 가져보세요. 질문 시간 후에는 밸런스 게임이 시작됩니다.'
+      />
+      <Footer />
+    </>
   );
 };
 
