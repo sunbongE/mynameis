@@ -1,5 +1,6 @@
 package com.ssafy.myname.vito.auth;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,7 @@ public class Auth {
         httpConn.setDoOutput(true);
 
         String data = "client_id=" + clientId + "&client_secret=" + clientSecret;
-        System.out.println(data);
+        //System.out.println(data);
 
         byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
@@ -47,16 +48,16 @@ public class Auth {
         String response = s.hasNext() ? s.next() : "";
         s.close();
 
-        // System.out.println("전체 응답: " + response);
-
-        // JSON 파싱을 통해 access_token 값을 추출해야 합니다.
-        // 이 부분은 간단한 예시이며, 실제로는 JSON 라이브러리를 사용하여 처리해야 합니다.
-        int startIndex = response.indexOf("access_token\":\"") + "access_token\":\"".length();
-        int endIndex = response.indexOf("\",\"expire_at\"");
-
-        String token = response.substring(startIndex, endIndex);
-
-        // System.out.println("추출된 access_token: " + token);
-        return token;
+        // JSON 역직렬화
+        JSONObject jsonResponse = new JSONObject(response);
+        if(jsonResponse.has("access_token")) {
+            // access_token 값 추출
+            String token = jsonResponse.getString("access_token");
+            return token;  // token 반환
+        } else {
+            // 오류 메시지 추출
+            String error = jsonResponse.getString("msg");
+            throw new IOException("Authentication error: " + error);
+        }
     }
 }

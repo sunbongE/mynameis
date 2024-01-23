@@ -1,8 +1,7 @@
 package com.ssafy.myname.vito.batch;
 
-import com.ssafy.myname.vito.auth.Auth;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -10,7 +9,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class GetTranscribe {
-    public void getTranscription(String transcribeId, String accessToken) throws Exception {
+    public String getTranscription(String transcribeId, String accessToken) throws Exception {
 
         URL url = new URL("https://openapi.vito.ai/v1/transcribe/" + transcribeId);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -24,7 +23,21 @@ public class GetTranscribe {
         Scanner s = new Scanner(responseStream).useDelimiter("\\A");
         String response = s.hasNext() ? s.next() : "";
         s.close();
-        
+
         System.out.println(response);
+
+        JSONObject jsonResponse = new JSONObject(response);
+        if (jsonResponse.getString("status").equals("completed")) {
+            JSONArray utterances = jsonResponse.getJSONObject("results").getJSONArray("utterances");
+            StringBuilder allMsgs = new StringBuilder();
+            for (int i = 0; i < utterances.length(); i++) {
+                String msg = utterances.getJSONObject(i).getString("msg");
+                System.out.println(msg);
+                allMsgs.append(msg).append(" ");
+            }
+            return allMsgs.toString();
+        } else {
+            return null;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.ssafy.myname.vito.batch;
 
 import com.ssafy.myname.vito.auth.Auth;
+import org.json.JSONObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -63,10 +64,17 @@ public class PostTranscribe {
         Scanner s = new Scanner(responseStream).useDelimiter("\\A");
         String response = s.hasNext() ? s.next() : "";
         s.close();
-        // System.out.println("POST 전체 응답: " + response);
 
-        // 토큰 값 추출
-        String token = response.substring(response.indexOf(":") + 2, response.length() - 2);
-        return token;
+        // JSON 역직렬화
+        JSONObject jsonResponse = new JSONObject(response);
+        if(jsonResponse.has("id")) {
+            // id 값 추출
+            String id = jsonResponse.getString("id");
+            return id;  // id 반환
+        } else {
+            // 오류 메시지 추출
+            String error = jsonResponse.getString("msg");
+            throw new Exception("Transcription error: " + error);
+        }
     }
 }
