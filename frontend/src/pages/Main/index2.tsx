@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/Header';
+import Header from '../../components/header';
 import Input from '../../components/Input';
 import styled from 'styled-components';
 import Modal from '../../components/Modal';
