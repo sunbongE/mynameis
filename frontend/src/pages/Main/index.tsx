@@ -5,13 +5,17 @@ import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
 import QuestionCard from '../../components/card/QuestionCard';
 import CoinListItem from '../../components/coinListItem/CoinListItem';
 import CoinList from '../../components/coinListItem/CoinList';
+import Footer from '../../components/Footer';
+import NoticeBox from '../../components/noticeBox/NoticeBox';
+import Toast from '../../components/toast/Toast';
+import Header from '../../components/header/Header';
 
 const MainContainer = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
 `;
 interface Review {
   id: number;
@@ -46,10 +50,19 @@ const Main = () => {
 
   return (
     <MainContainer>
+<<<<<<< frontend/src/pages/Main/index.tsx
 
 
       <CoinList/>
 
+=======
+      <Header />
+      {/* <div>
+        <VoteCountHeart color='pink' count={1} />
+        <VoteCountHeart color='purple' count={1} />
+      </div>
+      <ReviewCard color='pink' review={reviews[0]} /> */}
+>>>>>>> frontend/src/pages/Main/index.tsx
     </MainContainer>
   );
 };
