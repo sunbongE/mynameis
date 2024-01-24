@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ReviewCard from '../../components/reviewCard/ReviewCard';
-import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
-import Footer from '../../components/Footer';
-import NoticeBox from '../../components/noticeBox/NoticeBox';
-import Toast from '../../components/toast/Toast';
-import Header from '../../components/header/Header';
-import { click } from '@testing-library/user-event/dist/click';
+import Header from '../../components/Header/Header';
 
 const MainContainer = styled.div`
   width: 100%;

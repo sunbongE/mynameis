@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Logo from '../icon/Logo';
 import Icon from '../icon/Icon';
 import { Bell, Coin } from '../../config/IconName';
-import Button from '../button/Button';
+import Button from '../Button/Button';
 import { addCommaInNumber } from '../../utils/numberUtil';
 
 interface HeaderProps {
