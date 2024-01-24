@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Header from '../../components/Header/Header';
+import Header from '../../components/header/Header';
 
 const MainContainer = styled.div`
   width: 100%;
