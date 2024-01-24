@@ -5,7 +5,7 @@ import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
 import Footer from '../../components/Footer';
 import NoticeBox from '../../components/noticeBox/NoticeBox';
 import Toast from '../../components/toast/Toast';
-import { CustomRadioButton, SimpleRadioButton } from '../../components/button/RadioButton';
+import { CustomRadioButton, SimpleRadioButton } from '../../components/Button/RadioButton';
 import Header from '../../components/Header/Header';
 import AlarmList from '../../components/alarm/AlarmList';
 
