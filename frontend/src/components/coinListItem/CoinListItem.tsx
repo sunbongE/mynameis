@@ -1,25 +1,30 @@
 import styled from "styled-components";
 import Icon from '../icon/Icon';
 import { Coin } from '../../config/IconName';
-import { useState } from "react";
 
 
 interface CoinProps {
     id:number,
     coinText: string,
     coinPrice: number,
+    isSelected: boolean,
+    onClick: () => void,
 }
 
-const StyleCoinListItem = styled.div`
+const StyleCoinListItem = styled.div<{ isSelected: boolean }>`
     width: 339.2px;
     height: 38.4px;
     border-radius: var(--Radius-2, 16px);
-    
     background: #FFF;
     box-shadow: 0px 0px 16px 1.6px rgba(0, 0, 0, 0.10);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor:pointer;
+
+    ${(props) => props.isSelected && `
+        border: 2px solid #E1A3B3 ;
+    `}
 `
 
 const StylePrice = styled.button`
@@ -44,20 +49,16 @@ const StyleCoinText = styled.div`
 
 
 function CoinListItem(props: CoinProps) {
-    
-    const [selectedCoinIdx, setSelectedCoinIdx] = useState<number>(props.id)
-
-    console.log(selectedCoinIdx)
-
     return (
-        <StyleCoinListItem className={selectedCoinIdx === props.id ? 'active' : ''}  onClick={() => setSelectedCoinIdx(props.id)} >
-            <div style={{ display: 'flex' }} >
+        <StyleCoinListItem isSelected={props.isSelected} onClick={props.onClick}>
+            <div style={{ display: 'flex' }}>
                 <Icon src={Coin} />
-                <StyleCoinText> {props.coinText} </StyleCoinText>
+                <StyleCoinText>{props.coinText}</StyleCoinText>
             </div>
-            <StylePrice> {props.coinPrice} </StylePrice>
+            <StylePrice>{props.coinPrice}</StylePrice>
         </StyleCoinListItem>
-    )
+    );
 }
+
 
 export default CoinListItem

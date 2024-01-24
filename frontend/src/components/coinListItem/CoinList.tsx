@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Coin } from '../../config/IconName';
 import CoinListItem from "./CoinListItem";
 import styled from "styled-components";
@@ -10,14 +10,15 @@ const StyleCoinList = styled.div`
 `
 
 function CoinList() {
+    const [selectedCoinId, setSelectedCoinId] = useState<number | null>(null);
 
-    const Coinitems = [
+    const coinItems = [
         {
             id: 0,
             coinText: '코인 10개',
             coinPrice: 1000,
         },
-        {   
+        {
             id: 1,
             coinText: '코인 30개',
             coinPrice: 3000,
@@ -27,20 +28,26 @@ function CoinList() {
             coinText: '코인 50개',
             coinPrice: 5000,
         },
-    ]
+    ];
 
-
-    
+    const handleItemClick = (id: number) => {
+        setSelectedCoinId((prevId) => (prevId === id ? null : id));
+    };
 
     return (
         <StyleCoinList>
-            {Coinitems.map((e) =>
-                <CoinListItem key={e.id} id={e.id} coinText={e.coinText} coinPrice={e.coinPrice}/>
-            )}
+            {coinItems.map((item) => (
+                <CoinListItem
+                    key={item.id}
+                    id={item.id}
+                    coinText={item.coinText}
+                    coinPrice={item.coinPrice}
+                    isSelected={selectedCoinId === item.id}
+                    onClick={() => handleItemClick(item.id)}
+                />
+            ))}
         </StyleCoinList>
-
-    )
-
+    );
 }
 
-export default CoinList
+export default CoinList;

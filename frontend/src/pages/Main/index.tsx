@@ -46,20 +46,10 @@ const Main = () => {
 
   return (
     <MainContainer>
-      {/* <div>
-        <VoteCountHeart color='pink' count={1} />
-        <VoteCountHeart color='purple' count={1} />
-      </div>
-      <ReviewCard color='pink' review={reviews[0]} />
-      <div>
-        <Toast children={<p>누군가 당신을 투표했습니다!</p>} />
-        <Toast children={<p>영자님이 당신을 투표했습니다!</p>} />
-        <Toast children={<p>투표를 완료하였습니다!</p>} />
-      </div> */}
+
 
       <CoinList/>
-      {/* <QuestionCard questionText={'10년지기 이성친구 1명 vs 가끔 안부 묻는 이성친구 40명'} /> */}
-      {/* <CoinListItem coinText={'코인 50개'} coinPrice={5000}  /> */}
+
     </MainContainer>
   );
 };
