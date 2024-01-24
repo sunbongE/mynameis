@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Header from '../../components/header/Header';
+import AlarmList from '../../components/alarm/AlarmList';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -50,9 +51,14 @@ const Main = () => {
     console.log('회원가입');
   };
   return (
+    <>
     <MainContainer>
       <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
     </MainContainer>
+      <div>
+      <AlarmList/>
+      </div>
+    </>
   );
 };
 
