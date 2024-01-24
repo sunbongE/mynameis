@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ReviewCard from '../../components/reviewCard/ReviewCard';
 import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
-import Footer from '../../components/Footer';
+import Footer from '../../components/footer/Footer';
 import NoticeBox from '../../components/noticeBox/NoticeBox';
 import Toast from '../../components/toast/Toast';
-import { CustomRadioButton, SimpleRadioButton } from '../../components/Button/RadioButton';
-import Header from '../../components/Header/Header';
+import { CustomRadioButton, SimpleRadioButton } from '../../components/button/RadioButton';
+import Header from '../../components/header/Header';
 import AlarmList from '../../components/alarm/AlarmList';
+import HashtagButton from '../../components/hashtagButton/HashtagButton';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -60,6 +61,10 @@ const Main = () => {
       </MainContainer>
       <MainContainer>
         <SimpleRadioButton values={numberValues} selected={selectedNumber} setSelected={setSelectedNumber} />
+      </MainContainer>
+      <MainContainer>
+        <HashtagButton backgroundColor='#E1A4B4'>영자</HashtagButton>
+        <HashtagButton backgroundColor='#4F4F4F'>#패러글라이딩</HashtagButton>
       </MainContainer>
       <div>
         <AlarmList />
