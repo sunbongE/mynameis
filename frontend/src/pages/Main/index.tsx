@@ -6,6 +6,7 @@ import Footer from '../../components/Footer';
 import NoticeBox from '../../components/noticeBox/NoticeBox';
 import Toast from '../../components/toast/Toast';
 import Header from '../../components/header/Header';
+import { click } from '@testing-library/user-event/dist/click';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -13,6 +14,7 @@ const MainContainer = styled.div`
   display: flex;
   justify-content: center;
   /* align-items: center; */
+  background-color: #f2eeea;
 `;
 interface Review {
   id: number;
@@ -21,6 +23,7 @@ interface Review {
 }
 
 const Main = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [reviews, setReviews] = useState<Review[]>([
     {
       id: 1,
@@ -38,9 +41,22 @@ const Main = () => {
       reviewer: '2X세 김모씨',
     },
   ]);
+
+  const handleLogin = () => {
+    console.log('로그인');
+    setIsLogin(true);
+  };
+
+  const handleLogout = () => {
+    console.log('로그아웃');
+    setIsLogin(false);
+  };
+  const handleSignUp = () => {
+    console.log('회원가입');
+  };
   return (
     <MainContainer>
-      <Header />
+      <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
       {/* <div>
         <VoteCountHeart color='pink' count={1} />
         <VoteCountHeart color='purple' count={1} />
