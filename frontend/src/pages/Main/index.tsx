@@ -1,18 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-<<<<<<< HEAD
-import ReviewCard from '../../components/reviewCard/ReviewCard';
-import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
-import QuestionCard from '../../components/card/QuestionCard';
-import CoinListItem from '../../components/coinListItem/CoinListItem';
-import CoinList from '../../components/coinListItem/CoinList';
-import Footer from '../../components/Footer';
-import NoticeBox from '../../components/noticeBox/NoticeBox';
-import Toast from '../../components/toast/Toast';
-import Header from '../../components/header/Header';
-=======
 import Header from '../../components/Header/Header';
->>>>>>> main
 
 const MainContainer = styled.div`
   width: 100%;
@@ -29,11 +17,8 @@ interface Review {
 }
 
 const Main = () => {
-<<<<<<< HEAD
-  const [coinSelected, setCoinSelected] = useState(false)
-=======
   const [isLogin, setIsLogin] = useState<boolean>(false);
->>>>>>> main
+  const [coinSelected, setCoinSelected] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([
     {
       id: 1,
@@ -52,22 +37,6 @@ const Main = () => {
     },
   ]);
 
-<<<<<<< HEAD
-
-  if (coinSelected) {
-    setCoinSelected((selected) => !selected)
-  }
-
-  return (
-    <MainContainer>
-<<<<<<< frontend/src/pages/Main/index.tsx
-
-
-      <CoinList/>
-
-=======
-      <Header />
-=======
   const handleLogin = () => {
     console.log('로그인');
     setIsLogin(true);
@@ -83,13 +52,6 @@ const Main = () => {
   return (
     <MainContainer>
       <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
->>>>>>> main
-      {/* <div>
-        <VoteCountHeart color='pink' count={1} />
-        <VoteCountHeart color='purple' count={1} />
-      </div>
-      <ReviewCard color='pink' review={reviews[0]} /> */}
->>>>>>> frontend/src/pages/Main/index.tsx
     </MainContainer>
   );
 };
