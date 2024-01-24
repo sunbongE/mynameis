@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ReviewCard from '../../components/reviewCard/ReviewCard';
 import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
+import QuestionCard from '../../components/card/QuestionCard';
+import CoinListItem from '../../components/coinListItem/CoinListItem';
+import CoinList from '../../components/coinListItem/CoinList';
 import Footer from '../../components/Footer';
 import NoticeBox from '../../components/noticeBox/NoticeBox';
 import Toast from '../../components/toast/Toast';
@@ -21,6 +24,7 @@ interface Review {
 }
 
 const Main = () => {
+  const [coinSelected, setCoinSelected] = useState(false)
   const [reviews, setReviews] = useState<Review[]>([
     {
       id: 1,
@@ -38,14 +42,27 @@ const Main = () => {
       reviewer: '2X세 김모씨',
     },
   ]);
+
+
+  if (coinSelected) {
+    setCoinSelected((selected) => !selected)
+  }
+
   return (
     <MainContainer>
+<<<<<<< frontend/src/pages/Main/index.tsx
+
+
+      <CoinList/>
+
+=======
       <Header />
       {/* <div>
         <VoteCountHeart color='pink' count={1} />
         <VoteCountHeart color='purple' count={1} />
       </div>
       <ReviewCard color='pink' review={reviews[0]} /> */}
+>>>>>>> frontend/src/pages/Main/index.tsx
     </MainContainer>
   );
 };
