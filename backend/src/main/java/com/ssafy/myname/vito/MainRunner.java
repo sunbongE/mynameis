@@ -26,21 +26,24 @@ public class MainRunner {
 
     @PostConstruct
     public void run() throws Exception {
+        //인증 토큰 요청
         String token = auth.getToken();
-        //System.out.println(token);
 
+        //POST 요청
         PostTranscribe postTranscribe = new PostTranscribe();
         String transcribeToken = postTranscribe.transcribe(token);
 
+        //GET 요청
         GetTranscribe getTranscribe = new GetTranscribe();
         String transcription;
         Thread.sleep(5000);
+
         while ((transcription = getTranscribe.getTranscription(transcribeToken, token)) == null) {
             //전사 작업이 완료되지 않은 경우 1초 동안 대기
             Thread.sleep(1000);
         }
         //전사 결과 출력
-        //System.out.println(transcription);
-        //return 필요 시 사용할것.
+        //return을 통해 결과 출력 필요 시 사용할 것.
+        System.out.println(transcription);
     }
 }

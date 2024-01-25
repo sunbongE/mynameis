@@ -27,17 +27,20 @@ public class GetTranscribe {
         System.out.println(response);
 
         JSONObject jsonResponse = new JSONObject(response);
-        if (jsonResponse.getString("status").equals("completed")) {
+        String status = jsonResponse.getString("status");
+        if (status.equals("completed")) {
             JSONArray utterances = jsonResponse.getJSONObject("results").getJSONArray("utterances");
             StringBuilder allMsgs = new StringBuilder();
             for (int i = 0; i < utterances.length(); i++) {
                 String msg = utterances.getJSONObject(i).getString("msg");
-                System.out.println(msg);
-                allMsgs.append(msg).append(" ");
+                //System.out.println(msg);
+                allMsgs.append(msg).append("\n");
             }
             return allMsgs.toString();
-        } else {
+        } else if (status.equals("transcribing")){
             return null;
+        } else {
+            throw new Exception("Response error: " + status);
         }
     }
 }
