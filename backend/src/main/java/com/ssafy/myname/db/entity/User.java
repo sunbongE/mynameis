@@ -33,6 +33,7 @@ public class User {
     @NotNull
     @Column(length = 20)
     private String name;
+
     @NotNull
     @Column(length = 10)
     private String birth;
