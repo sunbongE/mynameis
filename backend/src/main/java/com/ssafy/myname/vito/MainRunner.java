@@ -10,12 +10,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class MainRunner {
 
     private final Auth auth;
 
-    @Autowired
+//    @Autowired
     public MainRunner(Auth auth) {
         this.auth = auth;
     }
