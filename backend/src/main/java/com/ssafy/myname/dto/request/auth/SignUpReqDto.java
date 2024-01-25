@@ -1,15 +1,15 @@
 package com.ssafy.myname.dto.request.auth;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @ToString
 @Getter
@@ -47,8 +47,8 @@ public class SignUpReqDto  {
     @NotBlank
     private String job;
 
-    @NotBlank
-    private String[] tags;
+//    @NotBlank
+    private List<String> tags;
 
     @NotBlank
     private String religion ;

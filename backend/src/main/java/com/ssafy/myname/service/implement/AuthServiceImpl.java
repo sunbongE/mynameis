@@ -2,9 +2,11 @@ package com.ssafy.myname.service.implement;
 
 import com.ssafy.myname.commons.CertificationNumber;
 import com.ssafy.myname.db.entity.Certification;
+import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CertificationRepository;
 import com.ssafy.myname.db.repository.RefreshTokenRepository;
+import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
@@ -13,6 +15,7 @@ import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.AuthService;
 import com.ssafy.myname.service.RedisService;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -35,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
 //    private final RefreshTokenRepository refreshTokenRepository;
     private final RedisService redisService;
+    private final TagRepository tagRepository;
 
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -112,7 +117,6 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto) {
         LOGGER.info("signUp, dto:{}",dto.toString());
         try {
-
             // 아이디 중복확인
             String userId = dto.getUserId();
             if(isExistUserId(userId)) return SignUpResDto.duplicateId();//이미 있는 아이디인경우.
@@ -120,12 +124,21 @@ public class AuthServiceImpl implements AuthService {
             String email = dto.getEmail();
             if(isExistUserEmail(email)) return SignUpResDto.duplicateEmail();//이미 있는 email인경우.
 
+            // 비밀번호 암호화.
             String password = dto.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             dto.setPassword(encodedPassword);
 
             User user = new User(dto);
             userRepository.save(user);
+
+            List<String> tagNames = dto.getTags();
+            for (String tagName : tagNames) {
+                Tags tags = new Tags(user, tagName);
+                tagRepository.save(tags);
+            }
+
+            // 회원 저장.
             // 리프레시토큰 저장.
             String token = jwtProvider.create(userId, "RT");
             redisService.setDataExpire(userId,token,60*60*24*15); // 15일
@@ -168,7 +181,6 @@ public class AuthServiceImpl implements AuthService {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-
         return SignInResDto.success(token, refreshToken);
     }
 
