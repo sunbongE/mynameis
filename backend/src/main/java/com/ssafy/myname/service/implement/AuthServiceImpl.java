@@ -2,8 +2,11 @@ package com.ssafy.myname.service.implement;
 
 import com.ssafy.myname.commons.CertificationNumber;
 import com.ssafy.myname.db.entity.Certification;
+import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CertificationRepository;
+import com.ssafy.myname.db.repository.RefreshTokenRepository;
+import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
@@ -11,14 +14,19 @@ import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.AuthService;
+import com.ssafy.myname.service.RedisService;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -29,6 +37,11 @@ public class AuthServiceImpl implements AuthService {
     private final CertificationRepository certificationRepository;
     private final EmailProvider emailProvider;
     private final JwtProvider jwtProvider;
+//    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisService redisService;
+    private final TagRepository tagRepository;
+
+
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
@@ -100,34 +113,36 @@ public class AuthServiceImpl implements AuthService {
         return CheckCertificationResDto.success();
     }
 
-    @Override
+    @Override // 회원가입
     public ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto) {
         LOGGER.info("signUp, dto:{}",dto.toString());
         try {
-
+            // 아이디 중복확인
             String userId = dto.getUserId();
             if(isExistUserId(userId)) return SignUpResDto.duplicateId();//이미 있는 아이디인경우.
-
+            // 이메일 중복확인
             String email = dto.getEmail();
-            String certificationNumber = dto.getCertificationNumber();
+            if(isExistUserEmail(email)) return SignUpResDto.duplicateEmail();//이미 있는 email인경우.
 
-            Certification certification = certificationRepository.findByUserId(userId);
-            System.out.println("certification.toString() = " + certification.toString());
-            System.out.println("SignUpReqDto = " + dto.toString());
-            if(!isMatched(certification, email, certificationNumber)){
-                return SignUpResDto.fail();
-            }
-
+            // 비밀번호 암호화.
             String password = dto.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             dto.setPassword(encodedPassword);
 
             User user = new User(dto);
-//            System.out.println("user = " + user.toString());
-//            System.out.println(user.getPassword().length());
-            LOGGER.info("[signUp], user:{}",user.toString());
             userRepository.save(user);
-            certificationRepository.deleteByUserId(userId); //회원가입성공한 회원에대한 정보삭제.
+
+            List<String> tagNames = dto.getTags();
+            for (String tagName : tagNames) {
+                Tags tags = new Tags(user, tagName);
+                tagRepository.save(tags);
+            }
+
+            // 회원 저장.
+            // 리프레시토큰 저장.
+            String token = jwtProvider.create(userId, "RT");
+            redisService.setDataExpire(userId,token,60*60*24*15); // 15일
+
 
         }catch (Exception exception){
             exception.printStackTrace();
@@ -137,33 +152,44 @@ public class AuthServiceImpl implements AuthService {
         return SignUpResDto.success();
     }
 
-    @Override
+
+
+    @Override // 로그인.
     public ResponseEntity<? super SignInResDto> signIn(SignInReqDto dto) {
         String token = null;
+        String refreshToken=null;
 
-        try{
+        try {
 
             String userId = dto.getUserId();
             User user = userRepository.findByUserId(userId);
-            if(user==null) return SignInResDto.fail();
+            if (user == null) return SignInResDto.fail();
 
             String password = dto.getPassword();
-            String encodedPassword =user.getPassword();
+            String encodedPassword = user.getPassword();
             boolean isMatched = passwordEncoder.matches(password, encodedPassword);
-            if(!isMatched) return SignInResDto.fail();
+            if (!isMatched) return SignInResDto.fail();
 
-            token =jwtProvider.create(userId);
+            token = jwtProvider.create(userId, "AT");
+            refreshToken = redisService.getData(userId);
+            if (refreshToken == null) {
+                // refreshToken만들고 저장하는 메서드 호출(userId)
+                refreshToken = jwtProvider.createSaveRefreshToken(userId);
+            }
 
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-
-        return SignInResDto.success(token);
+        return SignInResDto.success(token, refreshToken);
     }
+
 
     private  boolean isExistUserId(String userId){
         return userRepository.existsByUserId(userId);
+    }
+    private boolean isExistUserEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
     private boolean isMatched(Certification certification,String email, String CertificationNumber){
         return certification.getEmail().equals(email) &&

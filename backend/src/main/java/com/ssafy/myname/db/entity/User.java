@@ -33,6 +33,7 @@ public class User {
     @NotNull
     @Column(length = 20)
     private String name;
+
     @NotNull
     @Column(length = 10)
     private String birth;
@@ -42,7 +43,7 @@ public class User {
     @Column(length = 10)
     private String area; // 지역.
     @Column(length = 10)
-    private String religion ; // 종교.
+    private String religion; // 종교.
     @Column(length = 30)
     private String job;
 
@@ -82,7 +83,8 @@ public class User {
     @ColumnDefault("'READY'")
     private MatchStatus matchStatus; // 매칭 여부.
 
-    @NotNull @ColumnDefault("0")
+    @NotNull
+    @ColumnDefault("0")
     private int reportPoint;
 
     @Column(length = 50, unique = true)
@@ -108,6 +110,15 @@ public class User {
     public User() {
     }
 
+//    public User(SignUpReqDto dto) {
+//        this.userId = dto.getUserId();
+//        this.password = dto.getPassword();
+//        this.name = dto.getName();
+//        this.birth = dto.getBirth();
+//        this.gender = dto.getGender();
+//        this.email = dto.getEmail();
+//    }
+
     public User(SignUpReqDto dto) {
         this.userId = dto.getUserId();
         this.password = dto.getPassword();
@@ -115,31 +126,16 @@ public class User {
         this.birth = dto.getBirth();
         this.gender = dto.getGender();
         this.email = dto.getEmail();
+        this.area = dto.getArea();
+        this.religion = dto.getReligion();
+        this.job = dto.getJob();
+        this.phone = dto.getPhone();
+        // tag들 저장.
     }
-
     // 출력
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", birth='" + birth + '\'' +
-                ", gender=" + gender +
-                ", area='" + area + '\'' +
-                ", religion='" + religion + '\'' +
-                ", job='" + job + '\'' +
-                ", coin=" + coin +
-                ", joinDate=" + joinDate +
-                ", updateDate=" + updateDate +
-                ", isLeave=" + isLeave +
-                ", isValid=" + isValid +
-                ", role=" + role +
-                ", phone='" + phone + '\'' +
-                ", matchStatus=" + matchStatus +
-                ", reportPoint=" + reportPoint +
-                ", email='" + email + '\'' +
-                '}';
+        return "User{" + "userId='" + userId + '\'' + ", password='" + password + '\'' + ", name='" + name + '\'' + ", birth='" + birth + '\'' + ", gender=" + gender + ", area='" + area + '\'' + ", religion='" + religion + '\'' + ", job='" + job + '\'' + ", coin=" + coin + ", joinDate=" + joinDate + ", updateDate=" + updateDate + ", isLeave=" + isLeave + ", isValid=" + isValid + ", role=" + role + ", phone='" + phone + '\'' + ", matchStatus=" + matchStatus + ", reportPoint=" + reportPoint + ", email='" + email + '\'' + '}';
     }
 }

@@ -4,6 +4,8 @@ import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.auth.*;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Principal;
+
 public interface AuthService {
 
     ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto);
