@@ -9,6 +9,7 @@ import { CustomRadioButton, SimpleRadioButton } from '../../components/button/Ra
 import Header from '../../components/header/Header';
 import AlarmList from '../../components/alarm/AlarmList';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
+import Chip from '../../components/chip/Chip';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -65,6 +66,8 @@ const Main = () => {
       <MainContainer>
         <HashtagButton backgroundColor='#E1A4B4'>영자</HashtagButton>
         <HashtagButton backgroundColor='#4F4F4F'>#패러글라이딩</HashtagButton>
+        <Chip keyword='수영하기' />
+        <VoteCountHeart color='pink' count={2} />
       </MainContainer>
       <div>
         <AlarmList />

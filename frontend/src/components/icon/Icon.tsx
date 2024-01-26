@@ -12,6 +12,9 @@ const StyledIconContainer = styled.div<IconProps>`
   width: ${(props) => props.width || 'auto'};
   height: ${(props) => props.height || 'auto'};
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const StyledIcon = styled.img`
