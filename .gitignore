@@ -35,6 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
-application*.properties
+**/application*.properties
+backend/lib
 .DS_Store
-/lib
