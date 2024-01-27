@@ -65,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
         return IdCheckResponseDto.success();
     }
 
-    @Override
+    @Override // 이메일로 인증번호 발급해준다.
     public ResponseEntity<? super EmailCertificationResponseDto> emilCertification(EmailCertificationRequestDto dto) {
         try{
 
@@ -160,19 +160,24 @@ public class AuthServiceImpl implements AuthService {
         String refreshToken=null;
 
         try {
-
+            // 회원아이디로 회원엔터티 조회
             String userId = dto.getUserId();
             User user = userRepository.findByUserId(userId);
-            if (user == null) return SignInResDto.fail();
+            if (user == null) return SignInResDto.fail(); // 회원이 없으면 로그인 실패안내
 
+            // 입력받은 비밀번호 암호화 후 db의 비밀번호와 비교
             String password = dto.getPassword();
             String encodedPassword = user.getPassword();
             boolean isMatched = passwordEncoder.matches(password, encodedPassword);
-            if (!isMatched) return SignInResDto.fail();
+            if (!isMatched) return SignInResDto.fail(); // 비번이 다르면 실패안내.
 
+            // 엑세스 토큰 발급
             token = jwtProvider.create(userId, "AT");
+
+            // 레디스에서 리프레시토큰 가져오기.
             refreshToken = redisService.getData(userId);
-            if (refreshToken == null) {
+
+            if (refreshToken == null) {                     // 리프레시 토큰이 없는 경우 새로 발급
                 // refreshToken만들고 저장하는 메서드 호출(userId)
                 refreshToken = jwtProvider.createSaveRefreshToken(userId);
             }
@@ -184,10 +189,11 @@ public class AuthServiceImpl implements AuthService {
         return SignInResDto.success(token, refreshToken);
     }
 
-
+    // 회원 아이디가 존재하는지 확인
     private  boolean isExistUserId(String userId){
         return userRepository.existsByUserId(userId);
     }
+    // 회원 이메일이 존재하는지 확인
     private boolean isExistUserEmail(String email) {
         return userRepository.existsByEmail(email);
     }
