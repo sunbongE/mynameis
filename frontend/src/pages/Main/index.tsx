@@ -11,6 +11,8 @@ import AlarmList from '../../components/alarm/AlarmList';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Chip from '../../components/chip/Chip';
 import VideoButton from '../../components/videoButton/VideoButton';
+import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
+
 
 const MainContainer = styled.div`
   width: 100%;
