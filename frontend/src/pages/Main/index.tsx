@@ -10,6 +10,7 @@ import Header from '../../components/header/Header';
 import AlarmList from '../../components/alarm/AlarmList';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Chip from '../../components/chip/Chip';
+import VideoButton from '../../components/videoButton/VideoButton';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -70,7 +71,7 @@ const Main = () => {
         <VoteCountHeart color='pink' count={2} />
       </MainContainer>
       <div>
-        <AlarmList />
+        <VideoButton/>
       </div>
     </>
   );
