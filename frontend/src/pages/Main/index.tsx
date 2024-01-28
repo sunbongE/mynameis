@@ -10,6 +10,9 @@ import Header from '../../components/header/Header';
 import AlarmList from '../../components/alarm/AlarmList';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Chip from '../../components/chip/Chip';
+import VideoButton from '../../components/videoButton/VideoButton';
+import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
+import { SimpleInput, ConfirmationCodeInput } from '../../components/input/Input';
 
 
 
@@ -74,8 +77,10 @@ const Main = () => {
         <VoteCountHeart color='pink' count={2} />
       </MainContainer>
       <div>
-        <VideoCard width={'700px'} height={'350px'} />
+        <SimpleInput placeholder='아이디' />
+        <ConfirmationCodeInput placeholder='인증번호 확인' />
       </div>
+
     </>
   );
 };
