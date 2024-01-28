@@ -10,6 +10,7 @@ import Header from '../../components/header/Header';
 import AlarmList from '../../components/alarm/AlarmList';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Chip from '../../components/chip/Chip';
+import VideoButton from '../../components/videoButton/VideoButton';
 import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
 
 
@@ -72,7 +73,7 @@ const Main = () => {
         <VoteCountHeart color='pink' count={2} />
       </MainContainer>
       <div>
-        <ReportCheckBoxItem reportTitle={'욕설'} reportContent={'상처감을 주거나 부적절한 언어를 사용한 경우, 해당 내용을 신고해주세요.'} />
+        <VideoButton/>
       </div>
     </>
   );
