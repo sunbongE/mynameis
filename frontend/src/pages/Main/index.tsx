@@ -18,6 +18,9 @@ import { SimpleInput, ConfirmationCodeInput } from '../../components/input/Input
 
 import VideoCard from '../../components/videoCard/VideoCard';
 
+import Timer from '../../components/timer & stopWatch/Timer';
+import Clock from '../../components/timer & stopWatch/stopWatch';
+
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -76,6 +79,7 @@ const Main = () => {
         <Chip keyword='수영하기' />
         <VoteCountHeart color='pink' count={2} />
       </MainContainer>
+
       <div>
         <SimpleInput placeholder='아이디' />
         <ConfirmationCodeInput placeholder='인증번호 확인' />
