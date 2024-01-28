@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
-    private final Logger LOGGER = (Logger) LoggerFactory.getLogger(this.getClass());
+    private final Logger LOGGER =  LoggerFactory.getLogger(this.getClass());
 
     @Override
     public ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto) {
