@@ -97,8 +97,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Tags> tags = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Social social;
 
     @OneToMany(mappedBy = "user")
     private List<ChatJoinInfo> chatJoinInfos;

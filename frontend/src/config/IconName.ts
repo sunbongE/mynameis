@@ -6,7 +6,11 @@ export const Notice: string = '/icons/notice.svg';
 export const Bell: string = '/icons/bell.svg';
 export const Alarm: string = '/icons/alarm.svg';
 export const DelBtn: string = '/icons/delBtn.svg';
-
-
-
 export const TimerIcon: string = '/icons/timer.svg'
+export const MicOn: string = '/icons/micOn.svg';
+export const MicOff: string = '/icons/micOff.svg';
+export const EtcDots: string = '/icons/etcDots.svg';
+export const VideoOn: string = '/icons/videoOn.svg';
+export const VideoOff: string = '/icons/videoOff.svg';
+export const RoomOut: string = '/icons/roomOut.svg';
+export const Vector: string = '/icons/vector.svg';
