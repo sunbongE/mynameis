@@ -11,6 +11,9 @@ import AlarmList from '../../components/alarm/AlarmList';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Chip from '../../components/chip/Chip';
 
+import Timer from '../../components/timer & stopWatch/Timer';
+import Clock from '../../components/timer & stopWatch/stopWatch';
+
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -69,9 +72,10 @@ const Main = () => {
         <Chip keyword='수영하기' />
         <VoteCountHeart color='pink' count={2} />
       </MainContainer>
-      <div>
-        <AlarmList />
-      </div>
+      <br />
+        <Timer/>
+        <Clock/>
+
     </>
   );
 };
