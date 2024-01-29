@@ -22,6 +22,7 @@ import MyModal from '../../components/modal/MyModal';
 import FailModal from '../../modules/mainModules/FailModal';
 
 import CustomDropdown from '../../components/dropdown/Dropdown';
+import Message from '../../components/chat/Message';
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -97,6 +98,9 @@ const Main = () => {
         <VoteCountHeart color='pink' count={2} />
         <CustomDropdown options={tempArray} />
       </MainContainer>
+
+      <Message role='sender' msg='떡볶이요?' />
+      <Message role='receiver' msg='좋아해요' />
 
       <div>
         <SimpleInput placeholder='아이디' value='' />
