@@ -16,7 +16,7 @@ import java.util.Scanner;
 // 인증 토큰 요청
 @Component
 @PropertySource("classpath:application.properties")
-public class Auth {
+public class AuthSTT {
 
     @Value("${client-id}")
     private String clientId;
@@ -34,7 +34,6 @@ public class Auth {
         httpConn.setDoOutput(true);
 
         String data = "client_id=" + clientId + "&client_secret=" + clientSecret;
-        //System.out.println(data);
 
         byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
@@ -57,7 +56,7 @@ public class Auth {
         } else {
             // 오류 메시지 추출
             String error = jsonResponse.getString("msg");
-            throw new IOException("Authentication error: " + error);
+            throw new IOException("STT_Authentication error: " + error);
         }
     }
 }
