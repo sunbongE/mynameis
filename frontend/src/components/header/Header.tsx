@@ -1,17 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Logo from '../icon/Logo';
 import Icon from '../icon/Icon';
 import { Bell, Coin } from '../../config/IconName';
 import Button from '../button/Button';
 import { addCommaInNumber } from '../../utils/numberUtil';
+import MyPageCard from '../myPageCard/MyPageCard';
 
 interface HeaderProps {
   isLogin: boolean;
+  isMyPageOpen: boolean;
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
   onClickLogin: () => void;
   onClickLogout: () => void;
   onClickSignUp: () => void;
+  onClickMyPage: () => void;
 }
 
 const HeaderContainer = styled.div`
@@ -41,6 +44,11 @@ const StyledPoint = styled.p`
   font-family: 'Pretendard SemiBold';
 `;
 
+const MyPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const StyledButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -59,7 +67,10 @@ const Header = (props: HeaderProps) => {
             </StyledPointContainer>
             <Icon src={Bell} width='24px' height='24px' />
             <StyledButtonContainer>
-              <Button backgroundColor='#E1A3B3' width='85px' height='33px' borderRadius='15px' children={<p>마이페이지</p>} fontColor='#fff' fontSize='16px' />
+              <MyPageContainer>
+                <Button onButtonClick={props.onClickMyPage} backgroundColor='#E1A3B3' width='85px' height='33px' borderRadius='15px' children={<p>마이페이지</p>} fontColor='#fff' fontSize='16px' />
+                {props.isMyPageOpen && <MyPageCard />}
+              </MyPageContainer>
               <Button onButtonClick={props.onClickLogout} backgroundColor='#fff' width='85px' height='33px' borderRadius='15px' children={<p>로그아웃</p>} fontColor='#E1A3B3' borderColor='#E1A3B3' fontSize='16px' />
             </StyledButtonContainer>
           </>
