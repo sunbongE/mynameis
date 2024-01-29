@@ -18,8 +18,8 @@ import { SimpleInput, ConfirmationCodeInput } from '../../components/input/Input
 
 import VideoCard from '../../components/videoCard/VideoCard';
 
-import Timer from '../../components/timer & stopWatch/Timer';
-import Clock from '../../components/timer & stopWatch/stopWatch';
+import Timer from '../../components/timer/Timer';
+import Clock from '../../components/stopWatch/stopWatch';
 
 const MainContainer = styled.div`
   width: 100%;
