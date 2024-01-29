@@ -77,4 +77,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return ResponseDto.ok();
     }
+
+    @Override
+    public ResponseEntity<?> leave(String userId) {
+        User user = userRepository.findByUserId(userId);
+        user.setLeave(true);
+        userRepository.save(user);
+        return ResponseDto.ok();
+    }
 }
