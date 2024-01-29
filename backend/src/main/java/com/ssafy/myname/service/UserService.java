@@ -12,5 +12,7 @@ public interface UserService {
     ResponseEntity<?> modifyTag(String userId, List<String> tagNameList);
     ResponseEntity<?> modifyUser(String userId, ModifyUserDto modifyUserDto);
 
+    ResponseEntity<?> leave(String userId);
+
 
 }

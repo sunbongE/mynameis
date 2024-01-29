@@ -72,10 +72,10 @@ public class UserController {
     @PutMapping("/modify-tag")
     public ResponseEntity<?> modifyTag(Principal principal,
                                        @RequestBody Map<String, List<String>> tags) {
-        List<String> tagNameList = tags.get("tags");
         logger.info("** modify-tag 호출");
-        String userId = principal.getName();
         try{
+            List<String> tagNameList = tags.get("tags");
+            String userId = principal.getName();
             ResponseEntity<?> response = userService.modifyTag(userId,tagNameList);
             return response;
         }catch (Exception e){
@@ -88,8 +88,8 @@ public class UserController {
     public ResponseEntity<?> modifyUser(Principal principal,
                                         @RequestBody ModifyUserDto modifyUserDto){
         logger.info("** modify-user 호출");
-        String userId = principal.getName();
         try{
+            String userId = principal.getName();
             ResponseEntity<?> response = userService.modifyUser(userId,modifyUserDto);
             return response;
         }catch (Exception e){
@@ -99,5 +99,21 @@ public class UserController {
 
     }
 
-
+    /**
+     * 회원의 isLeave속성을 true으로 변경하여 탈퇴한 유저임을 기록한다.
+     * @param principal
+     * @return
+     */
+    @PatchMapping("/leave")
+    public ResponseEntity<?> leave (Principal principal){
+        logger.info("** leave-user 호출");
+        try {
+            String userId = principal.getName();
+            ResponseEntity<?> response = userService.leave(userId);
+            return response;
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+    }
 }
