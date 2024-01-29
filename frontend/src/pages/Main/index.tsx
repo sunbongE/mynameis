@@ -12,7 +12,7 @@ import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Chip from '../../components/chip/Chip';
 import VideoButton from '../../components/videoButton/VideoButton';
 import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
-import { SimpleInput, ConfirmationCodeInput } from '../../components/input/Input';
+import { SimpleInput, ConfirmationCodeInput, PasswordInput } from '../../components/input/Input';
 
 import VideoCard from '../../components/videoCard/VideoCard';
 
@@ -97,8 +97,10 @@ const Main = () => {
       </MainContainer>
 
       <div>
-        <SimpleInput placeholder='아이디' />
-        <ConfirmationCodeInput placeholder='인증번호 확인' />
+        <SimpleInput placeholder='아이디' value='' />
+        <SimpleInput placeholder='아이디' value='' />
+        <ConfirmationCodeInput placeholder='인증번호 확인' value='' />
+        <PasswordInput placeholder='비밀번호 확인' isReturn={true} value='123' originValue='123' />
       </div>
     </>
   );
