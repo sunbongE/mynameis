@@ -11,6 +11,7 @@ interface InputProps {
   isReturn?: boolean | false;
   value: string;
   originValue?: string; // 재확인 전에 사용자가 넘겨주는 비밀번호, 인증코드
+  fontSize?:string;
 }
 
 const StyledInputContainer = styled.div<InputProps>`
@@ -24,7 +25,7 @@ const StyledInput = styled.input<InputProps>`
   background: #fff;
   box-shadow: 0px 10px 40px 0px rgba(174, 174, 174, 0.2);
   height: ${(props) => (props.height ? props.height : `50px`)};
-  font-size: 15px;
+  font-size: ${(props) => (props.width ? props.width : `12px`)};
   padding: 10px;
   width: ${(props) => (props.width ? props.width : `300px`)};
 
@@ -51,7 +52,7 @@ const StyledCheckedContainer = styled.div`
 
 const StyledCheckText = styled.p<{ isMatch: boolean }>`
   color: ${(props) => (props.isMatch ? '#3da591' : '#EF3E5C')};
-  font-family: Pretendard;
+  font-family: 'Pretendard Regular';
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -59,7 +60,16 @@ const StyledCheckText = styled.p<{ isMatch: boolean }>`
 `;
 
 const SimpleInput = (props: InputProps) => {
-  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={props.value}></StyledInput>;
+  
+  const [inputValue,setInputValue] = useState('')
+
+  const handleSimpleInputChange = (e:any) => {
+    const newValue = e.target.value
+    setInputValue(newValue)
+    console.log(newValue)
+  }
+
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={inputValue} onChange={handleSimpleInputChange} ></StyledInput>;
 };
 
 const ConfirmationCodeInput = (props: InputProps) => {

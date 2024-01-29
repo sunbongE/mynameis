@@ -22,6 +22,9 @@ import MyModal from '../../components/modal/MyModal';
 import FailModal from '../../modules/mainModules/FailModal';
 
 import CustomDropdown from '../../components/dropdown/Dropdown';
+
+import Login from '../auth/Login';
+
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -75,28 +78,26 @@ const Main = () => {
         <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
       </MainContainer>
       <MainContainer>
-        <Button onButtonClick={handleModalOpen} backgroundColor='#e1a4b4' width='100px' height='40px' borderRadius='10px' fontColor='white'>
-          모달 열기
-        </Button>
-        <MyModal isOpen={isOpen} setIsOpen={setIsOpen}>
-          <>
-            <FailModal isOpen={isOpen} setIsOpen={setIsOpen} />
-          </>
-        </MyModal>
+        <Login/>
+
+
       </MainContainer>
-      <MainContainer>
-        <CustomRadioButton values={voteValues} version='vote' selected={selectedVote} setSelected={setSelectedVote} width='120px' />
-      </MainContainer>
-      <MainContainer>
-        <SimpleRadioButton values={numberValues} selected={selectedNumber} setSelected={setSelectedNumber} />
-      </MainContainer>
-      <MainContainer>
-        <HashtagButton backgroundColor='#E1A4B4'>영자</HashtagButton>
-        <HashtagButton backgroundColor='#4F4F4F'>#패러글라이딩</HashtagButton>
-        <Chip keyword='수영하기' />
-        <VoteCountHeart color='pink' count={2} />
-        <CustomDropdown options={tempArray} />
-      </MainContainer>
+  
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
 
       <div>
         <SimpleInput placeholder='아이디' value='' />
