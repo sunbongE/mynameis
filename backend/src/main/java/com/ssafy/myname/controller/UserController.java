@@ -39,11 +39,12 @@ public class UserController {
     private final TagRepository tagRepository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    //    @GetMapping("/{userId}")
-//    public String getUser(@PathVariable("userId") String userId){
-//        System.out.println("userId = " + userId);
-//        return userId;
-//    }
+
+    /**
+     *
+     * @param principal 어떤회원인지 식별할 수 있습니다.
+     * @return 회원정보를 반환합니다.
+     */
     @PostMapping("/get-user-info")
     public ResponseEntity<?> getUserInfo(Principal principal) {
     logger.info("** getUserInfo Controller 실행");
@@ -61,6 +62,12 @@ public class UserController {
         }
     }
 
+    /**
+     *
+     * @param principal
+     * @param tags tags라는 이름으로 태그이름들이 있는 리스트
+     * @return 변경에 대한 상태를 반환합니다. 성공이나 실패
+     */
     @PutMapping("/modify-tag")
     public ResponseEntity<?> modifyTag(Principal principal,
                                        @RequestBody Map<String, List<String>> tags) {
@@ -74,9 +81,6 @@ public class UserController {
             logger.info(e.getMessage());
             return ResponseDto.databaseError();
         }
-
-
-
     }
 
 

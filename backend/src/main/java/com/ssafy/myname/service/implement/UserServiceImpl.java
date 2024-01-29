@@ -17,18 +17,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.security.Principal;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final Logger logger =  LoggerFactory.getLogger(this.getClass());
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
 
-    @PostMapping(value = "/getUserInfo")
     public GetUserInfoResDto getUserInfo(Principal principal) {
         logger.info("** getUserInfo ServiceImpl 실행 ");
 
@@ -51,7 +52,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public ResponseEntity<?> modifyTag(String userId, List<String> tagNameList) {
         User user = userRepository.findByUserId(userId);
         logger.info("user : {} ",user);
