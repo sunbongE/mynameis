@@ -13,7 +13,6 @@ import Chip from '../../components/chip/Chip';
 import VideoButton from '../../components/videoButton/VideoButton';
 import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
 import { SimpleInput, ConfirmationCodeInput, PasswordInput } from '../../components/input/Input';
-
 import VideoCard from '../../components/videoCard/VideoCard';
 
 import Timer from '../../components/timer/Timer';
@@ -22,6 +21,7 @@ import Button from '../../components/button/Button';
 import MyModal from '../../components/modal/MyModal';
 import FailModal from '../../modules/mainModules/FailModal';
 
+import CustomDropdown from '../../components/dropdown/Dropdown';
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -68,6 +68,7 @@ const Main = () => {
     setIsOpen(true);
   };
 
+  const tempArray = ['일', '이', '삼', '사', '오'];
   return (
     <>
       <MainContainer>
@@ -94,6 +95,7 @@ const Main = () => {
         <HashtagButton backgroundColor='#4F4F4F'>#패러글라이딩</HashtagButton>
         <Chip keyword='수영하기' />
         <VoteCountHeart color='pink' count={2} />
+        <CustomDropdown options={tempArray} />
       </MainContainer>
 
       <div>
