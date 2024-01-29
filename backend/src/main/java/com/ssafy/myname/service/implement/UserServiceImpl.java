@@ -4,6 +4,7 @@ import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
 import com.ssafy.myname.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -47,4 +49,19 @@ public class UserServiceImpl implements UserService {
 
         return dto ;
     }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> modifyTag(String userId, List<String> tagNameList) {
+        User user = userRepository.findByUserId(userId);
+        logger.info("user : {} ",user);
+        // 기존 태그들 전부 삭제.
+        tagRepository.deleteAllByUser(user);
+        logger.info(" 전부 삭제됨 ");
+        for (String tagname : tagNameList) {
+            tagRepository.save(new Tags(user, tagname));
+        }
+        return ResponseDto.ok();
+
     }
+}
