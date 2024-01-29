@@ -13,3 +13,5 @@ export const VideoOn: string = '/icons/videoOn.svg';
 export const VideoOff: string = '/icons/videoOff.svg';
 export const RoomOut: string = '/icons/roomOut.svg';
 export const Vector: string = '/icons/vector.svg';
+export const Check_green: string = '/icons/check_green.svg';
+export const Check_red: string = '/icons/check_red.svg';
