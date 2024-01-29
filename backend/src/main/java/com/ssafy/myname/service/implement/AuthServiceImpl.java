@@ -19,6 +19,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -188,6 +189,8 @@ public class AuthServiceImpl implements AuthService {
         }
         return SignInResDto.success(token, refreshToken);
     }
+
+
 
     // 회원 아이디가 존재하는지 확인
     private  boolean isExistUserId(String userId){

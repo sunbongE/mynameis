@@ -29,6 +29,9 @@ public class Tags {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Tags() {
+    }
+
     public Tags(User user, String tag) {
         this.user = user;
         this.tagName = tag;
