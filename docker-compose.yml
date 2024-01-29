@@ -5,7 +5,7 @@ version: '3.8'
 services:
   nginx:
     container_name: nginx
-    image: kimahyeon/myname-nginx
+    image: dhflxhdxhd/myname-nginx
     build:
       context: nginx
       dockerfile: Dockerfile
@@ -19,7 +19,7 @@ services:
 
   front:
     container_name: front
-    image: kimahyeon/myname-front
+    image: dhflxhdxhd/myname-front
     build:
       context: frontend
       dockerfile: Dockerfile
@@ -31,7 +31,7 @@ services:
 
   back:
     container_name: back
-    image: kimahyeon/myname-back
+    image: dhflxhdxhd/myname-back
     build:
       context: backend
       dockerfile: Dockerfile
