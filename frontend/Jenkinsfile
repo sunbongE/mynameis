@@ -10,15 +10,11 @@ pipeline {
         REPO = "s10-webmobile1-sub2/S10P12C207"
     }
     stages {
-//        stage('Checkout') {
-//            steps {
-//                checkout scmGit(
-//                        branches: [[name: 'develop']],
-//                        extensions: [submodule(parentCredentials: true, trackingSubmodules: true)],
-//                        userRemoteConfigs: [[credentialsId: 'Github-Access-Token', url: 'https://github.com/KPPSC/myname-setting']]
-//                )
-//            }
-//        }
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
         stage("Build") {
             steps {
                 script {
