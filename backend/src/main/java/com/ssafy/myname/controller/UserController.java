@@ -6,6 +6,7 @@ import com.ssafy.myname.db.repository.RefreshTokenRepository;
 import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.RefreshTokenDto;
+import com.ssafy.myname.dto.request.users.ModifyUserDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
 import com.ssafy.myname.provider.JwtProvider;
@@ -81,6 +82,21 @@ public class UserController {
             logger.info(e.getMessage());
             return ResponseDto.databaseError();
         }
+    }
+
+    @PutMapping("/modify-user")
+    public ResponseEntity<?> modifyUser(Principal principal,
+                                        @RequestBody ModifyUserDto modifyUserDto){
+        logger.info("** modify-user 호출");
+        String userId = principal.getName();
+        try{
+            ResponseEntity<?> response = userService.modifyUser(userId,modifyUserDto);
+            return response;
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+
     }
 
 
