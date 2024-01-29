@@ -22,6 +22,7 @@ import MyModal from '../../components/modal/MyModal';
 import FailModal from '../../modules/mainModules/FailModal';
 
 import CustomDropdown from '../../components/dropdown/Dropdown';
+import ActionButton from '../../components/actionButton/ActionButton';
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -70,6 +71,8 @@ const Main = () => {
     setMyPageOpen(!myPageOpen);
   };
 
+  const [faqopen, setFaqOpen] = useState<boolean>(false);
+
   const [isOpen, setIsOpen] = useState(false);
   const handleModalOpen = () => {
     setIsOpen(true);
@@ -102,7 +105,9 @@ const Main = () => {
         <VoteCountHeart color='pink' count={2} />
         <CustomDropdown options={tempArray} />
       </MainContainer>
-
+      <div>
+        <ActionButton faqOpen={faqopen} setFaqOpen={setFaqOpen} />
+      </div>
       <div>
         <SimpleInput placeholder='아이디' value='' />
         <SimpleInput placeholder='아이디' value='' />

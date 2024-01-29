@@ -37,12 +37,6 @@ const UserInfo = styled.div`
   align-items: center;
 `;
 
-const StyledInput = styled.input`
-  width: 50%;
-  font-family: 'Pretendard SemiBold';
-  margin: 0px 10px;
-`;
-
 const StyledText = styled.p<TextStyleProps>`
   font-family: 'Pretendard SemiBold';
   margin: 0px 10px;
