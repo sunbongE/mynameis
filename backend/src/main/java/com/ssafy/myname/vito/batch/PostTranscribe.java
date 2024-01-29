@@ -1,9 +1,6 @@
 package com.ssafy.myname.vito.batch;
 
-import com.ssafy.myname.vito.auth.Auth;
 import org.json.JSONObject;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -74,7 +71,7 @@ public class PostTranscribe {
         } else {
             // 오류 메시지 추출
             String error = jsonResponse.getString("msg");
-            throw new Exception("Transcription error: " + error);
+            throw new Exception("STT_POST_Transcription error: " + error);
         }
     }
 }

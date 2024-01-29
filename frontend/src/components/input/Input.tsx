@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { formatTime } from '../../utils/numberUtil';
+import { Check_green, Check_red } from '../../config/IconName';
+import Icon from '../icon/Icon';
 
 interface InputProps {
   placeholder: string;
   width?: number;
   height?: number;
+  isReturn?: boolean | false;
+  value: string;
+  originValue?: string; // 재확인 전에 사용자가 넘겨주는 비밀번호, 인증코드
 }
 
 const StyledInputContainer = styled.div<InputProps>`
@@ -39,13 +44,32 @@ const StyledTimer = styled.p`
   font-size: 15px;
 `;
 
+const StyledCheckedContainer = styled.div`
+  display: flex;
+  column-gap: 3px;
+`;
+
+const StyledCheckText = styled.p<{ isMatch: boolean }>`
+  color: ${(props) => (props.isMatch ? '#3da591' : '#EF3E5C')};
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+`;
+
 const SimpleInput = (props: InputProps) => {
-  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height}></StyledInput>;
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={props.value}></StyledInput>;
 };
+
 const ConfirmationCodeInput = (props: InputProps) => {
+  const [isReturnMatch, setIsReturnMath] = useState(false);
+  useEffect(() => {
+    setIsReturnMath(props.value === props.originValue);
+  }, [props.value, props.originValue]);
+
   const [confirmTime, setConfirmTime] = useState(180); // default 3분
   const INTERVAL = 1000;
-
   useEffect(() => {
     const timer = setInterval(() => {
       setConfirmTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
@@ -58,10 +82,60 @@ const ConfirmationCodeInput = (props: InputProps) => {
 
   return (
     <StyledInputContainer {...props}>
-      <StyledInput placeholder={props.placeholder} width={props.width} height={props.height}></StyledInput>
+      <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={props.value}></StyledInput>
       <StyledTimer>{formatTime(confirmTime)}</StyledTimer>
+
+      {props.isReturn && (
+        <StyledCheckedContainer>
+          {isReturnMatch && (
+            <>
+              <Icon src={Check_green} width='12px' />
+              <StyledCheckText isMatch={isReturnMatch}>인증번호가 일치해요</StyledCheckText>
+            </>
+          )}
+          {!isReturnMatch && (
+            <>
+              <Icon src={Check_red} width='12px' />
+              <StyledCheckText isMatch={isReturnMatch}>인증번호가 일치하지 않아요</StyledCheckText>
+            </>
+          )}
+        </StyledCheckedContainer>
+      )}
     </StyledInputContainer>
   );
 };
 
-export { SimpleInput, ConfirmationCodeInput };
+const PasswordInput = (props: InputProps) => {
+  const [isReturnMatch, setIsReturnMath] = useState(false);
+
+  useEffect(() => {
+    setIsReturnMath(props.value === props.originValue);
+  }, [props.value, props.originValue]);
+
+  // 비밀번호 유효성 검사 추가
+
+  return (
+    <StyledInputContainer {...props}>
+      <StyledInput type='password' placeholder={props.placeholder} width={props.width} height={props.height} value={props.value}></StyledInput>
+
+      {props.isReturn && (
+        <StyledCheckedContainer>
+          {isReturnMatch && (
+            <>
+              <Icon src={Check_green} width='12px' />
+              <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치해요</StyledCheckText>
+            </>
+          )}
+          {!isReturnMatch && (
+            <>
+              <Icon src={Check_red} width='12px' />
+              <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치하지 않아요</StyledCheckText>
+            </>
+          )}
+        </StyledCheckedContainer>
+      )}
+    </StyledInputContainer>
+  );
+};
+
+export { SimpleInput, ConfirmationCodeInput, PasswordInput };
