@@ -21,3 +21,5 @@ export const Location: string = 'icons/location.svg';
 export const Bag: string = 'icons/bag.svg';
 export const Triangle: string = 'icons/triangle.svg';
 export const Crown: string = 'icons/crown.svg';
+export const Check_green: string = '/icons/check_green.svg';
+export const Check_red: string = '/icons/check_red.svg';

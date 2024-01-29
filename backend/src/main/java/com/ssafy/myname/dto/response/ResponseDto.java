@@ -29,4 +29,8 @@ public class ResponseDto {
         ResponseDto responseBody = new ResponseDto(ResponseCode.EXPIRATION_FAIL,ResponseMessage.EXPIRATION_FAIL);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
     }
+    public static ResponseEntity<ResponseDto> ok(){
+        ResponseDto responseBody = new ResponseDto(ResponseCode.SUCCESS,ResponseMessage.SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
 }
