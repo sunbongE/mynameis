@@ -1,7 +1,10 @@
 package com.ssafy.myname.controller;
 
+import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.RefreshTokenRepository;
+import com.ssafy.myname.db.repository.TagRepository;
+import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.RefreshTokenDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
@@ -11,6 +14,7 @@ import com.ssafy.myname.service.UserService;
 import com.ssafy.myname.service.implement.AuthServiceImpl;
 import com.ssafy.myname.service.implement.JwtService;
 import com.ssafy.myname.service.implement.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +26,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final JwtProvider jwtProvider;
-    private final AuthServiceImpl authServiceImpl;
     private final JwtService jwtService;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final TagRepository tagRepository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //    @GetMapping("/{userId}")
@@ -57,6 +61,23 @@ public class UserController {
         }
     }
 
+    @PutMapping("/modify-tag")
+    public ResponseEntity<?> modifyTag(Principal principal,
+                                       @RequestBody Map<String, List<String>> tags) {
+        List<String> tagNameList = tags.get("tags");
+        logger.info("** modify-tag 호출");
+        String userId = principal.getName();
+        try{
+            ResponseEntity<?> response = userService.modifyTag(userId,tagNameList);
+            return response;
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+
+
+
+    }
 
 
 }
