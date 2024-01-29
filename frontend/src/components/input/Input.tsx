@@ -6,12 +6,13 @@ import Icon from '../icon/Icon';
 
 interface InputProps {
   placeholder: string;
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
   isReturn?: boolean | false;
   value: string;
   originValue?: string; // 재확인 전에 사용자가 넘겨주는 비밀번호, 인증코드
   fontSize?:string;
+  id?:string;
 }
 
 const StyledInputContainer = styled.div<InputProps>`
@@ -69,11 +70,19 @@ const SimpleInput = (props: InputProps) => {
     console.log(newValue)
   }
 
-  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={inputValue} onChange={handleSimpleInputChange} ></StyledInput>;
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} ></StyledInput>;
 };
 
 const ConfirmationCodeInput = (props: InputProps) => {
   const [isReturnMatch, setIsReturnMath] = useState(false);
+  const [inputValue,setInputValue] = useState('')
+
+  const handleSimpleInputChange = (e:any) => {
+    const newValue = e.target.value
+    setInputValue(newValue)
+    console.log(newValue)
+  }
+
   useEffect(() => {
     setIsReturnMath(props.value === props.originValue);
   }, [props.value, props.originValue]);
@@ -92,7 +101,7 @@ const ConfirmationCodeInput = (props: InputProps) => {
 
   return (
     <StyledInputContainer {...props}>
-      <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={props.value}></StyledInput>
+      <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange}></StyledInput>
       <StyledTimer>{formatTime(confirmTime)}</StyledTimer>
 
       {props.isReturn && (
@@ -117,6 +126,13 @@ const ConfirmationCodeInput = (props: InputProps) => {
 
 const PasswordInput = (props: InputProps) => {
   const [isReturnMatch, setIsReturnMath] = useState(false);
+  const [inputValue,setInputValue] = useState('')
+
+  const handleSimpleInputChange = (e:any) => {
+    const newValue = e.target.value
+    setInputValue(newValue)
+    console.log(newValue)
+  }
 
   useEffect(() => {
     setIsReturnMath(props.value === props.originValue);
@@ -126,7 +142,7 @@ const PasswordInput = (props: InputProps) => {
 
   return (
     <StyledInputContainer {...props}>
-      <StyledInput type='password' placeholder={props.placeholder} width={props.width} height={props.height} value={props.value}></StyledInput>
+      <StyledInput type='password' placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange}></StyledInput>
 
       {props.isReturn && (
         <StyledCheckedContainer>

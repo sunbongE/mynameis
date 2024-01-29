@@ -24,6 +24,9 @@ import FailModal from '../../modules/mainModules/FailModal';
 import CustomDropdown from '../../components/dropdown/Dropdown';
 
 import Login from '../auth/Login';
+import SignUp from '../auth/SignUp';
+import EmailAuth from '../auth/EmailAuth';
+import PasswordReset from '../auth/PasswordReset';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -79,6 +82,9 @@ const Main = () => {
       </MainContainer>
       <MainContainer>
         <Login/>
+        {/* <SignUp/> */}
+        <EmailAuth/>
+        
 
 
       </MainContainer>
@@ -99,12 +105,12 @@ const Main = () => {
       <br />
       <br />
 
-      <div>
+      {/* <div>
         <SimpleInput placeholder='아이디' value='' />
         <SimpleInput placeholder='아이디' value='' />
         <ConfirmationCodeInput placeholder='인증번호 확인' value='' />
         <PasswordInput placeholder='비밀번호 확인' isReturn={true} value='123' originValue='123' />
-      </div>
+      </div> */}
     </>
   );
 };

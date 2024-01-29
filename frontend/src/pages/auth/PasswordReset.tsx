@@ -31,18 +31,18 @@ const StyledLoginText = styled.p`
     line-height: normal;
 `
 
-function Login() {
+function PasswordReset() {
 
 
     return (
         <StyledLoginContainer>
-            <h2>로그인</h2>
+            <h2>비밀번호 재설정</h2>
 
             <StyledLoginInputContainer>
                 <SimpleInput placeholder="아이디" value='' />
                 <SimpleInput placeholder="비밀번호" value='' />
                 <StyledLoginText>비밀번호를 잊어버리셨나요?</StyledLoginText>
-                <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF'>로그인</Button>
+                <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF' fontSize='12px' >로그인</Button>
             </StyledLoginInputContainer>
             <StyledLoginText>계정이 없으신가요? 회원가입하러 가기</StyledLoginText>
 
@@ -50,4 +50,4 @@ function Login() {
     )
 }
 
-export default Login
+export default PasswordReset
