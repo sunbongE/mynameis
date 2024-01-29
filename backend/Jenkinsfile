@@ -19,11 +19,6 @@ pipeline {
                 )
             }
         }
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
 //        stage('Move .env File') {
 //            steps {
 //                sh "ls backend/secure-settings"
