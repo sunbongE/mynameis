@@ -14,12 +14,13 @@ import VideoButton from '../../components/videoButton/VideoButton';
 import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
 import { SimpleInput, ConfirmationCodeInput } from '../../components/input/Input';
 
-
-
 import VideoCard from '../../components/videoCard/VideoCard';
 
 import Timer from '../../components/timer/Timer';
 import Clock from '../../components/stopWatch/stopWatch';
+import Button from '../../components/button/Button';
+import MyModal from '../../components/modal/MyModal';
+import FailModal from '../../modules/mainModules/FailModal';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -62,10 +63,25 @@ const Main = () => {
     console.log('회원가입');
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+  const handleModalOpen = () => {
+    setIsOpen(true);
+  };
+
   return (
     <>
       <MainContainer>
         <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
+      </MainContainer>
+      <MainContainer>
+        <Button onButtonClick={handleModalOpen} backgroundColor='#e1a4b4' width='100px' height='40px' borderRadius='10px' fontColor='white'>
+          모달 열기
+        </Button>
+        <MyModal isOpen={isOpen} setIsOpen={setIsOpen}>
+          <>
+            <FailModal isOpen={isOpen} setIsOpen={setIsOpen} />
+          </>
+        </MyModal>
       </MainContainer>
       <MainContainer>
         <CustomRadioButton values={voteValues} version='vote' selected={selectedVote} setSelected={setSelectedVote} width='120px' />
@@ -84,7 +100,6 @@ const Main = () => {
         <SimpleInput placeholder='아이디' />
         <ConfirmationCodeInput placeholder='인증번호 확인' />
       </div>
-
     </>
   );
 };
