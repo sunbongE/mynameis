@@ -5,6 +5,8 @@ import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.RedisService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -16,6 +18,7 @@ public class JwtService {
     private final RedisService redisService;
     private final UserRepository userRepository;
 
+    private final Logger logger =  LoggerFactory.getLogger(this.getClass());
     /**
      *
      * @param principal
@@ -23,9 +26,17 @@ public class JwtService {
      */
 
     public User getUser(Principal principal) {
+       try {
+           logger.info("** getUser 실행.");
+           logger.info("userId : {} ",principal.getName());
         User user = userRepository.findByUserId(principal.getName());
         if(user==null) return null;
         return user;
+
+       }catch (Exception e){
+           logger.info(e.getMessage());
+       }
+       return null;
     }
 
     /**
