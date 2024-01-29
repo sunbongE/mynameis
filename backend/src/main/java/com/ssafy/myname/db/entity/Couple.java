@@ -26,4 +26,7 @@ public class Couple {
 
     @OneToMany(mappedBy = "couple")
     private List<User> users = new ArrayList<>();
+
+    public Couple() {
+    }
 }
