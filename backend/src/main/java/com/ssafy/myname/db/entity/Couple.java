@@ -36,7 +36,7 @@ public class Couple {
     @JoinColumn(name = "user_m")
     private User userM;
 
-    @Column(columnDefinition = "false")
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isMatched;
 
     public Couple() {
