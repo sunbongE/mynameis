@@ -34,6 +34,9 @@ import java.util.Map;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+//    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtProvider jwtProvider;
+    private final AuthServiceImpl authServiceImpl;
     private final JwtService jwtService;
     private final UserService userService;
     private final UserRepository userRepository;
