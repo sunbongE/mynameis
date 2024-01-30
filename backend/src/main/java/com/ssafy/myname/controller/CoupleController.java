@@ -1,19 +1,23 @@
 package com.ssafy.myname.controller;
 
 import com.ssafy.myname.db.entity.Couple;
+import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CoupleRepository;
+import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.dto.request.couple.CoupleAcceptRequest;
+import com.ssafy.myname.service.CoupleService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/couple")
@@ -21,6 +25,8 @@ import java.util.Map;
 public class CoupleController {
 
     private final CoupleRepository coupleRepository;
+    private final UserRepository userRepository;
+    private final CoupleService coupleService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @PostMapping("/create")
     public ResponseEntity<?> createCoupleTBL(){
@@ -40,6 +46,51 @@ public class CoupleController {
         }
     }
 
-//    @PostMapping("/matching")
-//    public ResponseEntity<?> coupleMatching()
+    /**
+     *
+     * @param principal 회원 식별
+     * @param request   coupleId : 커플테이블 식별자, answer : true수락, false: 거절
+     * @return 커플이 성사 여부를 반환합니다.
+     */
+    @PostMapping("/accept")
+    public ResponseEntity<?> coupleAccept(Principal principal,@RequestBody CoupleAcceptRequest request){
+        logger.info("** coupleAccept 호출");
+
+        Long coupleId = request.getCoupleId();
+
+        // 커플 목록이 존재하는지 확인
+        Optional<Couple> opCouple = coupleRepository.findById(coupleId);
+        // 커플 목록에 없으면 한명이라도 거절을 한 상태입니다.
+        if(opCouple.isEmpty()) {
+            Map<String, String> body = new HashMap<>();
+            body.put("msg","커플이 이뤄지지 않음");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body); // 404
+        }
+
+        // 커플 수락한 경우.
+        if(request.getAnswer()){
+            String userId = principal.getName();
+
+            // 회원정보 불러오기
+            User user = userRepository.findByUserId(userId);
+            // 성별에 따라 테이블에 저장하기.
+            Couple couple = opCouple.get();
+            try {
+                ResponseEntity<?> response = coupleService.coupleAccept(user,couple);
+                return response;
+
+            }catch (Exception e){
+                Map<String ,String > body = new HashMap<>();
+                logger.info(e.getMessage());
+                body.put("msg","커플은 한 쌍만 가능합니다.");
+                body.put("error",e.getMessage());
+                return ResponseEntity.badRequest().body(body);
+            }
+
+        }else{ // 커플이 거절된 경우.
+            // 커플아이디로 커플 데이터 삭제.
+            ResponseEntity<?> response = coupleService.deleteCouple(coupleId);
+            return response;
+        }
+    }
 }
