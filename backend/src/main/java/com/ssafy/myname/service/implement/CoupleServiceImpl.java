@@ -68,8 +68,8 @@ public class CoupleServiceImpl implements CoupleService {
         try {
             coupleRepository.deleteById(coupleId);
             Map<String, String> body = new HashMap<>();
-            body.put("msg","커플이 이뤄지지 않음");
-            return ResponseEntity.status(HttpStatus.OK).body(body);
+            body.put("msg","커플 데이터 삭제됨");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(body);
         }catch (Exception e){
             logger.info(e.getMessage());
             Map<String, String> body = new HashMap<>();
@@ -77,5 +77,36 @@ public class CoupleServiceImpl implements CoupleService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
 
+    }
+
+    /**
+     *
+     * @param couple 커플 엔터티
+     * @param sender 이별을 선언한 userId
+     * @return
+     */
+    @Override
+    public ResponseEntity<?> breakCouple(Couple couple, User sender) {
+        // 알림 받는 사람.
+        User receiver = null;
+        if(sender.equals(couple.getUserW())){
+            receiver = couple.getUserM();
+        }else {
+            receiver = couple.getUserW();
+        }
+        sender.setCouple(null);
+        userRepository.save(sender);
+        receiver.setCouple(null);
+        userRepository.save(receiver);
+
+        // 커플 데이터 삭제
+        coupleRepository.delete(couple);
+
+        //=== 알림 상대방에게 발송====
+        // 여기 작성 예정.
+        // ==========
+        Map<String,String> body = new HashMap<>();
+        body.put("msg","헤어졌습니다.");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(body);
     }
 }
