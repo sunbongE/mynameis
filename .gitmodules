@@ -1,3 +1,0 @@
-[submodule "backend/secure-settings"]
-	path = backend/secure-settings
-	url = https://github.com/KPPSC/myname-setting.git
