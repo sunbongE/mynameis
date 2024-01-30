@@ -216,6 +216,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto) {
         try {
 //            String certificationId = dto.getCertificationId();
 //            String phone = dto.getPhone();
