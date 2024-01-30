@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ public class AuthController {
     @Value("${secret-key}")
     private String secretKey;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @PostMapping("/id-check")
     public ResponseEntity<? super IdCheckResponseDto> idCheck(@RequestBody @Valid IdCheckRequestDto requestBody) {
         ResponseEntity<? super IdCheckResponseDto> response = authService.idCheck(requestBody);
@@ -45,11 +49,29 @@ public class AuthController {
         return response;
     }
 
+    @PostMapping("/phone-certification")
+    public ResponseEntity<? super PhoneCertificationResponseDto> phonecerfitication(
+            @RequestBody @Valid PhoneCertificationRequestDto requestBody
+    ) {
+        logger.info("requestBody : {}", requestBody);
+        ResponseEntity<? super PhoneCertificationResponseDto> response =
+                authService.phoneCertification(requestBody);
+        return response;
+    }
+
     @PostMapping("/check-certification")
     public ResponseEntity<? super CheckCertificationResDto> checkCertification(
             @RequestBody @Valid CheckCertificationReqDto requestBody
     ) {
         ResponseEntity<? super CheckCertificationResDto> response = authService.checkCertification(requestBody);
+        return response;
+    }
+
+    @PostMapping("/check-phonecertification")
+    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(
+            @RequestBody @Valid CheckPhoneCertificationReqDto requestBody
+    ) {
+        ResponseEntity<? super CheckPhoneCertificationResDto> response = authService.checkPhoneCertification(requestBody);
         return response;
     }
 

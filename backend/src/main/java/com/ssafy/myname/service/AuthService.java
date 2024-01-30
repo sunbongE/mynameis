@@ -15,6 +15,12 @@ public interface AuthService {
     // 휴대폰 인증
     ResponseEntity<? super CheckCertificationResDto> checkCertification(CheckCertificationReqDto dto);
 
+    // 휴대폰 인증
+    ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto);
+
+    // 휴대폰 인증
+    ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto);
+
     // 회원가입
     ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto);
     // 로그인

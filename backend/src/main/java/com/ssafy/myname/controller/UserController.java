@@ -1,7 +1,7 @@
 package com.ssafy.myname.controller;
 
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.repository.RefreshTokenRepository;
+//import com.ssafy.myname.db.repository.RefreshTokenRepository;
 import com.ssafy.myname.dto.request.auth.RefreshTokenDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.provider.JwtProvider;
@@ -21,7 +21,7 @@ import java.security.Principal;
 @RequestMapping("/redis")
 @RequiredArgsConstructor
 public class UserController {
-    private final RefreshTokenRepository refreshTokenRepository;
+//    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProvider jwtProvider;
     private final AuthServiceImpl authServiceImpl;
     private final JwtService jwtService;
