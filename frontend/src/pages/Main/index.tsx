@@ -12,15 +12,17 @@ import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Chip from '../../components/chip/Chip';
 import VideoButton from '../../components/videoButton/VideoButton';
 import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
-import { SimpleInput, ConfirmationCodeInput } from '../../components/input/Input';
-
-
-
+import { SimpleInput, ConfirmationCodeInput, PasswordInput } from '../../components/input/Input';
 import VideoCard from '../../components/videoCard/VideoCard';
 
 import Timer from '../../components/timer/Timer';
 import Clock from '../../components/stopWatch/stopWatch';
+import Button from '../../components/button/Button';
+import MyModal from '../../components/modal/MyModal';
+import FailModal from '../../modules/mainModules/FailModal';
 
+import CustomDropdown from '../../components/dropdown/Dropdown';
+import ActionButton from '../../components/actionButton/ActionButton';
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
@@ -56,16 +58,39 @@ const Main = () => {
 
   const handleLogout = () => {
     console.log('로그아웃');
+    setMyPageOpen(false);
     setIsLogin(false);
   };
   const handleSignUp = () => {
     console.log('회원가입');
   };
 
+  const [myPageOpen, setMyPageOpen] = useState<boolean>(false);
+
+  const handleMyPage = () => {
+    setMyPageOpen(!myPageOpen);
+  };
+
+  const [faqopen, setFaqOpen] = useState<boolean>(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const handleModalOpen = () => {
+    setIsOpen(true);
+  };
+
+  const tempArray = ['일', '이', '삼', '사', '오'];
   return (
     <>
       <MainContainer>
-        <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
+        <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} />
+      </MainContainer>
+      <MainContainer>
+        <Button onButtonClick={handleModalOpen} backgroundColor='#e1a4b4' width='100px' height='40px' borderRadius='10px' fontColor='white'>
+          모달 열기
+        </Button>
+        <MyModal isOpen={isOpen} setIsOpen={setIsOpen}>
+          <FailModal isOpen={isOpen} setIsOpen={setIsOpen} />
+        </MyModal>
       </MainContainer>
       <MainContainer>
         <CustomRadioButton values={voteValues} version='vote' selected={selectedVote} setSelected={setSelectedVote} width='120px' />
@@ -78,13 +103,17 @@ const Main = () => {
         <HashtagButton backgroundColor='#4F4F4F'>#패러글라이딩</HashtagButton>
         <Chip keyword='수영하기' />
         <VoteCountHeart color='pink' count={2} />
+        <CustomDropdown options={tempArray} />
       </MainContainer>
-
       <div>
-        <SimpleInput placeholder='아이디' />
-        <ConfirmationCodeInput placeholder='인증번호 확인' />
+        <ActionButton faqOpen={faqopen} setFaqOpen={setFaqOpen} />
       </div>
-
+      <div>
+        <SimpleInput placeholder='아이디' value='' />
+        <SimpleInput placeholder='아이디' value='' />
+        <ConfirmationCodeInput placeholder='인증번호 확인' value='' />
+        <PasswordInput placeholder='비밀번호 확인' isReturn={true} value='123' originValue='123' />
+      </div>
     </>
   );
 };

@@ -1,9 +1,12 @@
 package com.ssafy.myname.controller;
 
+import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.dto.request.auth.*;
+import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.AuthService;
+import com.ssafy.myname.service.implement.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -17,10 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -29,16 +31,23 @@ public class AuthController {
 
     private final JwtProvider jwtProvider;
     private final AuthService authService;
+    private final JwtService jwtService;
     @Value("${secret-key}")
     private String secretKey;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     *
+     * @param requestBody :
+     * @return
+     */
     @PostMapping("/id-check")
     public ResponseEntity<? super IdCheckResponseDto> idCheck(@RequestBody @Valid IdCheckRequestDto requestBody) {
         ResponseEntity<? super IdCheckResponseDto> response = authService.idCheck(requestBody);
         return response;
     }
+
 
     @PostMapping("/email-certification")
     public ResponseEntity<? super EmailCertificationResponseDto> emailcertification(
