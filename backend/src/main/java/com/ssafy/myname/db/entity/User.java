@@ -74,10 +74,6 @@ public class User {
     @Column(length = 11, unique = true)
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "couple_id")
-    private Couple couple;
-
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'READY'")
@@ -104,6 +100,10 @@ public class User {
     // 참여정보 데이터들
     @OneToMany(mappedBy = "user")
     private List<JoinInfo> joinInfos = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "couple_id")
+    private Couple couple;
 
     public User() {
     }
