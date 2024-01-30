@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Star } from '../../config/IconName';
 import Icon from '../icon/Icon';
 
@@ -9,8 +9,12 @@ interface ActionButtonProps {
 }
 
 const ActionButtonContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-right: 20px;
 `;
 
 const StyledActionButton = styled.div`
@@ -19,7 +23,6 @@ const StyledActionButton = styled.div`
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  margin: auto;
   background-color: white;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -31,10 +34,18 @@ const StyledActionButton = styled.div`
   }
 `;
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
 const FaqContainer = styled.div`
   position: absolute;
-  top: calc(50vh - 60px);
-  left: calc(50vw - 340px);
+  bottom: 70px;
   background-color: white;
   border-radius: 10px;
   width: 360px;
@@ -44,6 +55,8 @@ const FaqContainer = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 10;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+  animation: ${fadeIn} 0.2s ease-in-out; /* fade-in 애니메이션 적용 */
 `;
 
 const FaqHeader = styled.div`
