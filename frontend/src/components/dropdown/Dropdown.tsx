@@ -19,9 +19,11 @@ const StyledDropdown = styled(Dropdown)<DropdownProps>`
     height: 50px;
     display: flex;
     align-items: center;
+    border : 1px solid #eaeaea;
   }
 
   .menu {
+    border : 1px solid #eaeaea;
     margin-top: 3px;
     border-radius: 10px;
     max-height: 150px; /* 조절 가능한 최대 높이 */

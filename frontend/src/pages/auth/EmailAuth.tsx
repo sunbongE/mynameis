@@ -15,7 +15,7 @@ const StyledEmailContainer = styled.div`
   gap: 40px;
 `;
 
-const StyledSignUpInputContainer = styled.div`
+const StyledEmailInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -44,7 +44,7 @@ function EmailAuth() {
     <StyledEmailContainer>
       <h2>이메일 인증</h2>
 
-      <StyledSignUpInputContainer>
+      <StyledEmailInputContainer>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='ID'>아이디</StyleLabel>
           <SimpleInput placeholder='아이디 입력' id='ID' value='' />
@@ -58,7 +58,7 @@ function EmailAuth() {
           </div>
         </div>
         <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF'>비밀번호 찾기</Button>
-      </StyledSignUpInputContainer>
+      </StyledEmailInputContainer>
     </StyledEmailContainer>
   );
 }

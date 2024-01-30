@@ -10,15 +10,16 @@ interface RadioButtonProps extends RadioButtonStyleProps {
 interface RadioButtonStyleProps {
   version?: string;
   width?: string;
+  id?: string;
 }
 
 const RadioInputBox = styled.div<RadioButtonStyleProps>`
   border: 1px solid #d9d9d9;
   border-radius: 10px;
   background-color: white;
-  width: ${(props) => (props.version === 'gender' ? '220px' : props.width)};
+  width: ${(props) => (props.version === 'gender' ? '145px' : props.width)};
   height: ${(props) => (props.version === 'gender' ? '66px' : '80px')};
-  margin: 0px 10px;
+  margin-right: 10px;
 `;
 
 const RadioInput = styled.input<RadioButtonStyleProps>`
@@ -38,7 +39,7 @@ const RadioInputLabel = styled.label<RadioButtonStyleProps>`
   cursor: pointer;
   color: ${(props) => (props.version === 'gender' ? '#B0A9A9' : 'black')};
   font-size: ${(props) => (props.version === 'gender' ? '15px' : '37px')};
-  width: ${(props) => (props.version === 'gender' ? '220px' : props.width)};
+  width: ${(props) => (props.version === 'gender' ? '145px' : props.width)};
   height: ${(props) => (props.version === 'gender' ? '66px' : '80px')};
   border-radius: 10px;
   display: flex;

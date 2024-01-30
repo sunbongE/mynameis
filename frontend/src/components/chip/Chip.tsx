@@ -16,6 +16,7 @@ const StyledChipContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 4px;
+
 `;
 
 const StyledText = styled.p`
@@ -23,7 +24,6 @@ const StyledText = styled.p`
   font-size: 12px;
   color: #fff;
   font-family: 'Pretendard Regular';
-  width: 100%;
   margin-right: 3px;
 `;
 const StyledDeleteBtn = styled.div`
@@ -37,7 +37,7 @@ const Chip = (props: ChipProps) => {
     <StyledChipContainer>
       <StyledText>{props.keyword}</StyledText>
 
-      <Icon src={DelBtn} />
+      <Icon src={DelBtn} width='15px'/>
     </StyledChipContainer>
   );
 };

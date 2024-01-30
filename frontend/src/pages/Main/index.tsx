@@ -81,9 +81,10 @@ const Main = () => {
         <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
       </MainContainer>
       <MainContainer>
-        <Login/>
-        {/* <SignUp/> */}
-        <EmailAuth/>
+        {/* <Login/> */}
+        <SignUp/>
+        {/* <EmailAuth/> */}
+        <PasswordReset/>
         
 
 

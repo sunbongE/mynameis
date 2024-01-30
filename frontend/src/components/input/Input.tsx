@@ -26,7 +26,7 @@ const StyledInput = styled.input<InputProps>`
   background: #fff;
   box-shadow: 0px 10px 40px 0px rgba(174, 174, 174, 0.2);
   height: ${(props) => (props.height ? props.height : `50px`)};
-  font-size: ${(props) => (props.width ? props.width : `12px`)};
+  font-size: ${(props) => (props.fontSize ? props.fontSize : `12px`)};
   padding: 10px;
   width: ${(props) => (props.width ? props.width : `300px`)};
 
