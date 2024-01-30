@@ -42,7 +42,7 @@ pipeline {
                     sh "ls -al"
                     component.each { entry ->
                         if (entry.value) {
-                            sh "docker compose -p myname build ${entry.key.toLowerCase()}"
+                            sh "docker compose -p myname build --no-cache ${entry.key.toLowerCase()}"
                         }
                     }
                 }
