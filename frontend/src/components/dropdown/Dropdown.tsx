@@ -6,6 +6,7 @@ import styled from 'styled-components';
 interface DropdownProps {
   width?: string;
   options: Array<string>;
+  onSelected?: (value: string) => void;
 }
 
 const StyledDropdownContainer = styled.div`
@@ -50,6 +51,9 @@ const CustomDropdown = (props: DropdownProps) => {
 
   const handleSelectChange = (selectedOption: any) => {
     setSelectedValue(selectedOption.value);
+    if (props.onSelected) {
+      props.onSelected(selectedValue);
+    }
   };
 
   useEffect(() => {

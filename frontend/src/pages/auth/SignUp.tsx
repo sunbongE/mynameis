@@ -47,7 +47,13 @@ const StyleLabel = styled.label`
 function SignUp() {
   const navigate = useNavigate();
   const [passwordConfirm, setPasswordConfirm] = useState('');
-
+  const [emailDropdown, setEmailDropdown] = useState('')
+  const [areaDropdown, setAreaDropdown] = useState('')
+  const [birthDropdown, setBirthDropdown] = useState('')
+  const [yearDropdown, setYearDropdown] = useState('')
+  const [monthDropdown, setMonthDropdown] = useState('')
+  const [dayDropdown, setDayDropdown] = useState('')
+  const [religionDropdown, setReligionDropdown] = useState('')
   const [registrationData, setRegistrationData] = useState({
     userId: '',
     password: '',
@@ -55,11 +61,42 @@ function SignUp() {
     name: '',
     gender: '',
     birth: '',
+    phone: '',
     area: '',
     job: '',
     tag: [],
     religion: '',
   });
+  
+  const [selectedGender, setSelectedGender] = useState('');
+  const genderValues = [
+    { id: 0, name: 'gender', value: '남성' },
+    { id: 1, name: 'gender', value: '여성' },
+  ];
+
+  const administrativeDistrict = ['서울특별시', '인천광역시', '대전광역시', '대구광역시', '울산광역시', '부산광역시', '광주광역시', '세종특별자치시', '경기도', '강원도', '충청남도', '충청북도', '전라북도', '전라남도', '경상북도', '경상남도']
+
+  const BirthData = (start: number, end: number): Array<string> => {
+    const result: Array<string> = [];
+    for (let i = start; i <= end; i++) {
+      result.push(`${i}`);
+    }
+    return result;
+  };
+  const birthYearOptions = BirthData(1950, 2005);
+  const birthMonthOptions = BirthData(1, 12);
+  const birthDayOptions = BirthData(1, 31);
+
+
+
+  const handleDropdownChange = (selectedOption:string) => {
+    setEmailDropdown(selectedOption)
+    setYearDropdown(selectedOption)
+    setMonthDropdown(selectedOption)
+    setDayDropdown(selectedOption)
+    setAreaDropdown(selectedOption)
+    setReligionDropdown(selectedOption)
+  }
 
   const handleUserIdChange = (value: string) => {
     setRegistrationData((prevData) => ({ ...prevData, userId: value }));
@@ -71,17 +108,45 @@ function SignUp() {
   };
 
   const handlePasswordConfirmChange = (value: string) => {
-    
-    setPasswordConfirm((prevData) => (prevData))
-    console.log('비밀번호 확인 : ',passwordConfirm)
-    
+    setPasswordConfirm(value)
+    console.log('비밀번호 확인 : ', passwordConfirm)
   };
 
-  const [selectedGender, setSelectedGender] = useState('');
-  const genderValues = [
-    { id: 0, name: 'gender', value: '남성' },
-    { id: 1, name: 'gender', value: '여성' },
-  ];
+  const handleEmailChange = (value: string) => {
+    const emailName = value
+    console.log(`${emailName}@${emailDropdown}`)
+    setRegistrationData((prevData) => ({ ...prevData, email: `${emailName}@${emailDropdown}` }));
+  };
+
+  const handleNameChange = (value: string) => {
+    setRegistrationData((prevData) => ({ ...prevData, name: value }));
+    console.log(registrationData.phone)
+  };
+  
+
+  const handleBirthChange = (value: string) => {
+    console.log(`${yearDropdown}${monthDropdown}${dayDropdown}`)
+    setRegistrationData((prevData) => ({ ...prevData, birth: `${yearDropdown}${monthDropdown}${dayDropdown}` }));
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setRegistrationData((prevData) => ({ ...prevData, phone: value }));
+  }
+
+  const handleAreaChange = (value: string) => {
+    setRegistrationData((prevData) => ({ ...prevData, area: value }));
+  }
+
+  const handleJobChange = (value: string) => {
+    setRegistrationData((prevData) => ({ ...prevData, job: value }));
+  }
+
+  const handleReligionChange = (value: string) => {
+    setRegistrationData((prevData) => ({ ...prevData, religion: value }));
+  }
+
+
+
 
   const handleSignUp = async () => {
     try {
@@ -112,14 +177,14 @@ function SignUp() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='email'>이메일</StyleLabel>
           <div style={{ display: 'flex' }}>
-            <SimpleInput placeholder='이메일 계정' id='email' value='' width='165px' />
+            <SimpleInput placeholder='이메일 계정' id='email' value={registrationData.email} onInputChange={handleEmailChange} width='165px' />
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px' }}>@</div>
-            <CustomDropdown options={['gmail.com', 'naver.com', 'daum.net']} width='103px' />
+            <CustomDropdown options={['gmail.com', 'naver.com', 'hanmail.net','kakao.com']} width='103px' onSelected={handleDropdownChange} />
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <StyleLabel htmlFor='username'>이름</StyleLabel>
-          <SimpleInput placeholder='이름 입력' id='username' value='' />
+          <SimpleInput placeholder='이름 입력' id='username' value={registrationData.name} onInputChange={handleNameChange} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <StyleLabel htmlFor='gender'>성별</StyleLabel>
@@ -128,17 +193,17 @@ function SignUp() {
           </div>
         </div>
         <div>
-          <StyleLabel htmlFor='username'>생년월일</StyleLabel>
+          <StyleLabel htmlFor='birth'>생년월일</StyleLabel>
           <div style={{ display: 'flex', gap: '8px' }}>
-            <CustomDropdown options={['1999', '2000', '2001']} width='94px' />
-            <CustomDropdown options={['08', '09', '10']} width='94px' />
-            <CustomDropdown options={['1', '2', '3', '4']} width='94px' />
+            <CustomDropdown options={birthYearOptions} width='94px' onSelected={handleDropdownChange} />
+            <CustomDropdown options={birthMonthOptions} width='94px' onSelected={handleDropdownChange} />
+            <CustomDropdown options={birthDayOptions} width='94px' onSelected={handleDropdownChange} />
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <StyleLabel htmlFor='phoneAuth'>휴대폰 인증</StyleLabel>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <SimpleInput placeholder='전화번호를 입력하세요' id='phoneAuth' value='' width='220px' />
+            <SimpleInput placeholder='전화번호를 입력하세요' id='phoneAuth' value={registrationData.phone} onInputChange={handlePhoneChange} width='220px' />
             <Button width='70px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' fontSize='12px'>
               다시 요청
             </Button>
@@ -146,12 +211,12 @@ function SignUp() {
           <ConfirmationCodeInput placeholder='인증번호' value={''} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <StyleLabel htmlFor='region'>지역</StyleLabel>
-          <CustomDropdown options={['광주광역시', '서울턱별시', '전주갓갓갓']} width='300px' />
+          <StyleLabel htmlFor='area'>지역</StyleLabel>
+          <CustomDropdown options={administrativeDistrict} width='300px' onSelected={handleDropdownChange} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='job'>직업</StyleLabel>
-          <SimpleInput placeholder='직업을 입력하세요' id='job' value='' />
+          <SimpleInput placeholder='직업을 입력하세요' id='job' value={registrationData.job} onInputChange={handleJobChange}/>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='hashtag'>MBTI/흥미/특기</StyleLabel>
@@ -160,7 +225,7 @@ function SignUp() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='religion'>종교</StyleLabel>
-          <CustomDropdown options={['기독교', '천주교', '불교']} width='300px' />
+          <CustomDropdown options={['무교', '기독교', '천주교', '불교']} width='300px' onSelected={handleDropdownChange} />
         </div>
         <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={handleSignUp}>
           입력 완료
