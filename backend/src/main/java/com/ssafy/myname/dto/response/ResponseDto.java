@@ -25,12 +25,4 @@ public class ResponseDto {
         ResponseDto responseBody = new ResponseDto(ResponseCode.VALIDATION_FAIL,ResponseMessage.VALIDATION_FAIL);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
     }
-    public static ResponseEntity<ResponseDto> expiration(){
-        ResponseDto responseBody = new ResponseDto(ResponseCode.EXPIRATION_FAIL,ResponseMessage.EXPIRATION_FAIL);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
-    }
-    public static ResponseEntity<ResponseDto> ok(){
-        ResponseDto responseBody = new ResponseDto(ResponseCode.SUCCESS,ResponseMessage.SUCCESS);
-        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-    }
 }
