@@ -46,7 +46,7 @@ const StyleLabel = styled.label`
 
 function SignUp() {
   const navigate = useNavigate();
-
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const [registrationData, setRegistrationData] = useState({
     userId: '',
@@ -61,19 +61,21 @@ function SignUp() {
     religion: '',
   });
 
-  const handleUserIdChange = (value:string) => {
-    setRegistrationData((prevData) => ({...prevData, userId: value}))
-  }
+  const handleUserIdChange = (value: string) => {
+    setRegistrationData((prevData) => ({ ...prevData, userId: value }));
+  };
 
   const handlePasswordChange = (value: string) => {
     setRegistrationData((prevData) => ({ ...prevData, password: value }));
+    console.log('비밀번호 입력 : ', registrationData.password )
   };
 
-  const [passwordConfirm, setPasswordConfirm] = useState('')
   const handlePasswordConfirmChange = (value: string) => {
     
-  }
-
+    setPasswordConfirm((prevData) => (prevData))
+    console.log('비밀번호 확인 : ',passwordConfirm)
+    
+  };
 
   const [selectedGender, setSelectedGender] = useState('');
   const genderValues = [
@@ -99,13 +101,13 @@ function SignUp() {
       <h2>회원가입</h2>
       <StyledSignUpInputContainer>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <StyleLabel htmlFor='ID'>아이디</StyleLabel>
-          <SimpleInput placeholder='아이디 입력' id='ID' onInputChange={handleUserIdChange} />
+          <StyleLabel htmlFor='Id'>아이디</StyleLabel>
+          <SimpleInput placeholder='아이디 입력' id='Id' value={registrationData.userId} onInputChange={handleUserIdChange} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <StyleLabel htmlFor='password'>비밀번호</StyleLabel>
-          <SimpleInput placeholder='비밀번호 입력' id='password' onInputChange={() => (handlePasswordChange(value))} />
-          <PasswordInput placeholder='비밀번호 확인' onInputChange={handlePasswordConfirmChange} isReturn={true} originValue={registrationData.password} />
+          <SimpleInput placeholder='비밀번호 입력' id='password' value={registrationData.password} onInputChange={handlePasswordChange} />
+          <PasswordInput placeholder='비밀번호 확인' value={passwordConfirm} onInputChange={handlePasswordConfirmChange} isReturn={true} originValue={registrationData.password} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='email'>이메일</StyleLabel>

@@ -76,10 +76,10 @@ const SimpleInput = (props: InputProps) => {
 };
 
 const ConfirmationCodeInput = (props: InputProps) => {
-  const [isReturnMatch, setIsReturnMath] = useState(false);
+  const [isReturnMatch, setIsReturnMatch] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const handleSimpleInputChange = (e: any) => {
+  const handleConfirmInputChange = (e: any) => {
     const newValue = e.target.value;
     setInputValue(newValue);
     if (props.onInputChange) {
@@ -88,7 +88,7 @@ const ConfirmationCodeInput = (props: InputProps) => {
   };
 
   useEffect(() => {
-    setIsReturnMath(props.value === props.originValue);
+    setIsReturnMatch(props.value === props.originValue);
   }, [props.value, props.originValue]);
 
   const [confirmTime, setConfirmTime] = useState(180); // default 3분
@@ -105,7 +105,7 @@ const ConfirmationCodeInput = (props: InputProps) => {
 
   return (
     <StyledInputContainer {...props}>
-      <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange}></StyledInput>
+      <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleConfirmInputChange}></StyledInput>
       <StyledTimer>{formatTime(confirmTime)}</StyledTimer>
 
       {props.isReturn && (
@@ -129,10 +129,10 @@ const ConfirmationCodeInput = (props: InputProps) => {
 };
 
 const PasswordInput = (props: InputProps) => {
-  const [isReturnMatch, setIsReturnMath] = useState(false);
+  const [isReturnMatch, setIsReturnMatch] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const handleSimpleInputChange = (e: any) => {
+  const handlePasswordInputChange = (e: any) => {
     const newValue = e.target.value;
     setInputValue(newValue);
     if (props.onInputChange) {
@@ -141,14 +141,14 @@ const PasswordInput = (props: InputProps) => {
   };
 
   useEffect(() => {
-    setIsReturnMath(props.value === props.originValue);
+    setIsReturnMatch(props.value === props.originValue);
   }, [props.value, props.originValue]);
 
   // 비밀번호 유효성 검사 추가
 
   return (
     <StyledInputContainer {...props}>
-      <StyledInput type='password' placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange}></StyledInput>
+      <StyledInput type='password' placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handlePasswordInputChange}></StyledInput>
 
       {props.isReturn && (
         <StyledCheckedContainer>
