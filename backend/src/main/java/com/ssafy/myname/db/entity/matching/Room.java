@@ -25,7 +25,13 @@ public class Room { // 매칭방
 
     @NotNull
     @ColumnDefault("0")
-    private int cnt;
+    @Column(name = "w_cnt")
+    private int Wcnt;
+
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "m_cnt")
+    private int Mcnt;
 
     @CreationTimestamp // insert할때 현재시각 입력. 자동으로..
     @Column(name = "start_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
