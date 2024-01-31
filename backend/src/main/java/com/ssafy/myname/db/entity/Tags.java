@@ -1,13 +1,10 @@
 package com.ssafy.myname.db.entity;
 
 
-import com.ssafy.myname.dto.request.auth.TagDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -28,13 +25,4 @@ public class Tags {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    public Tags() {
-    }
-
-    public Tags(User user, String tag) {
-        this.user = user;
-        this.tagName = tag;
-    }
-
 }

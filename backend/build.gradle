@@ -26,7 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -34,7 +34,6 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api',version:'0.11.2'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl',version:'0.11.2'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson',version:'0.11.2'
-	implementation 'org.json:json:20230618'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -43,19 +42,9 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'jakarta.mail:jakarta.mail-api:1.6.7' // 최신 버전 사용 가능한지 확인하세요
-	implementation 'net.nurigo:sdk:4.2.7'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-tasks.register('copyApplication', Copy) {
-	from 'secure-settings'
-	include "*.properties"
-	into 'src/main/resources'
-}
-
-processResources {
-	dependsOn 'copyApplication'
 }
