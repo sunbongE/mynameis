@@ -4,12 +4,12 @@ import Icon from '../icon/Icon';
 import Logo from '../icon/Logo';
 import { EtcDots, Vector, MicOn, MicOff, RoomOut, VideoOn, VideoOff } from '../../config/IconName';
 
-
 const StyleVideoButtonContainer = styled.div`
-  display: inline-flex;
-  justify-content: center;
+  margin-top: 10px;
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 39px;
 `;
 
 const StylevideoButtonItem = styled.div`
@@ -27,41 +27,34 @@ function VideoButton() {
   const [isVideoRunning, setIsVideoRunning] = useState(false);
 
   const handleMicToggle = () => {
-    setIsMicRunning((prev) => (!prev))
-  }
+    setIsMicRunning((prev) => !prev);
+  };
 
   const handleVideoToggle = () => {
-    setIsVideoRunning((prev) => (!prev))
-  }
-
+    setIsVideoRunning((prev) => !prev);
+  };
 
   return (
     <StyleVideoButtonContainer>
-      <br />
-      <StylevideoButtonItem style={{background:'#2E3038'}} >
-        <div onClick={handleMicToggle}>
-          {isMicRunning ? <Icon src={MicOn} /> : <Icon src={MicOff} />}
-        </div>
+      <StylevideoButtonItem style={{ background: '#2E3038' }}>
+        <div onClick={handleMicToggle}>{isMicRunning ? <Icon src={MicOn} /> : <Icon src={MicOff} />}</div>
         <Icon src={Vector} />
         <Icon src={EtcDots} />
       </StylevideoButtonItem>
 
-      <StylevideoButtonItem style={{background:'#2E3038'}} >
-        <div onClick={handleVideoToggle}>
-          {isVideoRunning ? <Icon src={VideoOn} /> : <Icon src={VideoOff} />}
-        </div>
+      <StylevideoButtonItem style={{ background: '#2E3038' }}>
+        <div onClick={handleVideoToggle}>{isVideoRunning ? <Icon src={VideoOn} /> : <Icon src={VideoOff} />}</div>
         <Icon src={Vector} />
         <Icon src={EtcDots} />
       </StylevideoButtonItem>
 
-      <StylevideoButtonItem style={{background:'#FF4155'}} >
+      <StylevideoButtonItem style={{ background: '#FF4155' }}>
         <Icon src={RoomOut} />
         <Icon src={Vector} />
         <Icon src={EtcDots} />
       </StylevideoButtonItem>
-
     </StyleVideoButtonContainer>
   );
 }
 
-export default VideoButton
+export default VideoButton;
