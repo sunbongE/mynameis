@@ -71,11 +71,20 @@ const Main = () => {
 
   const handleLogout = () => {
     console.log('로그아웃');
+    setMyPageOpen(false);
     setIsLogin(false);
   };
   const handleSignUp = () => {
     console.log('회원가입');
   };
+
+  const [myPageOpen, setMyPageOpen] = useState<boolean>(false);
+
+  const handleMyPage = () => {
+    setMyPageOpen(!myPageOpen);
+  };
+
+  const [faqopen, setFaqOpen] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleModalOpen = () => {
@@ -86,16 +95,14 @@ const Main = () => {
   return (
     <>
       <MainContainer>
-        <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
+        <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} />
       </MainContainer>
       <MainContainer>
         <Button onButtonClick={handleModalOpen} backgroundColor='#e1a4b4' width='100px' height='40px' borderRadius='10px' fontColor='white'>
           모달 열기
         </Button>
         <MyModal isOpen={isOpen} setIsOpen={setIsOpen}>
-          <>
-            <FailModal isOpen={isOpen} setIsOpen={setIsOpen} />
-          </>
+          <FailModal isOpen={isOpen} setIsOpen={setIsOpen} />
         </MyModal>
       </MainContainer>
       <MainContainer>

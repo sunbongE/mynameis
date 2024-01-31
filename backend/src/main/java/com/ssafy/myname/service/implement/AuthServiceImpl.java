@@ -2,17 +2,16 @@ package com.ssafy.myname.service.implement;
 
 import com.ssafy.myname.commons.CertificationNumber;
 import com.ssafy.myname.db.entity.Certification;
+import com.ssafy.myname.db.entity.PhoneCertification;
 import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.repository.CertificationRepository;
-import com.ssafy.myname.db.repository.RefreshTokenRepository;
-import com.ssafy.myname.db.repository.TagRepository;
-import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.db.repository.*;
 import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.provider.JwtProvider;
+import com.ssafy.myname.provider.PhoneProvider;
 import com.ssafy.myname.service.AuthService;
 import com.ssafy.myname.service.RedisService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -36,7 +35,9 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final CertificationRepository certificationRepository;
+    private final PhoneCertificationRepository phoneCertificationRepository;
     private final EmailProvider emailProvider;
+    private final PhoneProvider phoneProvider;
     private final JwtProvider jwtProvider;
 //    private final RefreshTokenRepository refreshTokenRepository;
     private final RedisService redisService;
@@ -124,7 +125,9 @@ public class AuthServiceImpl implements AuthService {
             // 이메일 중복확인
             String email = dto.getEmail();
             if(isExistUserEmail(email)) return SignUpResDto.duplicateEmail();//이미 있는 email인경우.
-
+            // 전화번호 중복확인
+            String phone = dto.getPhone();
+            if(isExistUserPhone(phone)) return SignUpResDto.duplicatePhone();//이미 있는 phone인경우.
             // 비밀번호 암호화.
             String password = dto.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
@@ -191,6 +194,47 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+    @Override // 휴대폰 번호로 인증번호 발급해준다
+    public ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto) {
+        try {
+            String phoneId = dto.getPhoneId();
+
+            boolean isExistId = userRepository.existsByPhone(phoneId); //<==============
+            if(isExistId) return PhoneCertificationResponseDto.duplicateId();
+
+            String certificationNumber = CertificationNumber.getCertificationNumber();
+            boolean isSuccess = phoneProvider.sendCertificationPhone(phoneId, certificationNumber);
+            if(!isSuccess) return PhoneCertificationResponseDto.mailSendFail();
+
+            PhoneCertification phonecertification = new PhoneCertification(phoneId, certificationNumber);
+            phoneCertificationRepository.save(phonecertification);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return PhoneCertificationResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto) {
+        try {
+//            String certificationId = dto.getCertificationId();
+//            String phone = dto.getPhone();
+            String phoneId = dto.getPhoneId();
+            String certificationNumber = dto.getCertificationNumber();
+
+            PhoneCertification phoneCertification = phoneCertificationRepository.findByPhoneId(phoneId);
+            if (phoneCertification == null) return CheckPhoneCertificationResDto.fail();
+
+            if (!isPhoneMatched(phoneCertification, phoneId, certificationNumber)) {
+                return SignUpResDto.fail();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return CheckPhoneCertificationResDto.success();
+    }
 
     // 회원 아이디가 존재하는지 확인
     private  boolean isExistUserId(String userId){
@@ -200,9 +244,17 @@ public class AuthServiceImpl implements AuthService {
     private boolean isExistUserEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+    // 회원 전화번호가 존재하는지 확인
+    private boolean isExistUserPhone(String phone) {
+        return userRepository.existsByPhone(phone);
+    }
     private boolean isMatched(Certification certification,String email, String CertificationNumber){
         return certification.getEmail().equals(email) &&
                 certification.getCertificationNumber().equals(CertificationNumber);
     }
 
+    private boolean isPhoneMatched(PhoneCertification phoneCertification, String phone, String certificationNumber) {
+        return phoneCertification.getPhoneId().equals(phone) &&
+                phoneCertification.getCertificationNumber().equals(certificationNumber);
+    }
 }
