@@ -1,15 +1,13 @@
-import {selector} from "recoil";
-import { textState } from "../atoms/textState";
+import { selector } from 'recoil';
+// import { textState } from "../atoms/textState";
 
-const textCountState = selector({
-    key : 'textCountState',
-    get : ({get}) => {
-        const text = get(textState);
-        return text.length;
-    }
-})
-
-
+// const textCountState = selector({
+//     key : 'textCountState',
+//     get : ({get}) => {
+//         const text = get(textState);
+//         return text.length;
+//     }
+// })
 
 /*
 atom으로 분리한 상태를 변화시킴.
