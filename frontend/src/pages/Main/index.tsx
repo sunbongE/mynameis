@@ -22,13 +22,26 @@ import MyModal from '../../components/modal/MyModal';
 import FailModal from '../../modules/mainModules/FailModal';
 
 import CustomDropdown from '../../components/dropdown/Dropdown';
+
+// chat
 import Message from '../../components/chat/Message';
+import ReceiverMessage from '../../components/chat/ReceiverMessage';
+import SenderMessage from '../../components/chat/SenderMessage';
+import MessageDate from '../../components/chat/MessageDate';
+import SenderMessageForm from '../../components/chat/SendMessageForm';
+import ChatHeader from '../../components/header/ChatHeader';
+import MessageList from '../../components/chat/MessageList';
+
 const MainContainer = styled.div`
   width: 100%;
   height: 200px;
   display: flex;
   justify-content: center;
-  background-color: #f2eeea;
+  background-color: #000000;
+`;
+
+const ChatContainer = styled.div`
+  background-color: #000;
 `;
 
 const Main = () => {
@@ -99,8 +112,16 @@ const Main = () => {
         <CustomDropdown options={tempArray} />
       </MainContainer>
 
-      <Message role='sender' msg='떡볶이요?' />
-      <Message role='receiver' msg='좋아해요' />
+      <ChatContainer>
+        <ChatHeader />
+        <MessageList />
+        {/* <Message role='sender' msg='떡볶이요?' />
+        <Message role='receiver' msg='좋아해요' />
+        <ReceiverMessage msg='안녕' time='10:35' />
+        <SenderMessage msg='안녕안녕안녕안녕안녕안녕' time='10:36' />
+        <MessageDate date='2024.01.31' /> */}
+        <SenderMessageForm />
+      </ChatContainer>
 
       <div>
         <SimpleInput placeholder='아이디' value='' />

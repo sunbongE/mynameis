@@ -6,19 +6,21 @@ interface MessageProps {
   msg: string;
 }
 const StyledMsgContainer = styled.div<MessageProps>`
-  width: 80px;
-  height: 45px;
+  min-width: 50px;
+  max-width: fit-content;
+  height: 35px;
   border-radius: 10px;
   background-color: ${(props) => (props.role === 'sender' ? '#e8b8c5' : '#F1F3F6')};
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0 10px;
 `;
 
 const StyledMsg = styled.p<MessageProps>`
   color: ${(props) => (props.role === 'sender' ? '#fff' : '#111')};
   font-family: 'Pretendard Regular';
-  font-size: 14px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   letter-spacing: 0.4px;
