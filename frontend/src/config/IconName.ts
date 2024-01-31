@@ -23,3 +23,7 @@ export const Triangle: string = 'icons/triangle.svg';
 export const Crown: string = 'icons/crown.svg';
 export const Check_green: string = '/icons/check_green.svg';
 export const Check_red: string = '/icons/check_red.svg';
+export const SendMsg: string = '/icons/send.svg';
+export const Out: string = '/icons/out.svg';
+export const Blink: string = '/icons/blink.svg';
+export const Video: string = '/icons/video.svg';
