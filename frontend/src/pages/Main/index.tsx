@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Header from '../../components/Header/Header';
 
 const MainContainer = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
-  /* align-items: center; */
   background-color: #f2eeea;
 `;
 interface Review {
@@ -48,16 +46,7 @@ const Main = () => {
   const handleSignUp = () => {
     console.log('회원가입');
   };
-  return (
-    <MainContainer>
-      <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
-      {/* <div>
-        <VoteCountHeart color='pink' count={1} />
-        <VoteCountHeart color='purple' count={1} />
-      </div>
-      <ReviewCard color='pink' review={reviews[0]} /> */}
-    </MainContainer>
-  );
+  return <MainContainer></MainContainer>;
 };
 
 export default Main;
