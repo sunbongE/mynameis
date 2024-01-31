@@ -17,4 +17,5 @@ public class EmailCertificationRequestDto {
     @Email
     @NotBlank
     private String email;
+    //인증번호 입력
 }

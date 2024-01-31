@@ -4,7 +4,9 @@ public interface ResponseCode {
 
     String SUCCESS = "SU";
     String VALIDATION_FAIL = "VF";
+    String EXPIRATION_FAIL = "EF";
     String DUPLICATE_ID = "DI";
+    String DUPLICATE_EMAIL = "DE";
 
     String SING_IN_FAIL ="SF";
 
@@ -12,5 +14,5 @@ public interface ResponseCode {
 
     String MAIL_FAIL ="MF";
     String DATABASE_ERROR = "DBE";
-
+    String DUPLICATE_PHONE = "DP";
 }
