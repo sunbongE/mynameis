@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import { formatTime } from '../../utils/numberUtil';
 import { Check_green, Check_red } from '../../config/IconName';
@@ -12,6 +12,8 @@ interface InputProps {
   value: string;
   originValue?: string; // 재확인 전에 사용자가 넘겨주는 비밀번호, 인증코드
   fontsize?: string;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onEnterPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const StyledInputContainer = styled.div<InputProps>`
@@ -60,7 +62,13 @@ const StyledCheckText = styled.p<{ isMatch: boolean }>`
 `;
 
 const SimpleInput = (props: InputProps) => {
-  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={props.value} fontsize={props.fontsize}></StyledInput>;
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (props.onEnterPress && event.key === 'Enter') {
+      props.onEnterPress(event);
+    }
+  };
+
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} value={props.value} fontsize={props.fontsize} onChange={props.onChange} onKeyPress={handleKeyPress}></StyledInput>;
 };
 
 const ConfirmationCodeInput = (props: InputProps) => {

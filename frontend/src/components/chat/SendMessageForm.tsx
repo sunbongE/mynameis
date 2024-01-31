@@ -1,3 +1,4 @@
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import { SimpleInput } from '../input/Input';
 import Button from '../button/Button';
@@ -16,10 +17,27 @@ const StyledMsgFormContainer = styled.div`
 `;
 
 const SenderMessageForm = () => {
+  const [message, setMessage] = useState('');
+
+  const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
+  };
+
+  const handleSendMessage = () => {
+    console.log('메세지 전송할게요', message);
+  };
+
+  const handleEnterPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setMessage(''); // Clear the input value
+      handleSendMessage();
+    }
+  };
+
   return (
     <StyledMsgFormContainer>
-      <SimpleInput placeholder='메세지를 입력하세요' value='' height='40px' fontsize='12px' />
-      <Button backgroundColor='#E1A4B4' width='50px' height='40px' borderRadius='10px' children={<Icon src={SendMsg} width='100%' />} />
+      <SimpleInput placeholder='메세지를 입력하세요' value={message} height='40px' fontsize='12px' onChange={handleMessageChange} onEnterPress={handleEnterPress} />
+      <Button backgroundColor='#E1A4B4' width='45px' height='40px' borderRadius='10px' children={<Icon src={SendMsg} />} onButtonClick={handleSendMessage} />
     </StyledMsgFormContainer>
   );
 };

@@ -18,8 +18,8 @@ const StyledIconContainer = styled.div<IconProps>`
 `;
 
 const StyledIcon = styled.img`
-  width: '100%';
-  height: '100%';
+  width: ${(props) => props.width || '25px'};
+  height: ${(props) => props.height || '25px'};
 `;
 
 const StyledChildrenContainer = styled.div`
