@@ -4,10 +4,11 @@ import MeetingRoom from '../../modules/roomModules/MeetingRoom';
 
 const Room = () => {
   const [state, setState] = useState('loading');
+
   return (
     <>
       {state === 'loading' && <Loading state={state} setState={setState} />}
-      {state === 'ready' && <MeetingRoom />}
+      {state === 'ready' && <MeetingRoom state={state} setState={setState} />}
     </>
   );
 };

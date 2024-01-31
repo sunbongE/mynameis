@@ -4,22 +4,27 @@ import Icon from '../icon/Icon';
 import Logo from '../icon/Logo';
 import { EtcDots, Vector, MicOn, MicOff, RoomOut, VideoOn, VideoOff } from '../../config/IconName';
 
-const StyleVideoButtonContainer = styled.div`
+const StyleVideoButtonContainer = styled.div<ButtonItemProps>`
   margin-top: 10px;
-  width: 400px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const StylevideoButtonItem = styled.div`
+  width: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 87px;
-  height: 48px;
-  border-radius: var(--Radius-1, 8px);
-  gap: 5px;
+  gap: 15px;
+`;
+
+interface ButtonItemProps {
+  backgroundColor?: string;
+  gap?: string;
+}
+
+const StylevideoButtonItem = styled.div<ButtonItemProps>`
+  background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : '#2E3038')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  padding: 10px 20px;
 `;
 
 function VideoButton() {
@@ -36,22 +41,16 @@ function VideoButton() {
 
   return (
     <StyleVideoButtonContainer>
-      <StylevideoButtonItem style={{ background: '#2E3038' }}>
-        <div onClick={handleMicToggle}>{isMicRunning ? <Icon src={MicOn} /> : <Icon src={MicOff} />}</div>
-        <Icon src={Vector} />
-        <Icon src={EtcDots} />
+      <StylevideoButtonItem>
+        <div onClick={handleMicToggle}>{isMicRunning ? <Icon src={MicOn} width='20px' height='20px' /> : <Icon src={MicOff} width='20px' height='20px' />}</div>
       </StylevideoButtonItem>
 
-      <StylevideoButtonItem style={{ background: '#2E3038' }}>
-        <div onClick={handleVideoToggle}>{isVideoRunning ? <Icon src={VideoOn} /> : <Icon src={VideoOff} />}</div>
-        <Icon src={Vector} />
-        <Icon src={EtcDots} />
+      <StylevideoButtonItem>
+        <div onClick={handleVideoToggle}>{isVideoRunning ? <Icon src={VideoOn} width='20px' height='20px' /> : <Icon src={VideoOff} width='20px' height='20px' />}</div>
       </StylevideoButtonItem>
 
-      <StylevideoButtonItem style={{ background: '#FF4155' }}>
-        <Icon src={RoomOut} />
-        <Icon src={Vector} />
-        <Icon src={EtcDots} />
+      <StylevideoButtonItem backgroundColor='#FF4155'>
+        <Icon src={RoomOut} width='20px' height='20px' />
       </StylevideoButtonItem>
     </StyleVideoButtonContainer>
   );

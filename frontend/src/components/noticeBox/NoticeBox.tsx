@@ -14,14 +14,14 @@ const NoticeBoxContainer = styled.div`
 
 const StyledText = styled.p`
   font-family: 'Pretendard SemiBold';
-  font-size: 20px;
+  font-size: 16px;
   margin-left: 8px;
 `;
 
 const NoticeBox = (props: NoticeBoxProps) => {
   return (
     <NoticeBoxContainer>
-      <Icon src={Notice} />
+      <Icon src={Notice} width='24px' height='24px' />
       <StyledText>{props.noticeText}</StyledText>
     </NoticeBoxContainer>
   );

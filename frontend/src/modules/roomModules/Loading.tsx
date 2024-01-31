@@ -54,7 +54,7 @@ const StyledText = styled.p<TextStyleProps>`
 `;
 
 const Loading = (props: LoadingProps) => {
-  let [seconds, setSeconds] = useState<number>(5);
+  let [seconds, setSeconds] = useState<number>(1);
   useEffect(() => {
     const timerId = setInterval(() => {
       setSeconds((prevSeconds) => {

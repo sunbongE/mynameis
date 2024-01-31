@@ -1,24 +1,23 @@
-
-
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface VideoCardProps {
-  width:string;
-  height:string;
+  width: string;
+  height: string;
+  children?: React.ReactNode;
 }
-
 
 const StyledVideoCard = styled.div<VideoCardProps>`
   width: ${(props) => (props.width ? props.width : '700px')};
   height: ${(props) => (props.height ? props.height : '350px')};
   border-radius: 20px;
-  background: url(<path-to-image>), lightgray 0px -92.722px / 100% 197.778% no-repeat;
+  background:
+    url(<path-to-image>),
+    lightgray 0px -92.722px / 100% 197.778% no-repeat;
 
   & focus-within {
-    border: 3px solid #3AFF42;
+    border: 3px solid #3aff42;
   }
-`
-
+`;
 
 /**
  * VideoCard 컴포넌트
@@ -29,14 +28,12 @@ const StyledVideoCard = styled.div<VideoCardProps>`
  * @param props
  * @returns
  */
-function VideoCard (props:VideoCardProps) {
-
+function VideoCard(props: VideoCardProps) {
   return (
     <StyledVideoCard width={props.width} height={props.height}>
-
+      {props.children}
     </StyledVideoCard>
-  )
-
+  );
 }
 
-export default VideoCard
+export default VideoCard;
