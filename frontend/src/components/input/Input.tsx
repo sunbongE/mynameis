@@ -11,8 +11,9 @@ interface InputProps {
   isReturn?: boolean | false;
   value: string;
   originValue?: string; // 재확인 전에 사용자가 넘겨주는 비밀번호, 인증코드
-  fontSize?:string;
-  id?:string;
+  fontSize?: string;
+  id?: string;
+  onInputChange?: (value: string) => void;
 }
 
 const StyledInputContainer = styled.div<InputProps>`
@@ -61,27 +62,30 @@ const StyledCheckText = styled.p<{ isMatch: boolean }>`
 `;
 
 const SimpleInput = (props: InputProps) => {
-  
-  const [inputValue,setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState('');
 
-  const handleSimpleInputChange = (e:any) => {
-    const newValue = e.target.value
-    setInputValue(newValue)
-    console.log(newValue)
-  }
+  const handleSimpleInputChange = (e: any) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    if (props.onInputChange) {
+      props.onInputChange(newValue);
+    }
+  };
 
-  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} ></StyledInput>;
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange}></StyledInput>;
 };
 
 const ConfirmationCodeInput = (props: InputProps) => {
   const [isReturnMatch, setIsReturnMath] = useState(false);
-  const [inputValue,setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState('');
 
-  const handleSimpleInputChange = (e:any) => {
-    const newValue = e.target.value
-    setInputValue(newValue)
-    console.log(newValue)
-  }
+  const handleSimpleInputChange = (e: any) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    if (props.onInputChange) {
+      props.onInputChange(newValue);
+    }
+  };
 
   useEffect(() => {
     setIsReturnMath(props.value === props.originValue);
@@ -126,13 +130,15 @@ const ConfirmationCodeInput = (props: InputProps) => {
 
 const PasswordInput = (props: InputProps) => {
   const [isReturnMatch, setIsReturnMath] = useState(false);
-  const [inputValue,setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState('');
 
-  const handleSimpleInputChange = (e:any) => {
-    const newValue = e.target.value
-    setInputValue(newValue)
-    console.log(newValue)
-  }
+  const handleSimpleInputChange = (e: any) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    if (props.onInputChange) {
+      props.onInputChange(newValue);
+    }
+  };
 
   useEffect(() => {
     setIsReturnMath(props.value === props.originValue);

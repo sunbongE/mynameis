@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Icon from '../icon/Icon';
 import { TimerIcon } from '../../config/IconName';
 
@@ -17,7 +17,7 @@ const StyledTimer = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-`
+`;
 
 function Timer() {
   const [min, setMin] = useState(0);
@@ -43,13 +43,13 @@ function Timer() {
 
   return (
     <StyledTimer>
-      <Icon src={TimerIcon}/>
-      {padNumber(min,2)}:{padNumber(sec,2)}
+      <Icon src={TimerIcon} />
+      {padNumber(min, 2)}:{padNumber(sec, 2)}
     </StyledTimer>
   );
 }
 
-function padNumber(number:any, width:any) {
+function padNumber(number: any, width: any) {
   return String(number).padStart(width, '0');
 }
 
