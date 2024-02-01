@@ -24,3 +24,4 @@ export const Crown: string = 'icons/crown.svg';
 export const Check_green: string = '/icons/check_green.svg';
 export const Check_red: string = '/icons/check_red.svg';
 export const Report: string = './icons/report.svg';
+export const ReportRed: string = './icons/reportRed.svg';

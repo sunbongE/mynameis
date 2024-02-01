@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Icon from '../../components/icon/Icon';
 import { Star } from '../../config/IconName';
 import VideoCard from '../../components/videoCard/VideoCard';
-import Button from '../../components/button/Button';
 import VideoButton from '../../components/videoButton/VideoButton';
 import MyModal from '../../components/modal/MyModal';
 import ExitModal from './ExitModal';
@@ -22,7 +21,7 @@ const Loading = (props: LoadingProps) => {
       setSeconds((prevSeconds) => {
         if (prevSeconds <= 0) {
           clearInterval(timerId);
-          props.setState('ready');
+          props.setState('step123');
         }
         return prevSeconds - 1;
       });

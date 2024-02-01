@@ -17,21 +17,24 @@ const Timer = (props: TimerProps) => {
   const repeat4TimesTimer = (initialTime: number, currentTime: number) => {
     let i = 0;
     const intervalId = setInterval(() => {
-      currentTime -= 1; // 시간 감소 시키기
+      // currentTime -= 1; // 시간 감소 시키기
       setMin(Math.floor(currentTime / 60));
       setSec(currentTime % 60);
 
       if (currentTime === 0 && i < 3) {
         i += 1;
         currentTime = initialTime;
+        console.log(i);
       } else if (currentTime === 0 && i === 3) {
         if (props.state === 'step1') {
           // 1단계인 경우
           props.setState('step12'); // 2단계로 변경
-        } else if (props.state === 'step123') {
+        }
+        if (props.state === 'step123') {
           // 3단계인 경우
           props.setState('step123_vote'); // 이름 공개 투표 시작
-        } else if (props.state === 'step1234') {
+        }
+        if (props.state === 'step1234') {
           // 4단계인 경우
           props.setState('step12345'); // 5단계로 변경
         }
@@ -46,7 +49,7 @@ const Timer = (props: TimerProps) => {
   const repeat3TimesTimer = (initialTime: number, currentTime: number) => {
     let i = 0;
     const intervalId = setInterval(() => {
-      currentTime -= 1; // 시간 감소 시키기
+      // currentTime -= 1; // 시간 감소 시키기
       setMin(Math.floor(currentTime / 60));
       setSec(currentTime % 60);
 
@@ -64,7 +67,7 @@ const Timer = (props: TimerProps) => {
 
   const singleTimer = (initialTime: number, currentTime: number) => {
     const intervalId = setInterval(() => {
-      currentTime -= 1; // 시간 감소 시키기
+      // currentTime -= 1; // 시간 감소 시키기
       setMin(Math.floor(currentTime / 60));
       setSec(currentTime % 60);
 
@@ -88,6 +91,9 @@ const Timer = (props: TimerProps) => {
   useEffect(() => {
     const initialTime = props.time; // 초기에 주어진 시간
     let currentTime = initialTime; // 줄어들 시간
+    setMin(Math.floor(currentTime / 60));
+    setSec(currentTime % 60);
+
     if (props.repeatCount === 4) {
       repeat4TimesTimer(initialTime, currentTime);
     } else if (props.repeatCount === 3) {

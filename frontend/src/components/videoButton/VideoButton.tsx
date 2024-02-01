@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import Icon from '../icon/Icon';
-import Logo from '../icon/Logo';
 import { EtcDots, Vector, MicOn, MicOff, RoomOut, VideoOn, VideoOff } from '../../config/IconName';
 
 interface VideoButtonProps {

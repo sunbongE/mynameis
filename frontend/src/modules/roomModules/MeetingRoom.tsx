@@ -11,6 +11,8 @@ import { calcAge } from '../../utils/numberUtil';
 import MyModal from '../../components/modal/MyModal';
 import VoteModal from './VoteModal';
 import ExitModal from './ExitModal';
+import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
+import ReportModal from './ReportModal';
 
 interface MeetingRoomProps {
   state: string;
@@ -23,11 +25,8 @@ const MeetingRoom = (props: MeetingRoomProps) => {
   const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
-  const [reportModalOpen, setReportModalOpen] = useState(false);
-  const [voteModalOpen, setVoteModalOpen] = useState(false);
 
   useEffect(() => {
-    console.log(props.state);
     if (props.state === 'step12') {
       setNotice('공개된 정보인 [키워드]를 통해 10분동안 자유롭게 대화를 나눠보세요.');
       setTime(2);
@@ -66,12 +65,18 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     { userId: 'ssafy4', gender: true, nickName: '상철', area: '경기', birth: '19990520', tags: ['INFP', '수영', '넷플릭스보기'], job: '의사' },
   ];
 
+  // 투표 관련 파트
   const voteValues = userInfos.filter((user) => user.gender !== myInfo.gender).map((user) => ({ id: user.userId, name: 'gender', value: user.nickName }));
   const [selectedValue, setSelectedValue] = useState<string>('');
+  const [voteModalOpen, setVoteModalOpen] = useState(false);
 
-  const reportMember = (userId: string) => {
+  // 신고 관련 파트
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [reportUser, setReportUser] = useState(''); // 신고할 회원
+  const handleReport = (userId: string) => {
     // TODO: 회원 신고 로직 작성
-    console.log(userId);
+    setReportUser(userId);
+    setReportModalOpen(true);
   };
 
   return (
@@ -88,10 +93,15 @@ const MeetingRoom = (props: MeetingRoomProps) => {
           <VideoCard width={'40vw'} height={'37vh'}>
             <InfoContainer>
               <HashtagContainer justifyContent='space-between'>
-                <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#E1A4B4'}>{userInfo.nickName}</HashtagButton>
-                <ClickBox onClick={() => reportMember(userInfo.userId)}>
-                  <Icon src={Report} width='24px' height='24px' />
-                </ClickBox>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#E1A4B4'}>{userInfo.nickName}</HashtagButton>
+                  {props.state.includes('step123') && myInfo.userId === userInfo.userId && <VoteCountHeart color={userInfo.gender ? 'purple' : 'pink'} count={1} />}
+                </div>
+                {userInfo.userId !== myInfo.userId && (
+                  <ClickBox onClick={() => handleReport(userInfo.userId)}>
+                    <Icon src={Report} width='24px' height='24px' />
+                  </ClickBox>
+                )}
               </HashtagContainer>
               <HashtagWrapper>
                 {props.state.includes('step1') && (
@@ -156,6 +166,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       </MyModal>
       <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
         <ExitModal exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+      </MyModal>
+      <MyModal isOpen={reportModalOpen} setIsOpen={setReportModalOpen}>
+        <ReportModal userId={reportUser} reportModalOpen={reportModalOpen} setReportModalOpen={setReportModalOpen} />
       </MyModal>
     </MeetingRoomContainer>
   );

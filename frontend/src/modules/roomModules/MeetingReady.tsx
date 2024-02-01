@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import NoticeBox from '../../components/noticeBox/NoticeBox';
-import Icon from '../../components/icon/Icon';
-import { TimerIcon } from '../../config/IconName';
 import Timer from '../../components/timer/Timer';
 import VideoButton from '../../components/videoButton/VideoButton';
 import VideoCard from '../../components/videoCard/VideoCard';
