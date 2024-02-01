@@ -2,9 +2,10 @@ package com.ssafy.myname.provider;
 
 import com.ssafy.myname.db.entity.MatchStatus;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.entity.matching.JoinInfo;
-import com.ssafy.myname.db.entity.matching.Room;
-import com.ssafy.myname.db.entity.matching.RoomType;
+
+import com.ssafy.myname.db.entity.meeting.JoinInfo;
+import com.ssafy.myname.db.entity.meeting.Room;
+import com.ssafy.myname.db.entity.meeting.RoomType;
 import com.ssafy.myname.db.repository.JoinInfoRepository;
 import com.ssafy.myname.db.repository.RoomRepository;
 import com.ssafy.myname.db.repository.UserRepository;
