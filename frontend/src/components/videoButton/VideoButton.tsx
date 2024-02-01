@@ -4,6 +4,11 @@ import Icon from '../icon/Icon';
 import Logo from '../icon/Logo';
 import { EtcDots, Vector, MicOn, MicOff, RoomOut, VideoOn, VideoOff } from '../../config/IconName';
 
+interface VideoButtonProps {
+  exitModalOpen: boolean;
+  setExitModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const StyleVideoButtonContainer = styled.div<ButtonItemProps>`
   margin-top: 10px;
   width: 300px;
@@ -27,7 +32,7 @@ const StylevideoButtonItem = styled.div<ButtonItemProps>`
   padding: 10px 20px;
 `;
 
-function VideoButton() {
+const VideoButton = (props: VideoButtonProps) => {
   const [isMicRunning, setIsMicRunning] = useState(false);
   const [isVideoRunning, setIsVideoRunning] = useState(false);
 
@@ -49,11 +54,16 @@ function VideoButton() {
         <div onClick={handleVideoToggle}>{isVideoRunning ? <Icon src={VideoOn} width='20px' height='20px' /> : <Icon src={VideoOff} width='20px' height='20px' />}</div>
       </StylevideoButtonItem>
 
-      <StylevideoButtonItem backgroundColor='#FF4155'>
+      <StylevideoButtonItem
+        backgroundColor='#FF4155'
+        onClick={() => {
+          props.setExitModalOpen(true);
+        }}
+      >
         <Icon src={RoomOut} width='20px' height='20px' />
       </StylevideoButtonItem>
     </StyleVideoButtonContainer>
   );
-}
+};
 
 export default VideoButton;

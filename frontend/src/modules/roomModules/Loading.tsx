@@ -5,12 +5,62 @@ import { Star } from '../../config/IconName';
 import VideoCard from '../../components/videoCard/VideoCard';
 import Button from '../../components/button/Button';
 import VideoButton from '../../components/videoButton/VideoButton';
+import MyModal from '../../components/modal/MyModal';
+import ExitModal from './ExitModal';
 
 interface LoadingProps {
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const Loading = (props: LoadingProps) => {
+  const [seconds, setSeconds] = useState<number>(1);
+  const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setSeconds((prevSeconds) => {
+        if (prevSeconds <= 0) {
+          clearInterval(timerId);
+          props.setState('ready');
+        }
+        return prevSeconds - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, []);
+  return (
+    <LoadingContainer>
+      <LoadingHeader>
+        <Icon src={Star} width='16px' height='16px' />
+        <StyledText fontSize='28px' margin='20px'>
+          저의 이름은
+        </StyledText>
+        <StyledText fontSize='18px'>당신의 이름은 "영호" 입니다.</StyledText>
+      </LoadingHeader>
+      <VideoContainer>
+        {/* **********여기에 openvidu 화면 추가해야함******** */}
+        <VideoCard width={'600px'} height={'300px'} />
+      </VideoContainer>
+      <StyledText fontSize='18px' margin='0 0 10px 0'>
+        좋은 시간 보낼 준비 되셨나요?
+      </StyledText>
+      <StyledText fontSize='18px'>이제 곧 미팅이 시작되니, 단계에 따라 미팅을 진행해주세요 :)</StyledText>
+      <ButtonContainer>
+        <StyledText fontSize='18px'>{seconds}초 후에 시작됩니다</StyledText>
+      </ButtonContainer>
+      <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+      <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
+        <ExitModal exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+      </MyModal>
+    </LoadingContainer>
+  );
+};
+
+//////////////////////////
+//////styled component ///
+//////////////////////////
 const LoadingContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -52,45 +102,5 @@ const StyledText = styled.p<TextStyleProps>`
   font-size: ${(props) => (props.fontSize ? props.fontSize : '20px')};
   margin: ${(props) => props.margin};
 `;
-
-const Loading = (props: LoadingProps) => {
-  let [seconds, setSeconds] = useState<number>(1);
-  useEffect(() => {
-    const timerId = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds <= 0) {
-          clearInterval(timerId);
-          props.setState('step1');
-        }
-        return prevSeconds - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timerId);
-  }, []);
-  return (
-    <LoadingContainer>
-      <LoadingHeader>
-        <Icon src={Star} width='16px' height='16px' />
-        <StyledText fontSize='28px' margin='20px'>
-          저의 이름은
-        </StyledText>
-        <StyledText fontSize='18px'>당신의 이름은 "영호" 입니다.</StyledText>
-      </LoadingHeader>
-      <VideoContainer>
-        {/* **********여기에 openvidu 화면 추가해야함******** */}
-        <VideoCard width={'600px'} height={'300px'} />
-      </VideoContainer>
-      <StyledText fontSize='18px' margin='0 0 10px 0'>
-        좋은 시간 보낼 준비 되셨나요?
-      </StyledText>
-      <StyledText fontSize='18px'>이제 곧 미팅이 시작되니, 단계에 따라 미팅을 진행해주세요 :)</StyledText>
-      <ButtonContainer>
-        <StyledText fontSize='18px'>{seconds}초 후에 시작됩니다</StyledText>
-      </ButtonContainer>
-      <VideoButton />
-    </LoadingContainer>
-  );
-};
 
 export default Loading;

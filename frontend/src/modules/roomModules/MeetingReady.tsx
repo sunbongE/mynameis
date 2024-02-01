@@ -7,6 +7,8 @@ import Timer from '../../components/timer/Timer';
 import VideoButton from '../../components/videoButton/VideoButton';
 import VideoCard from '../../components/videoCard/VideoCard';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
+import MyModal from '../../components/modal/MyModal';
+import ExitModal from './ExitModal';
 
 interface MeetingReadyProps {
   state: string;
@@ -46,7 +48,9 @@ const HashtagContainer = styled.div`
 
 const MeetingReady = (props: MeetingReadyProps) => {
   const [time, setTime] = useState(15);
-  // recoil에서 가져오는 사용자 정보
+  const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
+
+  // recoil에서 가져올 사용자 정보
   const userInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'] };
 
   return (
@@ -63,8 +67,11 @@ const MeetingReady = (props: MeetingReadyProps) => {
         </VideoCard>
       </VideoContainer>
       <VideoButtonContainer>
-        <VideoButton />
+        <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </VideoButtonContainer>
+      <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
+        <ExitModal exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+      </MyModal>
     </StyledContainer>
   );
 };

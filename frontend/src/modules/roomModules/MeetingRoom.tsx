@@ -10,6 +10,7 @@ import { Report } from '../../config/IconName';
 import { calcAge } from '../../utils/numberUtil';
 import MyModal from '../../components/modal/MyModal';
 import VoteModal from './VoteModal';
+import ExitModal from './ExitModal';
 
 interface MeetingRoomProps {
   state: string;
@@ -24,8 +25,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
   const [exitModalOpen, setExitModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [voteModalOpen, setVoteModalOpen] = useState(false);
-  const [namedModalOpen, setNamedModalOpen] = useState(false);
-  const [finalModalOpen, setFinalModalOpen] = useState(false);
 
   useEffect(() => {
     console.log(props.state);
@@ -141,7 +140,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         ))}
       </VideoContainer>
       <VideoButtonContainer>
-        <VideoButton />
+        <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </VideoButtonContainer>
       <MyModal isOpen={voteModalOpen} setIsOpen={setVoteModalOpen}>
         <VoteModal
@@ -154,6 +153,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
           selectedValue={selectedValue}
           setSelectedValue={setSelectedValue}
         />
+      </MyModal>
+      <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
+        <ExitModal exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </MyModal>
     </MeetingRoomContainer>
   );
