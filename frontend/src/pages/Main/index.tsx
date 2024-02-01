@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
@@ -49,9 +49,30 @@ const Main = () => {
     setIsOpen(true);
   };
 
+  const [scrolling, setScrolling] = useState(false);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     setScrolling(window.scrollY > 0 ? true : false);
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
+
   return (
     <MainContainer>
-      <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} />
+      <Header
+        isLogin={isLogin}
+        setIsLogin={setIsLogin}
+        onClickLogin={handleLogin}
+        onClickLogout={handleLogout}
+        onClickSignUp={handleSignUp}
+        onClickMyPage={handleMyPage}
+        isMyPageOpen={myPageOpen}
+        showHeader={scrolling}
+      />
       <MainSection />
       <Footer />
     </MainContainer>
