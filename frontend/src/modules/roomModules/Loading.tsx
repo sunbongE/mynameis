@@ -21,7 +21,7 @@ const Loading = (props: LoadingProps) => {
       setSeconds((prevSeconds) => {
         if (prevSeconds <= 0) {
           clearInterval(timerId);
-          props.setState('step123');
+          props.setState('step1');
         }
         return prevSeconds - 1;
       });

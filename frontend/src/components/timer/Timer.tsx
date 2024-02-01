@@ -14,94 +14,63 @@ const Timer = (props: TimerProps) => {
   const [min, setMin] = useState<number>(Math.floor(props.time / 60));
   const [sec, setSec] = useState<number>(props.time % 60);
 
-  const repeat4TimesTimer = (initialTime: number, currentTime: number) => {
+  const setState = () => {
+    if (props.state === 'step1') {
+      props.setState('step12');
+    } else if (props.state === 'step12') {
+      props.setState('step12_vote');
+    } else if (props.state === 'step12_vote') {
+      props.setState('step123');
+    } else if (props.state === 'step123') {
+      props.setState('step123_vote');
+    } else if (props.state === 'step123_vote') {
+      props.setState('ready');
+    } else if (props.state === 'ready') {
+      props.setState('step1234');
+    } else if (props.state === 'step1234') {
+      props.setState('step12345');
+    } else if (props.state === 'step12345') {
+      props.setState('');
+    }
+  };
+
+  const repeatTimer = (initialTime: number, repeatCount: number) => {
     let i = 0;
+    let currentTime = initialTime;
+
     const intervalId = setInterval(() => {
-      // currentTime -= 1; // 시간 감소 시키기
+      currentTime -= 1;
       setMin(Math.floor(currentTime / 60));
       setSec(currentTime % 60);
 
-      if (currentTime === 0 && i < 3) {
+      if (currentTime === 0 && i < repeatCount - 1) {
         i += 1;
-        currentTime = initialTime;
-        console.log(i);
-      } else if (currentTime === 0 && i === 3) {
-        if (props.state === 'step1') {
-          // 1단계인 경우
-          props.setState('step12'); // 2단계로 변경
-        }
-        if (props.state === 'step123') {
-          // 3단계인 경우
-          props.setState('step123_vote'); // 이름 공개 투표 시작
-        }
-        if (props.state === 'step1234') {
-          // 4단계인 경우
-          props.setState('step12345'); // 5단계로 변경
-        }
-
+        currentTime = initialTime + 1;
+        // console.log(i + 1);
+      } else if (currentTime === 0 && i === repeatCount - 1) {
         clearInterval(intervalId);
+        setState();
       }
     }, 1000);
 
     return () => clearInterval(intervalId);
-  };
-
-  const repeat3TimesTimer = (initialTime: number, currentTime: number) => {
-    let i = 0;
-    const intervalId = setInterval(() => {
-      // currentTime -= 1; // 시간 감소 시키기
-      setMin(Math.floor(currentTime / 60));
-      setSec(currentTime % 60);
-
-      if (currentTime === 0 && i < 2) {
-        i += 1;
-        currentTime = initialTime;
-      } else if (currentTime === 0 && i === 2) {
-        props.setState('step12345_vote');
-        clearInterval(intervalId);
-      }
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  };
-
-  const singleTimer = (initialTime: number, currentTime: number) => {
-    const intervalId = setInterval(() => {
-      // currentTime -= 1; // 시간 감소 시키기
-      setMin(Math.floor(currentTime / 60));
-      setSec(currentTime % 60);
-
-      if (currentTime === 0) {
-        if (props.state === 'step12') {
-          props.setState('step12_vote'); // 익명 투표 시작
-        } else if (props.state === 'step12_vote') {
-          props.setState('step123'); // 3단계로 이동
-        } else if (props.state === 'step123_vote') {
-          props.setState('ready'); // 준비화면으로 이동
-        } else if (props.state === 'ready') {
-          props.setState('step1234');
-        } else if (props.state === 'step12345_vote') {
-          props.setState(''); // 최종 투표 끝나면.. 어디로?
-        }
-        clearInterval(intervalId);
-      }
-    }, 1000);
   };
 
   useEffect(() => {
-    const initialTime = props.time; // 초기에 주어진 시간
-    let currentTime = initialTime; // 줄어들 시간
+    const initialTime = props.time;
+    let currentTime = initialTime;
+
     setMin(Math.floor(currentTime / 60));
     setSec(currentTime % 60);
 
     if (props.repeatCount === 4) {
-      repeat4TimesTimer(initialTime, currentTime);
+      repeatTimer(initialTime, 4);
     } else if (props.repeatCount === 3) {
-      repeat3TimesTimer(initialTime, currentTime);
+      repeatTimer(initialTime, 3);
     } else {
-      singleTimer(initialTime, currentTime);
+      repeatTimer(initialTime, 1);
     }
-  }, [props.time]);
+  }, [props.time, props.repeatCount]);
 
   return (
     <StyledTimer>
