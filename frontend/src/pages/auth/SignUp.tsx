@@ -6,7 +6,7 @@ import Button from '../../components/button/Button';
 import CustomDropdown from '../../components/dropdown/Dropdown';
 import { CustomRadioButton } from '../../components/button/RadioButton';
 import Chip from '../../components/chip/Chip';
-import { userPhoneCertification, userSignUp } from '../../apis/services/user/user';
+import { userPhoneAuthentication, userPhoneNumberSubmit, userSignUp } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 
 const StyledSignUpContainer = styled.div`
@@ -52,8 +52,11 @@ function SignUp() {
   const [areaDropdown, setAreaDropdown] = useState('');
   const [birthDropdown, setBirthDropdown] = useState('');
   const [yearDropdown, setYearDropdown] = useState('');
-  const [monthDropdown, setMonthDropdown] = useState('');
-  const [dayDropdown, setDayDropdown] = useState('');
+  const [monthDropdown, setMonthDropdown] = useState('1');
+  const [dayDropdown, setDayDropdown] = useState('1');
+  const [submitPhoneNumber, setsubmitPhoneNumber] = useState('');
+  const [isPhoneAuth, setIsPhoneAuth] = useState(false);
+  const [phoneAuthNumber, setphoneAuthNumber] = useState('');
   const [tagItem, setTagItem] = useState('');
   const [religionDropdown, setReligionDropdown] = useState('');
   const [registrationData, setRegistrationData] = useState({
@@ -161,7 +164,6 @@ function SignUp() {
 
   const handleNameChange = (value: string) => {
     setRegistrationData((prevData) => ({ ...prevData, name: value }));
-    console.log(registrationData.phone);
   };
 
   const handleGenderChange = (value: string) => {
@@ -179,7 +181,11 @@ function SignUp() {
   }, [yearDropdown, monthDropdown, dayDropdown]);
 
   const handlePhoneChange = (value: string) => {
-    setRegistrationData((prevData) => ({ ...prevData, phone: value }));
+    setsubmitPhoneNumber(value);
+  };
+
+  const handlePhoneAuthChange = (value: string) => {
+    setphoneAuthNumber(value);
   };
 
   const handleAreaChange = (value: string, type: string) => {
@@ -215,28 +221,45 @@ function SignUp() {
     try {
       const booleanGender = selectedGender === '남성' ? true : false;
       const { gender, tag, ...restData } = registrationData;
-      
+
       const response = await userSignUp({ gender: booleanGender, tags: registrationData.tag, ...restData });
       console.log(registrationData);
       console.log('회원가입 성공:', response);
+      alert('회원가입 되었습니다. 메인페이지로 이동합니다.');
       navigate('/'); // 메인 페이지 이동
     } catch (error) {
       console.log(registrationData);
       console.log('회원가입 실패:', error);
+      alert('정보를 입력 안한 부분이 있는지 확인해보세요!');
       // 회원가입 실패 후 처리 : 에러 메시지 표시, 로그인 페이지 이동 등
     }
   };
 
-  const handlePhoneCertification = async () => {
+  const handleBeforePhoneAuth = async () => {
     try {
-        const response = await userPhoneCertification({phoneId:registrationData.phone})
-        console.log(registrationData.phone)
-        console.log('휴대폰 인증 성공', response)
+      const response = await userPhoneNumberSubmit({ phoneId: submitPhoneNumber });
+      console.log('휴대폰 인증 전송', response, submitPhoneNumber);
+      alert('휴대폰 번호를 전송했습니다.');
     } catch (error) {
-        console.log(registrationData.phone)
-        console.log('휴대폰 인증 실패', error)
+      console.log('휴대폰 인증 전송 안됨', error, submitPhoneNumber);
+      alert('휴대폰 인증 전송이 안됐습니다.');
     }
-  }
+  };
+
+  const handleAfterPhoneAuth = async () => {
+    try {
+      const response = await userPhoneAuthentication({ phoneId: submitPhoneNumber, certificationNumber: phoneAuthNumber });
+      setIsPhoneAuth(true);
+      if (isPhoneAuth) {
+        setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
+      }
+      console.log('휴대폰 인증 성공', response, submitPhoneNumber);
+      alert('휴대폰 인증에 성공했습니다.');
+    } catch (error) {
+      console.log('휴대폰 인증 실패', error, submitPhoneNumber);
+      alert('휴대폰 인증에 실패했습니다.');
+    }
+  };
 
   return (
     <StyledSignUpContainer>
@@ -281,11 +304,11 @@ function SignUp() {
           <StyleLabel htmlFor='phoneAuth'>휴대폰 인증</StyleLabel>
           <div style={{ display: 'flex', gap: '10px' }}>
             <SimpleInput placeholder='전화번호를 입력하세요' id='phoneAuth' value={registrationData.phone} onInputChange={handlePhoneChange} width='220px' />
-            <Button width='70px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' fontSize='12px' onButtonClick={handlePhoneCertification}>
+            <Button width='70px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' fontSize='12px' onButtonClick={handleBeforePhoneAuth}>
               다시 요청
             </Button>
           </div>
-          <ConfirmationCodeInput placeholder='인증번호' value={''} />
+          <ConfirmationCodeInput placeholder='인증번호' value={''} onInputChange={handlePhoneAuthChange} onEnterKeyUp={handleAfterPhoneAuth} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='area'>지역</StyleLabel>
@@ -308,7 +331,7 @@ function SignUp() {
           <StyleLabel htmlFor='religion'>종교</StyleLabel>
           <CustomDropdown options={['종교를 선택하세요', '무교', '기독교', '천주교', '불교']} width='300px' onSelected={(value) => handleReligionChange(value, 'religion')} />
         </div>
-        <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={handleSignUp}>
+        <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={isPhoneAuth ? handleSignUp : undefined} disabled={!isPhoneAuth}>
           입력 완료
         </Button>
       </StyledSignUpInputContainer>

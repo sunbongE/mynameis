@@ -13,11 +13,16 @@ export const userSignUp = async (params : {userId: string; password: string; ema
   return response.data;
 };
 
-export const userPhoneCertification = async (params : {phoneId: string;}) => {
+export const userPhoneNumberSubmit = async (params : {phoneId: string;}) => {
   const response = await instance.post(`${authUrl}/phone-certification`, params);
   return response.data;
 }
 
+
+export const userPhoneAuthentication = async (params : {phoneId: string; certificationNumber:string;}) => {
+  const response = await instance.post(`${authUrl}/check-phonecertification`, params);
+  return response.data;
+}
 
 
 const userUrl = 'api/v1/users';
