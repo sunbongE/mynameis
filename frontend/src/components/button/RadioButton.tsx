@@ -11,6 +11,8 @@ interface RadioButtonStyleProps {
   version?: string;
   width?: string;
   id?: string;
+  key?: string;
+  onSelected?: (value: string) => void;
 }
 
 const RadioInputBox = styled.div<RadioButtonStyleProps>`
@@ -63,7 +65,18 @@ export const CustomRadioButton = (props: RadioButtonProps) => {
   return (
     <>
       {props.values.map((value) => (
-        <RadioInputBox key={value.value} onClick={() => props.setSelected(value.value)} version={props.version} width={props.width}>
+        <RadioInputBox
+          key={value.value}
+          onClick={() => {
+            props.setSelected(value.value);
+            if (props.onSelected) {
+              props.onSelected(value.value);
+            }
+          }}
+          version={props.version}
+          width={props.width}
+          onSelected={value.value}
+        >
           <RadioInput version={props.version} type='radio' id={value.value} name={value.name} value={value.value} checked={props.selected === value.value} onChange={() => props.setSelected(value.value)} />
           <RadioInputLabel version={props.version} htmlFor={value.name} width={props.width}>
             {value.value}

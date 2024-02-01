@@ -14,6 +14,7 @@ interface InputProps {
   fontSize?: string;
   id?: string;
   onInputChange?: (value: string) => void;
+  onEnterKeyUp?: (value: string) => void;
 }
 
 const StyledInputContainer = styled.div<InputProps>`
@@ -72,7 +73,18 @@ const SimpleInput = (props: InputProps) => {
     }
   };
 
-  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange}></StyledInput>;
+  const handleEnterKeyPress = (e: any) => {
+    if (e.key === 'Enter' && inputValue.trim() !== '') {
+      // 엔터 키를 눌렀고, 입력값이 비어있지 않다면 Chip 생성
+      // 여기에서는 콜백 함수로 받아온 onEnterKeyUp 함수 호출
+      if (props.onEnterKeyUp) {
+        props.onEnterKeyUp(inputValue);
+      }
+      setInputValue(''); // 입력값 초기화
+    }
+  };
+
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} onKeyUp={handleEnterKeyPress}></StyledInput>;
 };
 
 const ConfirmationCodeInput = (props: InputProps) => {

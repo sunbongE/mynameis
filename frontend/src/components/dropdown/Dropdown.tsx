@@ -52,7 +52,8 @@ const CustomDropdown = (props: DropdownProps) => {
   const handleSelectChange = (selectedOption: any) => {
     setSelectedValue(selectedOption.value);
     if (props.onSelected) {
-      props.onSelected(selectedValue);
+      props.onSelected(selectedOption.value);
+      console.log(selectedOption.value)
     }
   };
 
