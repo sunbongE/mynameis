@@ -5,4 +5,10 @@ import lombok.Getter;
 @Getter
 public class CoupleVideoDto {
     private Long coupleId;
+
+    @Override
+    public String toString() {
+        return coupleId+"";
+
+    }
 }
