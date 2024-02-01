@@ -2,7 +2,7 @@ package com.ssafy.myname.service.implement;
 
 import com.ssafy.myname.db.entity.MatchStatus;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.entity.matching.JoinInfo;
+import com.ssafy.myname.db.entity.meeting.JoinInfo;
 import com.ssafy.myname.db.repository.JoinInfoRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.response.matching.MatchingAcceptResponseDto;
