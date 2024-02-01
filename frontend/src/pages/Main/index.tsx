@@ -3,9 +3,16 @@ import styled from 'styled-components';
 import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
+
 const MainContainer = styled.div`
   width: 100%;
   background-color: #f2eeea;
+`;
+
+const ImgContainer = styled.div`
+  width: 400px;
+  height: 400px;
+  border: 1px solid black;
 `;
 
 const ChatContainer = styled.div`

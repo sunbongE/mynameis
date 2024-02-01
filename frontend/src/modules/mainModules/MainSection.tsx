@@ -16,7 +16,7 @@ const MainSection = () => {
       <MainHero />
       <MainStep />
       <MainCouple />
-      <MainReview />
+      {/* <MainReview /> */}
       <MainStart />
     </StyledMainSectionContainer>
   );
