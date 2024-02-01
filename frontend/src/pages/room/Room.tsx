@@ -11,6 +11,7 @@ const Room = () => {
       {state === 'loading' && <Loading state={state} setState={setState} />}
       {state.includes('step') && <MeetingRoom state={state} setState={setState} />}
       {state.includes('ready') && <MeetingReady state={state} setState={setState} />}
+      {state === '' && <div>끝났대...</div>}
     </>
   );
 };

@@ -30,8 +30,7 @@ const Timer = (props: TimerProps) => {
           props.setState('step12'); // 2단계로 변경
         } else if (props.state === 'step123') {
           // 3단계인 경우
-          // props.setState('step123_vote'); // 이름 공개 투표 시작
-          props.setState('ready'); // 일단 준비화면으로 가보자
+          props.setState('step123_vote'); // 이름 공개 투표 시작
         } else if (props.state === 'step1234') {
           // 4단계인 경우
           props.setState('step12345'); // 5단계로 변경
@@ -44,7 +43,24 @@ const Timer = (props: TimerProps) => {
     return () => clearInterval(intervalId);
   };
 
-  const repeat3TimesTimer = (initialTime: number, currentTime: number) => {};
+  const repeat3TimesTimer = (initialTime: number, currentTime: number) => {
+    let i = 0;
+    const intervalId = setInterval(() => {
+      currentTime -= 1; // 시간 감소 시키기
+      setMin(Math.floor(currentTime / 60));
+      setSec(currentTime % 60);
+
+      if (currentTime === 0 && i < 2) {
+        i += 1;
+        currentTime = initialTime;
+      } else if (currentTime === 0 && i === 2) {
+        props.setState('step12345_vote');
+        clearInterval(intervalId);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  };
 
   const singleTimer = (initialTime: number, currentTime: number) => {
     const intervalId = setInterval(() => {
@@ -54,8 +70,7 @@ const Timer = (props: TimerProps) => {
 
       if (currentTime === 0) {
         if (props.state === 'step12') {
-          // props.setState('step12_vote'); // 익명 투표 시작 (일단 123ㅇ로 이동하자)
-          props.setState('step123');
+          props.setState('step12_vote'); // 익명 투표 시작
         } else if (props.state === 'step12_vote') {
           props.setState('step123'); // 3단계로 이동
         } else if (props.state === 'step123_vote') {

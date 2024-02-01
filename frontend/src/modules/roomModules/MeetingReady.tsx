@@ -45,7 +45,7 @@ const HashtagContainer = styled.div`
 `;
 
 const MeetingReady = (props: MeetingReadyProps) => {
-  const [time, setTime] = useState(20);
+  const [time, setTime] = useState(15);
   // recoil에서 가져오는 사용자 정보
   const userInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'] };
 
@@ -53,7 +53,7 @@ const MeetingReady = (props: MeetingReadyProps) => {
     <StyledContainer>
       <NoticeContainer>
         <NoticeBox noticeText={'15초 후에 참여자 분들의 얼굴이 공개 됩니다! 얼굴 공개 전 잠시 준비 시간을 가져 볼까요?'} />
-        <Timer />
+        <Timer time={time} state={props.state} setState={props.setState} repeatCount={0} />
       </NoticeContainer>
       <VideoContainer>
         <VideoCard width={'70vw'} height={'70vh'}>

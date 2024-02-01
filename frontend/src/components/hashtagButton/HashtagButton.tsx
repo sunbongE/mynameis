@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface HashtagButtonProps {
-  backgroundColor: string;
+  backgroundColor?: string;
   children: React.ReactNode;
   fontSize?: string;
   padding?: string;
@@ -18,7 +18,7 @@ const HashtagBox = styled.div<HashtagButtonProps>`
   background-color: pink;
   color: white;
   font-family: 'Pretendard SemiBold';
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : 'rgba(50, 50, 50, 0.8)')};
   font-size: ${(props) => props.fontSize};
 `;
 
