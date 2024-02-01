@@ -8,7 +8,7 @@ const Room = () => {
   return (
     <>
       {state === 'loading' && <Loading state={state} setState={setState} />}
-      {state === 'ready' && <MeetingRoom state={state} setState={setState} />}
+      {state.includes('step') && <MeetingRoom state={state} setState={setState} />}
     </>
   );
 };
