@@ -8,12 +8,16 @@ import com.ssafy.myname.db.entity.matching.RoomType;
 import com.ssafy.myname.db.repository.JoinInfoRepository;
 import com.ssafy.myname.db.repository.RoomRepository;
 import com.ssafy.myname.db.repository.UserRepository;
+import io.openvidu.java.client.*;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -23,6 +27,19 @@ public class MatchingProvider {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final JoinInfoRepository joinInfoRepository;
+
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
+
+    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET;
+
+    private OpenVidu openvidu;
+
+    @PostConstruct
+    public void init() {
+        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+    }
 
 
     private static final int TWO = 2;
@@ -105,8 +122,6 @@ public class MatchingProvider {
         }
 
         // 위에서 리턴이 안됐으면 매칭이 잡힌 상태니까 여기서도 지워줘야함.
-
-        // 위에서 리턴이 안됐으면 매칭이 잡힌 상태니까 여기서도 지워줘야함.
         matchedTwoWoman.remove(userId);
         // 큐 크기가 2보다 작고 대기열이 비어있지 않으면 대기열의 값을 넣어준다.
         if (matchedTwoWoman.size() < TWO && !wQueueTwo.isEmpty()) {
@@ -186,7 +201,7 @@ public class MatchingProvider {
     }
 
 //    @Async
-    public void createRoom(String type){
+    public void createRoom(String type) throws OpenViduJavaClientException, OpenViduHttpException {
         // 타입별로 방을 만들어야한다.
         Room room = new Room();
         if(type.equals("two")){
@@ -204,27 +219,36 @@ public class MatchingProvider {
         }
         roomRepository.save(room);
 
+        Long roomId = room.getRoomId();
+        // 활성화된 방 가져오기.
+        Session activeRoom = openvidu.getActiveSession(roomId.toString());
+
+        // 활성화된 방이 없으면 만들기
+        if(activeRoom==null){
+            activeRoom = openvidu.createSession(new SessionProperties.Builder().customSessionId(roomId.toString()).build());
+        }
+
+        // 여기서 접속가능한 토큰 발급
+        ConnectionProperties properties = ConnectionProperties.fromJson(new HashMap<>()).build();
+        Connection connection = activeRoom.createConnection(properties);
+        String token = connection.getToken();
+
         // joinInfo세팅
         while (!matchedTwoMan.isEmpty()){
             JoinInfo joinInfo = new JoinInfo();
             joinInfo.setRoom(room);
+            joinInfo.setToken(token);
             joinInfo.setUser(userRepository.findByUserId(matchedTwoMan.poll()));
-            logger.info("여긴오니?");
-            //            room.getJoinInfos().add(joinInfo);
             joinInfoRepository.save(joinInfo);
         }
 
         while (!matchedTwoWoman.isEmpty()){
             JoinInfo joinInfo = new JoinInfo();
             joinInfo.setRoom(room);
+            joinInfo.setToken(token);
             joinInfo.setUser(userRepository.findByUserId(matchedTwoWoman.poll()));
-//            room.getJoinInfos().add(joinInfo);
             joinInfoRepository.save(joinInfo);
         }
-
-
-
-        // 여기서 질문리스트 가져와서 세팅해준다.
 
 
     }

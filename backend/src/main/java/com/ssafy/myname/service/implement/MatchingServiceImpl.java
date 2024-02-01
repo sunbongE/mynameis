@@ -9,21 +9,21 @@ import com.ssafy.myname.dto.response.matching.MatchingAcceptResponseDto;
 import com.ssafy.myname.provider.MatchingProvider;
 import com.ssafy.myname.service.MatchingService;
 import io.openvidu.java.client.*;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @DynamicInsert
 public class MatchingServiceImpl implements MatchingService {
@@ -32,18 +32,6 @@ public class MatchingServiceImpl implements MatchingService {
     private final JoinInfoRepository joinInfoRepository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
-
-    @Value("${OPENVIDU_SECRET}")
-    private String OPENVIDU_SECRET;
-
-    private OpenVidu openvidu;
-
-    @PostConstruct
-    public void init() {
-        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
 
 
     @Override
@@ -83,38 +71,36 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     /**
-     * 현재 내가 매칭확정 배열에 들어있는지 확인하는 로직.
+     * 참여정보에 내가 있는지 확인하는 로직.
+     * 내가 있으면 방번호, 입장토큰 넘겨준다.
      *
      * @param userId
      * @return
      */
     @Override
     public ResponseEntity<?> check(String userId) throws OpenViduJavaClientException, OpenViduHttpException {
+        logger.info("** check함수 실행!! ");
         logger.info("userId :{}", userId);
+        Map<String, String> body = new HashMap<>();
+
         User user = userRepository.findByUserId(userId);
         Optional<JoinInfo> opJoinInfo = joinInfoRepository.findByUser(user);
 
         Long roomId = null;
-        if (opJoinInfo.isPresent()) {
+        String token =null;
+        if (opJoinInfo.isPresent()) { // 매칭이 잡힌 상태
 
             JoinInfo myJoinInfo = opJoinInfo.get();
             roomId = myJoinInfo.getRoom().getRoomId();
+            token = myJoinInfo.getToken();
             logger.info("myJoinInfo : {}", roomId);
+            body.put("roomId", roomId.toString());
+            body.put("token", token);
+            return ResponseEntity.status(HttpStatus.OK).body(body);
+
+        }else { // 안잡힌 상태
+            body.put("msg", "아직 대기중");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(body);
         }
-
-        Map<String, String> body = new HashMap<>();
-        body.put("roomId", roomId.toString());
-
-
-        // 활성화된 방 가져오기.
-        Session activeRoom = openvidu.getActiveSession(roomId.toString());
-        // 활성화된방이 없으면 만들기
-        if(activeRoom==null){
-            activeRoom = openvidu.createSession(new SessionProperties.Builder().customSessionId(roomId.toString()).build());
-        }
-        logger.info("activeRoom : {}",activeRoom);
-
-
-        return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 }

@@ -20,9 +20,6 @@ public class JoinInfo {
     @Column(name = "join_id")
     private Long joinId;
 
-    @Lob
-    private String record; // stt 음성 기록.
-
     @NotNull
     @ColumnDefault("0")
     private int like_cnt;
@@ -37,11 +34,13 @@ public class JoinInfo {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // 방 입장토큰
+    private String token;
+
     @Override
     public String toString() {
         return "JoinInfo{" +
                 "joinId=" + joinId +
-                ", record='" + record + '\'' +
                 ", like_cnt=" + like_cnt +
                 ", room=" + room +
 //                ", user=" + user +
