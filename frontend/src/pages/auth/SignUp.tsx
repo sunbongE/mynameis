@@ -6,7 +6,7 @@ import Button from '../../components/button/Button';
 import CustomDropdown from '../../components/dropdown/Dropdown';
 import { CustomRadioButton } from '../../components/button/RadioButton';
 import Chip from '../../components/chip/Chip';
-import { userSignUp } from '../../apis/services/user/user';
+import { userPhoneCertification, userSignUp } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 
 const StyledSignUpContainer = styled.div`
@@ -213,19 +213,30 @@ function SignUp() {
 
   const handleSignUp = async () => {
     try {
-      const booleanGender = registrationData.gender === '남성' ? true : false;
+      const booleanGender = selectedGender === '남성' ? true : false;
       const { gender, tag, ...restData } = registrationData;
-
+      
+      const response = await userSignUp({ gender: booleanGender, tags: registrationData.tag, ...restData });
       console.log(registrationData);
-
-      const response = await userSignUp({ gender: booleanGender, tag: [], ...restData });
       console.log('회원가입 성공:', response);
       navigate('/'); // 메인 페이지 이동
     } catch (error) {
+      console.log(registrationData);
       console.log('회원가입 실패:', error);
       // 회원가입 실패 후 처리 : 에러 메시지 표시, 로그인 페이지 이동 등
     }
   };
+
+  const handlePhoneCertification = async () => {
+    try {
+        const response = await userPhoneCertification({phoneId:registrationData.phone})
+        console.log(registrationData.phone)
+        console.log('휴대폰 인증 성공', response)
+    } catch (error) {
+        console.log(registrationData.phone)
+        console.log('휴대폰 인증 실패', error)
+    }
+  }
 
   return (
     <StyledSignUpContainer>
@@ -270,7 +281,7 @@ function SignUp() {
           <StyleLabel htmlFor='phoneAuth'>휴대폰 인증</StyleLabel>
           <div style={{ display: 'flex', gap: '10px' }}>
             <SimpleInput placeholder='전화번호를 입력하세요' id='phoneAuth' value={registrationData.phone} onInputChange={handlePhoneChange} width='220px' />
-            <Button width='70px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' fontSize='12px'>
+            <Button width='70px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' fontSize='12px' onButtonClick={handlePhoneCertification}>
               다시 요청
             </Button>
           </div>

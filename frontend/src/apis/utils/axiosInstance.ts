@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://i10c207.p.ssafy.io:8081/',
 });
 
 const setCommonHeaders = async (config: any) => {
@@ -12,7 +12,8 @@ const setCommonHeaders = async (config: any) => {
 const handleResponseError = async (error: AxiosError) => {
   if (!error.response) return Promise.reject(error);
   const { status, data } = error.response as { status: number; data: any };
-  console.log('status :', status);
+  console.log('status :', status, data);
+
 
   switch (status) {
     case 400:

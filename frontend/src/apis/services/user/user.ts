@@ -7,10 +7,16 @@ export const userLogin = async (params: { userId: string; password: string }) =>
   return response.data;
 }
 
-export const userSignUp = async (params : {userId: string; password: string; email:string; name:string; gender:boolean; birth:string; area:string; job:string; tag:[]; religion:string}) => {
+export const userSignUp = async (params : {userId: string; password: string; email:string; name:string; gender:boolean; birth:string; area:string; job:string; tags:string[]; religion:string}) => {
+  console.log(params)
   const response = await instance.post(`${authUrl}/sign-up`, params);
   return response.data;
 };
+
+export const userPhoneCertification = async (params : {phoneId: string;}) => {
+  const response = await instance.post(`${authUrl}/phone-certification`, params);
+  return response.data;
+}
 
 
 
