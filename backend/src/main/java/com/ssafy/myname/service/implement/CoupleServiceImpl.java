@@ -4,7 +4,12 @@ import com.ssafy.myname.db.entity.Couple;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CoupleRepository;
 import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.dto.request.couple.CoupleVideoDto;
+import com.ssafy.myname.provider.CoupleVideoProvider;
+import com.ssafy.myname.provider.MatchingProvider;
 import com.ssafy.myname.service.CoupleService;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,5 +113,20 @@ public class CoupleServiceImpl implements CoupleService {
         Map<String,String> body = new HashMap<>();
         body.put("msg","헤어졌습니다.");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(body);
+    }
+
+    @Override
+    public ResponseEntity<?> coupleVideo(CoupleVideoDto dto) throws OpenViduJavaClientException, OpenViduHttpException {
+        // 방 만들고 방아이디는 커플 아이디.
+        Long coupleId = dto.getCoupleId();
+        String newCoupleId = coupleId.toString();
+        String token = CoupleVideoProvider.coupleVideo(newCoupleId);
+
+        // 방 입장토큰을 준다.
+        Map<String,String> body = new HashMap<>();
+        body.put("videoId",newCoupleId);
+        body.put("token",token);
+
+         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 }

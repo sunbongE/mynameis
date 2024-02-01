@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 @Component
@@ -36,6 +37,8 @@ public class MatchingProvider {
     private String OPENVIDU_SECRET;
 
     private OpenVidu openvidu;
+
+
 
     @PostConstruct
     public void init() {
@@ -250,7 +253,7 @@ public class MatchingProvider {
             joinInfo.setUser(userRepository.findByUserId(matchedTwoWoman.poll()));
             joinInfoRepository.save(joinInfo);
         }
-
-
     }
+
+
 }
