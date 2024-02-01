@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Setter
 @Entity
 @DynamicInsert
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"room_id"})) // 유니크 제약 조건 부분을 제거
 public class JoinInfo {
 
     @Id
@@ -27,7 +28,7 @@ public class JoinInfo {
     private int like_cnt;
 
     // 매칭번호.
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
@@ -36,4 +37,14 @@ public class JoinInfo {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Override
+    public String toString() {
+        return "JoinInfo{" +
+                "joinId=" + joinId +
+                ", record='" + record + '\'' +
+                ", like_cnt=" + like_cnt +
+                ", room=" + room +
+//                ", user=" + user +
+                '}';
+    }
 }

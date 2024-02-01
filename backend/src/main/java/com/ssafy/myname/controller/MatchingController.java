@@ -1,9 +1,8 @@
 package com.ssafy.myname.controller;
 
-import com.ssafy.myname.db.entity.MatchStatus;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.repository.UserRepository;
-import com.ssafy.myname.dto.request.matching.MatchJoinRequestDto;
+import com.ssafy.myname.db.repository.RoomRepository;
+import com.ssafy.myname.dto.request.matching.MatchRequestDto;
 import com.ssafy.myname.dto.response.matching.MatchingAcceptResponseDto;
 import com.ssafy.myname.provider.MatchingProvider;
 import com.ssafy.myname.service.MatchingService;
@@ -23,6 +22,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MatchingController {
     private final MatchingService matchingService;
+    private final MatchingProvider matchingProvider;
+//    private final RoomRepository roomRepository;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -33,13 +35,22 @@ public class MatchingController {
      * @return
      */
     @PostMapping("/join")
-    public ResponseEntity<?> matchingJoin(Principal principal, @RequestBody MatchJoinRequestDto dto) throws InterruptedException {
+    public ResponseEntity<?> matchingJoin(Principal principal, @RequestBody MatchRequestDto dto) throws InterruptedException {
         logger.info("dto : {}",dto);
         logger.info("** 매칭 요청 실행 타입 :{}",dto.getType());
         String userId = principal.getName();
+        String type = dto.getType();
         try {
-            if (dto.getType().equals("two")) {
+            if (type.equals("two")) {
                 ResponseEntity<?> response = matchingService.twoMatchingJoin(userId);
+                // 매칭이 모두 잡혔는지 확인해보자.
+
+                if(matchingProvider.check(type)){
+
+                    // 여기서 DB생성.
+                    matchingProvider.createRoom(type);
+
+                }
                 return response;
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("아직 구현 안했어요.");
@@ -61,11 +72,18 @@ public class MatchingController {
         }
     }
 
-    @GetMapping("/matched")
-    private ResponseEntity<?> didItMatch(Principal principal) {
+    /**
+     * 사용자가 내가 매칭이 잡혔는지 확인하는 요청을 보낸것.
+     * 성공 : 방번호를 준다.
+     * 실패 : 대기안내.
+     * @param principal
+     * @return
+     */
+    @GetMapping("/check")
+    private ResponseEntity<?> check(Principal principal) {
         String userId = principal.getName();
         try{
-            ResponseEntity<?> response = matchingService.didItMatch(userId);
+            ResponseEntity<?> response = matchingService.check(userId);
             return response;
 
         }catch (Exception e){
@@ -74,6 +92,4 @@ public class MatchingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
-
-
 }

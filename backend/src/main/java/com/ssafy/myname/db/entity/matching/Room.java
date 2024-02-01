@@ -43,8 +43,8 @@ public class Room { // 매칭방
     @Enumerated(EnumType.STRING) // 문자로 값 저장,
     private RoomType roomType;
 
-    @OneToMany(mappedBy = "room")
-    private List<JoinInfo> joinInfos;
+    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL)
+    private List<JoinInfo> joinInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "room") // 신고 목록.
     private List<Record> records = new ArrayList<>();
