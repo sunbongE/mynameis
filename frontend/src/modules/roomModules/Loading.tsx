@@ -40,7 +40,7 @@ const Loading = (props: LoadingProps) => {
       </LoadingHeader>
       <VideoContainer>
         {/* **********여기에 openvidu 화면 추가해야함******** */}
-        <VideoCard width={'600px'} height={'300px'} />
+        <VideoCard width={'600px'} height={'300px'} streamManager={undefined} userType={0} />
       </VideoContainer>
       <StyledText fontSize='18px' margin='0 0 10px 0'>
         좋은 시간 보낼 준비 되셨나요?
