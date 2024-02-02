@@ -1,13 +1,16 @@
 package com.ssafy.myname.service.implement;
 
+import com.ssafy.myname.db.entity.Alarm;
 import com.ssafy.myname.db.entity.Couple;
 import com.ssafy.myname.db.entity.User;
+import com.ssafy.myname.db.repository.AlarmRepository;
 import com.ssafy.myname.db.repository.CoupleRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.provider.CoupleVideoProvider;
 import com.ssafy.myname.service.CoupleService;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,8 @@ import java.util.*;
 public class CoupleServiceImpl implements CoupleService {
     private final CoupleRepository coupleRepository;
     private final UserRepository userRepository;
+    private final AlarmRepository alarmRepository;
+    private final EntityManager em;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -84,12 +89,15 @@ public class CoupleServiceImpl implements CoupleService {
 
     /**
      *
-     * @param couple 커플 엔터티
-     * @param sender 이별을 선언한 userId
+     * @param senderId 이별을 선언한 userId
      * @return
      */
     @Override
-    public ResponseEntity<?> breakCouple(Couple couple, User sender) {
+    public ResponseEntity<?> breakCouple( String senderId) {
+        logger.info("** breakCouple Impl실행");
+        User sender = userRepository.findByUserId(senderId);
+        Couple couple = sender.getCouple();
+
         // 알림 받는 사람.
         User receiver = null;
         if(sender.equals(couple.getUserW())){
@@ -97,16 +105,23 @@ public class CoupleServiceImpl implements CoupleService {
         }else {
             receiver = couple.getUserW();
         }
+
         sender.setCouple(null);
         userRepository.save(sender);
         receiver.setCouple(null);
         userRepository.save(receiver);
-
         // 커플 데이터 삭제
         coupleRepository.delete(couple);
 
+
         //=== 알림 상대방에게 발송====
         // 여기 작성 예정.
+        Alarm alarm = new Alarm();
+        alarm.setSender(sender);
+        alarm.setReceiver(receiver);
+        alarm.setMsg(sender.getName()+"님과 이별하였습니다.");
+        alarmRepository.save(alarm);
+
         // ==========
         Map<String,String> body = new HashMap<>();
         body.put("msg","헤어졌습니다.");
