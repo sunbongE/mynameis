@@ -58,6 +58,8 @@ public class MatchingController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("아직 구현 안했어요.");
             }
         } catch (Exception e) {
+            logger.info(e.getMessage());
+            logger.info("======================");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MatchingAcceptResponseDto.fail());
         }
     }

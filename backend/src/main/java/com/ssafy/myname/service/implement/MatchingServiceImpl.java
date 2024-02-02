@@ -72,6 +72,7 @@ public class MatchingServiceImpl implements MatchingService {
         } else {
             matchingProvider.queTwoRemoveWoman(userId);
         }
+
         // 큐에 삽입
         return ResponseEntity.status(HttpStatus.OK).body(MatchingAcceptResponseDto.cancle());
     }
@@ -100,17 +101,18 @@ public class MatchingServiceImpl implements MatchingService {
             roomId = myJoinInfo.getRoom().getRoomId();
             token = myJoinInfo.getToken();
             logger.info("myJoinInfo : {}", roomId);
+
             body.put("roomId", roomId.toString());
             body.put("token", token);
             body.put("userId", userId);
-
+            body.put("randomName", myJoinInfo.getRandomName());
 
             GetUserInfoResDto dto = new GetUserInfoResDto(user);
             logger.info("dto : {}", dto);
 
-
             List<Tags> tags = tagRepository.findAllByUser(user);
             logger.info("tags : {}", tags);
+
             dto.addTags(tags);
 
             body.put("userInfo",dto.toString());
