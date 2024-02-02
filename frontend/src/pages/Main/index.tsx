@@ -23,10 +23,11 @@ import FailModal from '../../modules/mainModules/FailModal';
 
 import CustomDropdown from '../../components/dropdown/Dropdown';
 
-import Login from '../auth/Login';
-import SignUp from '../auth/SignUp';
+import Login from '../auth/LoginPage';
+import SignUp from '../auth/SignUpPage';
 import EmailAuth from '../auth/EmailAuth';
 import PasswordReset from '../auth/PasswordReset';
+
 
 const MainContainer = styled.div`
   width: 100%;
@@ -81,8 +82,7 @@ const Main = () => {
         <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} />
       </MainContainer>
       <MainContainer>
-        <Login />
-        <SignUp />
+
         {/* <EmailAuth/> */}
         {/* <PasswordReset/> */}
       </MainContainer>

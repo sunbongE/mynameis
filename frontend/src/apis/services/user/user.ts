@@ -14,10 +14,12 @@ export const userSignUp = async (params : {userId: string; password: string; ema
 };
 
 export const userPhoneNumberSubmit = async (params : {phoneId: string;}) => {
+  console.log('userPhoneNumberSubmit 들어옴')
   const response = await instance.post(`${authUrl}/phone-certification`, params);
+  console.log('userPhoneNumberSubmit response이후', response)
+  console.log(params)
   return response.data;
 }
-
 
 export const userPhoneAuthentication = async (params : {phoneId: string; certificationNumber:string;}) => {
   const response = await instance.post(`${authUrl}/check-phonecertification`, params);

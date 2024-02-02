@@ -40,6 +40,34 @@ const StyleLabel = styled.label`
 `;
 
 function EmailAuth() {
+  const [userIdInput, setUserIdInput] = useState('');
+  const [emailInput, setEmailInput] = useState('');
+  const [emailDropdown, setEmailDropdown] = useState('');
+  const [emailAuthData, setEmailAuthData] = useState({
+    userId: '',
+    email: '',
+  })
+
+  const handleUserIdChange = (value: string) => {
+    setUserIdInput(value);
+  };
+
+  const handleEmailChange = (value: string) => {
+    setEmailInput(value);
+    updateEmail(value, emailDropdown)
+  };
+  
+  const handleEmailDropdown = (value: string) => {
+    setEmailDropdown(value);
+    updateEmail(emailInput, value)
+  };
+
+  const updateEmail = (emailName: string, emailDomain: string) => {
+    const EmailFull = `${emailName}@${emailDomain}`;
+  };
+
+
+
   return (
     <StyledEmailContainer>
       <h2>이메일 인증</h2>
@@ -47,17 +75,19 @@ function EmailAuth() {
       <StyledEmailInputContainer>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='ID'>아이디</StyleLabel>
-          <SimpleInput placeholder='아이디 입력' id='ID' value='' />
+          <SimpleInput placeholder='아이디 입력' id='ID' value={userIdInput} onInputChange={handleUserIdChange} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='email'>이메일</StyleLabel>
           <div style={{ display: 'flex' }}>
-            <SimpleInput placeholder='이메일 계정' id='email' value='' width='165px' />
+            <SimpleInput placeholder='이메일 계정' id='email' value={emailInput} width='165px' onInputChange={handleEmailChange} />
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px' }}>@</div>
-            <CustomDropdown options={['gmail.com', 'naver.com', 'daum.net']} width='103px' />
+            <CustomDropdown options={['gmail.com', 'naver.com', 'daum.net']} width='103px' onSelected={handleEmailDropdown} />
           </div>
         </div>
-        <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF'>비밀번호 찾기</Button>
+        <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF'>
+          비밀번호 찾기
+        </Button>
       </StyledEmailInputContainer>
     </StyledEmailContainer>
   );

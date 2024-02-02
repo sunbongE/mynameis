@@ -40,14 +40,29 @@ const StyleLabel = styled.label`
 `;
 
 function PasswordReset() {
+
+  const [newPassword, setNewPassword] = useState('')
+  const [newPasswordConfirm, setnewPasswordConfirm] = useState('')
+
+  const handleNewPasswordChange = (value:string) => {
+    setNewPassword(value)
+    console.log(value)
+  }
+  
+  const handleNewPasswordConfirmChange = (value:string) => {
+    setnewPasswordConfirm(value)
+    console.log(value)
+  }
+
+
     return (
         <StyledPasswordResetContainer>
             <h2>비밀번호 재설정</h2>
             <StyledPasswordResetInputContainer>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <StyleLabel htmlFor='PasswordReset'>새 비밀번호</StyleLabel>
-                    <SimpleInput placeholder='비밀번호 입력' id='PasswordReset' value='' />
-                    <PasswordInput placeholder='비밀번호 확인' value={''} />
+                    <SimpleInput placeholder='비밀번호 입력' id='PasswordReset' value={newPassword} onInputChange={handleNewPasswordChange} />
+                    <PasswordInput placeholder='비밀번호 확인' value={newPasswordConfirm} onInputChange={handleNewPasswordConfirmChange} isReturn={true} originValue={newPassword} />
                 </div>
                 <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF'>비밀번호 변경</Button>
             </StyledPasswordResetInputContainer>
