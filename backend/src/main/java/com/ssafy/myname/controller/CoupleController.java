@@ -5,6 +5,7 @@ import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CoupleRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.couple.CoupleAcceptRequest;
+import com.ssafy.myname.dto.request.couple.CoupleVideoDto;
 import com.ssafy.myname.service.CoupleService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -120,6 +121,22 @@ public class CoupleController {
             body.put("msg", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
+    }
 
+    @GetMapping("/video")
+    public ResponseEntity<?> coupleVideo(@RequestParam("coupleId") String coupleId){
+        logger.info("** coupleVideo 호출");
+        logger.info("dto :{}",coupleId);
+        try {
+            ResponseEntity<?> response = coupleService.coupleVideo(coupleId);
+
+            return response;
+
+        }catch (Exception e){
+           logger.info(e.getMessage());
+            Map<String, String> body = new HashMap<>();
+            body.put("msg", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
     }
 }

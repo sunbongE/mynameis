@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Button from '../../components/button/Button';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
@@ -20,6 +22,8 @@ const ChatContainer = styled.div`
 `;
 
 const Main = () => {
+  const navigate = useNavigate();
+
   const [isLogin, setIsLogin] = useState<boolean>(false);
 
   const handleLogin = () => {
@@ -41,7 +45,6 @@ const Main = () => {
   const handleMyPage = () => {
     setMyPageOpen(!myPageOpen);
   };
-
   const [faqopen, setFaqOpen] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -49,10 +52,42 @@ const Main = () => {
     setIsOpen(true);
   };
 
+  const [scrolling, setScrolling] = useState(false);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     setScrolling(window.scrollY > 0 ? true : false);
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
+
   return (
     <MainContainer>
-      <Header isLogin={isLogin} setIsLogin={setIsLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} />
+      <Header
+        isLogin={isLogin}
+        setIsLogin={setIsLogin}
+        onClickLogin={handleLogin}
+        onClickLogout={handleLogout}
+        onClickSignUp={handleSignUp}
+        onClickMyPage={handleMyPage}
+        isMyPageOpen={myPageOpen}
+        showHeader={scrolling}
+      />
       <MainSection />
+      <Button
+        backgroundColor={'#e1a4b4'}
+        width={'200px'}
+        height={'80px'}
+        borderRadius={'16px'}
+        onButtonClick={() => {
+          navigate('/room');
+        }}
+      >
+        준비페이지로 이동
+      </Button>
       <Footer />
     </MainContainer>
   );

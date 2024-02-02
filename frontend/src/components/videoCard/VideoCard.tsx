@@ -3,13 +3,15 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface VideoCardProps {
-  streamManager: StreamManager | undefined;
-  userType: number;
   width: string;
   height: string;
+  children?: React.ReactNode;
+  streamManager: StreamManager | undefined;
+  userType: number;
 }
 
 const StyledVideoCard = styled.div<VideoCardProps>`
+  position: relative;
   width: ${(props) => (props.width ? props.width : '700px')};
   height: ${(props) => (props.height ? props.height : '350px')};
   border-radius: 20px;
@@ -43,6 +45,7 @@ function VideoCard(props: VideoCardProps) {
   return (
     <StyledVideoCard width={props.width} height={props.height} streamManager={props.streamManager} userType={0}>
       <video autoPlay={true} ref={videoRef}></video>
+      {props.children}
     </StyledVideoCard>
   );
 }

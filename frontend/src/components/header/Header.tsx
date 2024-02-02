@@ -10,6 +10,7 @@ import MyPageCard from '../myPageCard/MyPageCard';
 interface HeaderProps {
   isLogin: boolean;
   isMyPageOpen: boolean;
+  showHeader: boolean;
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
   onClickLogin: () => void;
   onClickLogout: () => void;

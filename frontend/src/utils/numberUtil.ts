@@ -21,3 +21,12 @@ export const formatDate = (date: string) => {
 
   return formattedDate;
 };
+
+export const calcAge = (data: string) => {
+  const birthYear = parseInt(data.substring(0, 4));
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
+  return currentYear - birthYear + 1;
+};
