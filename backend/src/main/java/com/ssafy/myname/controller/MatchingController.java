@@ -98,8 +98,10 @@ public class MatchingController {
     @GetMapping("/questions")
     public ResponseEntity<?> getQuestions(){
         try {
-            List<String> questions = questionProvider.getQuestions();
-            return ResponseEntity.status(HttpStatus.OK).body(questions);
+            List<String> questions = questionProvider.getRandomQuestions();
+            Map<String,String> body = new HashMap<>();
+            body.put("questions", questions.toString());
+            return ResponseEntity.status(HttpStatus.OK).body(body);
         }catch (Exception e){
             Map<String,String> body = new HashMap<>();
             body.put("msg",e.getMessage());
