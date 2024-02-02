@@ -35,8 +35,6 @@ public class GetUserInfoResDto {
 
     private Long coupleId;
 
-    private Boolean isValid;
-
     public void addTags(List<Tags> tagsEntity){
         for (Tags tagEntity : tagsEntity) {
             this.tag.add(tagEntity.getTagName());
@@ -50,7 +48,6 @@ public class GetUserInfoResDto {
         this.birth = user.getBirth();
         this.area = user.getArea();
         this.job = user.getJob();
-
         this.religion = user.getReligion();
 
         if(user.getCouple() != null){
@@ -58,7 +55,21 @@ public class GetUserInfoResDto {
         }else{
             this.coupleId = null;
         }
-        this.isValid = user.isValid();
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "name='" + name + '\'' +
+                ", coin=" + coin +
+                ", gender=" + gender +
+                ", birth='" + birth + '\'' +
+                ", area='" + area + '\'' +
+                ", job='" + job + '\'' +
+                ", tag=" + tag +
+                ", religion='" + religion + '\'' +
+                ", coupleId=" + coupleId +
+                '}';
     }
 }
 
