@@ -34,6 +34,7 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api',version:'0.11.2'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl',version:'0.11.2'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson',version:'0.11.2'
+	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.29.0'
 	implementation 'org.json:json:20230618'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -43,9 +44,19 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'jakarta.mail:jakarta.mail-api:1.6.7' // 최신 버전 사용 가능한지 확인하세요
-
+	implementation 'net.nurigo:sdk:4.2.7'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.register('copyApplication', Copy) {
+	from 'secure-settings'
+	include "*.properties"
+	into 'src/main/resources'
+}
+
+processResources {
+	dependsOn 'copyApplication'
 }

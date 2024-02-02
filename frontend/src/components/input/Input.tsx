@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import { formatTime } from '../../utils/numberUtil';
 import { Check_green, Check_red } from '../../config/IconName';
@@ -85,6 +85,7 @@ const SimpleInput = (props: InputProps) => {
   };
 
   return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} onKeyUp={handleEnterKeyPress}></StyledInput>;
+
 };
 
 const ConfirmationCodeInput = (props: InputProps) => {

@@ -4,6 +4,7 @@ import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.dto.request.users.ModifyUserDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
 import com.ssafy.myname.service.UserService;
@@ -63,5 +64,25 @@ public class UserServiceImpl implements UserService {
         }
         return ResponseDto.ok();
 
+    }
+
+    @Override
+    public ResponseEntity<?> modifyUser(String userId, ModifyUserDto modifyUserDto) {
+        User user = userRepository.findByUserId(userId);
+        user.setGender(modifyUserDto.getGender());
+        user.setBirth(modifyUserDto.getBirth());
+        user.setArea(modifyUserDto.getArea());
+        user.setJob(modifyUserDto.getJob());
+        user.setReligion(modifyUserDto.getReligion());
+        userRepository.save(user);
+        return ResponseDto.ok();
+    }
+
+    @Override
+    public ResponseEntity<?> leave(String userId) {
+        User user = userRepository.findByUserId(userId);
+        user.setLeave(true);
+        userRepository.save(user);
+        return ResponseDto.ok();
     }
 }

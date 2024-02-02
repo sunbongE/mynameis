@@ -14,5 +14,6 @@ public interface ResponseCode {
 
     String MAIL_FAIL ="MF";
     String DATABASE_ERROR = "DBE";
-
+    String DUPLICATE_PHONE = "DP";
+    String MATCHING_FAIL = "MATCHING_FAIL";
 }

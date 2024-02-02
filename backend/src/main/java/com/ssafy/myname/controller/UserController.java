@@ -2,10 +2,11 @@ package com.ssafy.myname.controller;
 
 import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.repository.RefreshTokenRepository;
+//import com.ssafy.myname.db.repository.RefreshTokenRepository;
 import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.RefreshTokenDto;
+import com.ssafy.myname.dto.request.users.ModifyUserDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
 import com.ssafy.myname.provider.JwtProvider;
@@ -33,6 +34,9 @@ import java.util.Map;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+//    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtProvider jwtProvider;
+    private final AuthServiceImpl authServiceImpl;
     private final JwtService jwtService;
     private final UserService userService;
     private final UserRepository userRepository;
@@ -71,10 +75,10 @@ public class UserController {
     @PutMapping("/modify-tag")
     public ResponseEntity<?> modifyTag(Principal principal,
                                        @RequestBody Map<String, List<String>> tags) {
-        List<String> tagNameList = tags.get("tags");
         logger.info("** modify-tag 호출");
-        String userId = principal.getName();
         try{
+            List<String> tagNameList = tags.get("tags");
+            String userId = principal.getName();
             ResponseEntity<?> response = userService.modifyTag(userId,tagNameList);
             return response;
         }catch (Exception e){
@@ -83,5 +87,36 @@ public class UserController {
         }
     }
 
+    @PutMapping("/modify-user")
+    public ResponseEntity<?> modifyUser(Principal principal,
+                                        @RequestBody ModifyUserDto modifyUserDto){
+        logger.info("** modify-user 호출");
+        try{
+            String userId = principal.getName();
+            ResponseEntity<?> response = userService.modifyUser(userId,modifyUserDto);
+            return response;
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
 
+    }
+
+    /**
+     * 회원의 isLeave속성을 true으로 변경하여 탈퇴한 유저임을 기록한다.
+     * @param principal
+     * @return
+     */
+    @PatchMapping("/leave")
+    public ResponseEntity<?> leave (Principal principal){
+        logger.info("** leave-user 호출");
+        try {
+            String userId = principal.getName();
+            ResponseEntity<?> response = userService.leave(userId);
+            return response;
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+    }
 }

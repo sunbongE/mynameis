@@ -13,9 +13,10 @@ const loginInstance = axios.create({
   }
 });
 
-
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
+  // config.headers['Authorization'] = `Bearer ${accessToken}`;
+
   return config;
 };
 
@@ -23,7 +24,6 @@ const handleResponseError = async (error: AxiosError) => {
   if (!error.response) return Promise.reject(error);
   const { status, data } = error.response as { status: number; data: any };
   console.log('status :', status, data);
-
 
   switch (status) {
     case 400:

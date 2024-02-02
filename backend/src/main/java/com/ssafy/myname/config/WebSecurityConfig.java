@@ -44,9 +44,9 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/css/", "/js/", "/images/**").permitAll()
-                        .requestMatchers("/", "/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/user/**","/refresh/**","/users/**").hasRole("USER")
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/", "/auth/**","/couple/create","/matching/questions").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/refresh/**","/users/**","/matching/**","/couple/**").hasRole("USER")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 )
