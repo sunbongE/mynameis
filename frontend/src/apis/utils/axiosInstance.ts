@@ -4,15 +4,18 @@ const instance = axios.create({
   baseURL: 'http://localhost:8080',
 });
 
+const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJka2d1czAwIiwiaWF0IjoxNzA2ODM3MTk4LCJleHAiOjE3MDgxMzMxOTh9.4c_JPDf1MbX6MBH97F2mwvh2RjVnaACigstT6Uuvlfc';
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
+  config.headers['Authorization'] = `Bearer ${accessToken}`;
+
   return config;
 };
 
 const handleResponseError = async (error: AxiosError) => {
   if (!error.response) return Promise.reject(error);
   const { status, data } = error.response as { status: number; data: any };
-  console.log('status :', status);
+  console.log('status :', status, data);
 
   switch (status) {
     case 400:

@@ -42,6 +42,8 @@ const HashtagContainer = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
+  position: absolute;
+  top: -0.1px;
 `;
 
 const MeetingReady = (props: MeetingReadyProps) => {
@@ -58,7 +60,7 @@ const MeetingReady = (props: MeetingReadyProps) => {
         <Timer time={time} state={props.state} setState={props.setState} repeatCount={0} />
       </NoticeContainer>
       <VideoContainer>
-        <VideoCard width={'70vw'} height={'70vh'}>
+        <VideoCard width={'70vw'} height={'70vh'} streamManager={undefined} userType={0}>
           <HashtagContainer>
             <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#e1a4b4'}>{userInfo.nickName}</HashtagButton>
           </HashtagContainer>

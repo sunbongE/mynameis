@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-<<<<<<< frontend/src/pages/Main/index.tsx
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
@@ -79,16 +78,16 @@ const Main = () => {
       />
       <MainSection />
       <Button
-          backgroundColor={'#e1a4b4'}
-          width={'200px'}
-          height={'80px'}
-          borderRadius={'16px'}
-          onButtonClick={() => {
-            navigate('/room');
-          }}
-        >
-          준비페이지로 이동
-        </Button>
+        backgroundColor={'#e1a4b4'}
+        width={'200px'}
+        height={'80px'}
+        borderRadius={'16px'}
+        onButtonClick={() => {
+          navigate('/room');
+        }}
+      >
+        준비페이지로 이동
+      </Button>
       <Footer />
     </MainContainer>
   );

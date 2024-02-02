@@ -11,12 +11,14 @@ interface VideoCardProps {
 }
 
 const StyledVideoCard = styled.div<VideoCardProps>`
+  position: relative;
   width: ${(props) => (props.width ? props.width : '700px')};
   height: ${(props) => (props.height ? props.height : '350px')};
   border-radius: 20px;
-  background:
+  border: 1px solid lightgray;
+  /* background:
     url(<path-to-image>),
-    lightgray 0px -92.722px / 100% 197.778% no-repeat;
+    lightgray 0px -92.722px / 100% 197.778% no-repeat; */
 
   & focus-within {
     border: 3px solid #3aff42;
@@ -34,13 +36,13 @@ const StyledVideoCard = styled.div<VideoCardProps>`
  */
 function VideoCard(props: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-    useEffect(() => {
-      if (props.streamManager && videoRef.current) {
-        props.streamManager.addVideoElement(videoRef.current);
-      }
-    }, [props.streamManager]);
+  useEffect(() => {
+    if (props.streamManager && videoRef.current) {
+      props.streamManager.addVideoElement(videoRef.current);
+    }
+  }, [props.streamManager]);
 
-return (
+  return (
     <StyledVideoCard width={props.width} height={props.height} streamManager={props.streamManager} userType={0}>
       <video autoPlay={true} ref={videoRef}></video>
       {props.children}

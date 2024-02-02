@@ -89,7 +89,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       {/* ******************************************************** */}
       <VideoContainer>
         {userInfos.map((userInfo) => (
-          <VideoCard width={'40vw'} height={'37vh'}>
+          <VideoCard width={'40vw'} height={'37vh'} streamManager={undefined} userType={0}>
             <InfoContainer>
               <HashtagContainer justifyContent='space-between'>
                 <div style={{ display: 'flex', gap: '4px' }}>
@@ -214,7 +214,10 @@ const InfoContainer = styled.div`
   justify-content: space-between;
   padding: 20px;
   height: 100%;
+  width: 100%;
   z-index: 10;
+  position: absolute;
+  top: -0.1px;
 `;
 
 const HashtagWrapper = styled.div`
