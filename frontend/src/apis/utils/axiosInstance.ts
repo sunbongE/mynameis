@@ -5,17 +5,19 @@ const instance = axios.create({
   baseURL: 'http://i10c207.p.ssafy.io:8081/',
 });
 
-const loginInstance = axios.create({
-  baseURL: 'http://i10c207.p.ssafy.io:8081/',
-  withCredentials: true,
-  headers: {
-    'Authorization':`Bearer ${Cookies.get('accessToken')}`
-  }
-});
+// const loginInstance = axios.create({
+//   baseURL: 'http://i10c207.p.ssafy.io:8081/',
+//   withCredentials: true,
+//   headers: {
+//     'Authorization':`Bearer ${Cookies.get('accessToken')}`
+//   }
+// });
+
+const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJka2d1cyIsImlhdCI6MTcwNjg0OTk1NCwiZXhwIjoxNzA4MTQ1OTU0fQ.EfvnI7WYRS1EN8KnFaLKthfRFNQE-FAj4s6XDWQcD5c';
 
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
-  // config.headers['Authorization'] = `Bearer ${accessToken}`;
+  config.headers['Authorization'] = `Bearer ${accessToken}`;
 
   return config;
 };
@@ -56,8 +58,8 @@ instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 
-loginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
-loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
+// loginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
+// loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 
 
