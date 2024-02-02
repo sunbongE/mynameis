@@ -1,13 +1,17 @@
 package com.ssafy.myname.service.implement;
 
 import com.ssafy.myname.db.entity.MatchStatus;
+import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.entity.meeting.JoinInfo;
 import com.ssafy.myname.db.repository.JoinInfoRepository;
+import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
 import com.ssafy.myname.dto.response.matching.MatchingAcceptResponseDto;
 import com.ssafy.myname.provider.MatchingProvider;
 import com.ssafy.myname.service.MatchingService;
+import com.ssafy.myname.service.UserService;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,6 +35,7 @@ public class MatchingServiceImpl implements MatchingService {
     private final MatchingProvider matchingProvider;
     private final UserRepository userRepository;
     private final JoinInfoRepository joinInfoRepository;
+    private final TagRepository tagRepository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
@@ -96,6 +102,19 @@ public class MatchingServiceImpl implements MatchingService {
             logger.info("myJoinInfo : {}", roomId);
             body.put("roomId", roomId.toString());
             body.put("token", token);
+            body.put("userId", userId);
+
+
+            GetUserInfoResDto dto = new GetUserInfoResDto(user);
+            logger.info("dto : {}", dto);
+
+
+            List<Tags> tags = tagRepository.findAllByUser(user);
+            logger.info("tags : {}", tags);
+            dto.addTags(tags);
+
+            body.put("userInfo",dto.toString());
+
             return ResponseEntity.status(HttpStatus.OK).body(body);
 
         }else { // 안잡힌 상태

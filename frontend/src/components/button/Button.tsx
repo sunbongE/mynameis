@@ -11,6 +11,7 @@ interface ButtonProps {
   fontSize?: string;
   children: React.ReactNode;
   onButtonClick?: () => void;
+  disabled?: boolean;
 }
 
 const StyledButton = styled.button<ButtonProps>`
@@ -22,6 +23,7 @@ const StyledButton = styled.button<ButtonProps>`
   color: ${(props) => (props.fontColor ? props.fontColor : '#000000')};
   font-size: ${(props) => (props.fontSize ? props.fontSize : '18px')};
   border: ${(props) => (props.borderColor ? `1px solid ${props.borderColor}` : '0')};
+  cursor: pointer;
 `;
 
 /**

@@ -10,6 +10,22 @@ interface TimerProps {
   repeatCount: number;
 }
 
+const StyledTimer = styled.div`
+  width: 85.22px;
+  height: 28.755px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 19.718px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+
 const Timer = (props: TimerProps) => {
   const [min, setMin] = useState<number>(Math.floor(props.time / 60));
   const [sec, setSec] = useState<number>(props.time % 60);
@@ -84,19 +100,7 @@ function padNumber(number: number, width: number) {
   return String(number).padStart(width, '0');
 }
 
-//////////////////////////////////
-////// styled component //////////
-//////////////////////////////////
 
-const StyledTimer = styled.div`
-  width: 85.22px;
-  height: 28.755px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Pretendard SemiBold';
-  font-size: 16px;
-`;
+
 
 export default Timer;

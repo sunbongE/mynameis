@@ -10,15 +10,18 @@ interface RadioButtonProps extends RadioButtonStyleProps {
 interface RadioButtonStyleProps {
   version?: string;
   width?: string;
+  id?: string;
+  key?: string;
+  onSelected?: (value: string) => void;
 }
 
 const RadioInputBox = styled.div<RadioButtonStyleProps>`
   border: 1px solid #d9d9d9;
   border-radius: 10px;
   background-color: white;
-  width: ${(props) => (props.version === 'gender' ? '220px' : props.width)};
+  width: ${(props) => (props.version === 'gender' ? '145px' : props.width)};
   height: ${(props) => (props.version === 'gender' ? '66px' : '80px')};
-  margin: 0px 10px;
+  margin-right: 10px;
 `;
 
 const RadioInput = styled.input<RadioButtonStyleProps>`
@@ -38,7 +41,7 @@ const RadioInputLabel = styled.label<RadioButtonStyleProps>`
   cursor: pointer;
   color: ${(props) => (props.version === 'gender' ? '#B0A9A9' : 'black')};
   font-size: ${(props) => (props.version === 'gender' ? '15px' : '37px')};
-  width: ${(props) => (props.version === 'gender' ? '220px' : props.width)};
+  width: ${(props) => (props.version === 'gender' ? '145px' : props.width)};
   height: ${(props) => (props.version === 'gender' ? '66px' : '80px')};
   border-radius: 10px;
   display: flex;
@@ -62,7 +65,18 @@ export const CustomRadioButton = (props: RadioButtonProps) => {
   return (
     <>
       {props.values.map((value) => (
-        <RadioInputBox key={value.value} onClick={() => props.setSelected(value.value)} version={props.version} width={props.width}>
+        <RadioInputBox
+          key={value.value}
+          onClick={() => {
+            props.setSelected(value.value);
+            if (props.onSelected) {
+              props.onSelected(value.value);
+            }
+          }}
+          version={props.version}
+          width={props.width}
+          onSelected={value.value}
+        >
           <RadioInput version={props.version} type='radio' id={value.value} name={value.name} value={value.value} checked={props.selected === value.value} onChange={() => props.setSelected(value.value)} />
           <RadioInputLabel version={props.version} htmlFor={value.name} width={props.width}>
             {value.value}

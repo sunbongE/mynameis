@@ -36,7 +36,7 @@ const SenderMessageForm = () => {
 
   return (
     <StyledMsgFormContainer>
-      <SimpleInput placeholder='메세지를 입력하세요' value={message} height='40px' fontsize='12px' onChange={handleMessageChange} onEnterPress={handleEnterPress} />
+      {/* <SimpleInput placeholder='메세지를 입력하세요' value={message} height='40px' fontsize='12px' onChange={handleMessageChange} onEnterPress={handleEnterPress} /> */}
       <Button backgroundColor='#E1A4B4' width='45px' height='40px' borderRadius='10px' children={<Icon src={SendMsg} />} onButtonClick={handleSendMessage} />
     </StyledMsgFormContainer>
   );
