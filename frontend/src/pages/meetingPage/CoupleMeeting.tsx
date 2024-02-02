@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import VideoCard from '../../components/videoCard/VideoCard';
 import styled from 'styled-components';
 import axios from 'axios';
-import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager } from 'openvidu-browser';
-
+import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent } from 'openvidu-browser';
+import { getCoupleRoomToken } from '../../apis/services/user/room';
+// import { Stream } from 'stream';
 const StyledMeetingContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -13,8 +14,8 @@ const StyledMeetingContainer = styled.div`
 `;
 
 // backend url 지정
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
-
+// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+// const APPLICATION_SERVER_URL = 'http://localhost:8080';
 const CoupleMeeting = () => {
   // 1. 필요한 상태 정의
   const [mySessionId, setMySessionId] = useState<string>('매칭방번호');
@@ -36,7 +37,7 @@ const CoupleMeeting = () => {
   }, [mySessionId]);
 
   useEffect(() => {
-    const handleBeforeUnload = (event: any) => {
+    const handleBeforeUnload = (event: Event) => {
       leaveSession();
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -50,11 +51,11 @@ const CoupleMeeting = () => {
     leaveSession();
   };
 
-  const handleChangeSessionId = (event: any) => {
+  const handleChangeSessionId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMySessionId(event.target.value);
   };
 
-  const handleChangeUserName = (event: any) => {
+  const handleChangeUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMyUserName(event.target.value);
   };
 
@@ -124,19 +125,19 @@ const CoupleMeeting = () => {
     };
 
     // session에 참가한 사용자 추가
-    nSession.on('streamCreated', (event) => {
+    nSession.on('streamCreated', (event: StreamEvent) => {
       console.log('제가 들어왔어요', event);
       const subscriber = nSession.subscribe(event.stream, undefined);
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
     // session에서 나간 사용자 삭제
-    nSession.on('streamDestroyed', (event) => {
+    nSession.on('streamDestroyed', (event: StreamEvent) => {
       deleteSubscriber(event.stream.streamManager);
     });
 
     // 예외처리
-    nSession.on('exception', (exception) => {
+    nSession.on('exception', (exception: ExceptionEvent) => {
       console.warn(exception);
     });
 
@@ -164,8 +165,13 @@ const CoupleMeeting = () => {
   };
 
   // token 가져오기 > 백에서 가져올거임
-  const getToken = () => {
-    return 'kkk';
+  const getToken = async () => {
+    try {
+      const token = await getCoupleRoomToken({ coupleId: 1 });
+      return token;
+    } catch (error) {
+      console.log('token 에러', error);
+    }
   };
 
   return (
