@@ -1,13 +1,21 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import Cookies from 'js-cookie'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://i10c207.p.ssafy.io:8081/',
 });
 
-const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJka2d1czAwIiwiaWF0IjoxNzA2ODM3MTk4LCJleHAiOjE3MDgxMzMxOTh9.4c_JPDf1MbX6MBH97F2mwvh2RjVnaACigstT6Uuvlfc';
+const loginInstance = axios.create({
+  baseURL: 'http://i10c207.p.ssafy.io:8081/',
+  withCredentials: true,
+  headers: {
+    'Authorization':`Bearer ${Cookies.get('accessToken')}`
+  }
+});
+
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
-  config.headers['Authorization'] = `Bearer ${accessToken}`;
+  // config.headers['Authorization'] = `Bearer ${accessToken}`;
 
   return config;
 };
@@ -46,5 +54,12 @@ const handleRequestError = (error: AxiosError) => {
 
 instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
+
+
+loginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
+loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
+
+
+
 
 export default instance;

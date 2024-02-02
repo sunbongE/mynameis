@@ -6,6 +6,8 @@ import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
 
+
+
 const MainContainer = styled.div`
   width: 100%;
   background-color: #f2eeea;
@@ -52,6 +54,11 @@ const Main = () => {
     setIsOpen(true);
   };
 
+
+  const tempArray = ['일', '이', '삼', '사', '오'];
+
+
+
   const [scrolling, setScrolling] = useState(false);
   // useEffect(() => {
   //   const handleScroll = () => {
@@ -90,6 +97,7 @@ const Main = () => {
       </Button>
       <Footer />
     </MainContainer>
+
   );
 };
 
