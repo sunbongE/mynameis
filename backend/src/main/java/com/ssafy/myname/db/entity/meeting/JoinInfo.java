@@ -12,7 +12,6 @@ import org.hibernate.annotations.DynamicInsert;
 @Setter
 @Entity
 @DynamicInsert
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"room_id"})) // 유니크 제약 조건 부분을 제거
 public class JoinInfo {
 
     @Id
@@ -36,6 +35,9 @@ public class JoinInfo {
 
     // 방 입장토큰
     private String token;
+
+    // 랜덤이름
+    private String randomName;
 
     @Override
     public String toString() {
