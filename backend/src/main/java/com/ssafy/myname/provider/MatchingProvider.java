@@ -208,18 +208,12 @@ public class MatchingProvider {
         int nameCnt = 0;
         Room room = new Room();
         if(type.equals("two")){
-            room.setMcnt(TWO);
-            room.setWcnt(TWO);
             room.setRoomType(RoomType.TWO_TO_TWO);
             nameCnt = TWO;
         }else if (type.equals("three")){
-            room.setMcnt(THREE);
-            room.setWcnt(THREE);
             room.setRoomType(RoomType.THREE_TO_THREE);
             nameCnt = THREE;
         } else if (type.equals("four")) {
-            room.setMcnt(FOUR);
-            room.setWcnt(FOUR);
             room.setRoomType(RoomType.FOUR_TO_FOUR);
             nameCnt = FOUR;
         }
