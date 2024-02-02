@@ -96,7 +96,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<JoinInfo> joinInfos = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couple_id")
     private Couple couple;
 
