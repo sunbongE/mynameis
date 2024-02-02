@@ -3,6 +3,8 @@ package com.ssafy.myname.provider;
 import com.ssafy.myname.db.entity.meeting.Questions;
 import com.ssafy.myname.db.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuestionProvider {
     private final QuestionRepository questionRepository;
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 데이터베이스에서 모든 질문을 가져와서 질문 내용만을 추출하여 리스트로 반환합니다.
      *
@@ -37,6 +39,7 @@ public class QuestionProvider {
      */
     public List<String> getRandomQuestions() {
         List<String> allQuestions = getQuestions();
+        logger.info("allQuestions : {} ",allQuestions);
 
         // 질문 목록이 3개 이하인 경우 전체 목록을 반환
         if (allQuestions.size() <= 3) {
