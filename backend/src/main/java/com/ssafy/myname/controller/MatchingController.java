@@ -2,11 +2,14 @@ package com.ssafy.myname.controller;
 
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.RoomRepository;
+import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.dto.request.matching.EnterDto;
 import com.ssafy.myname.dto.request.matching.MatchRequestDto;
 import com.ssafy.myname.dto.response.matching.MatchingAcceptResponseDto;
 import com.ssafy.myname.provider.MatchingProvider;
 import com.ssafy.myname.provider.QuestionProvider;
 import com.ssafy.myname.service.MatchingService;
+import com.ssafy.myname.service.implement.MatchingServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,8 +112,32 @@ public class MatchingController {
             body.put("msg",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
+    }
 
+    /**
+     * 회원이 들어왔다는 것을 받는다.
+     * 남여 구분하여 Room데이터의 mCnt, wCnt 증가시킨다.
+     * @param dto roomId
+     */
+    @PostMapping("/enter")
+    private void enterMeeting(Principal principal, @RequestBody EnterDto dto){
+
+        try {
+            matchingService.enterMeeting(principal, dto);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+        }
 
     }
 
+    @PostMapping("/exit")
+    private void exitMeeting(Principal principal, @RequestBody EnterDto dto){
+
+        try {
+            matchingService.enterMeeting(principal, dto);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+        }
+
+    }
 }
