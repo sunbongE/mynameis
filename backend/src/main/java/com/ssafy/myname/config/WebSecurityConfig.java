@@ -43,10 +43,10 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/css/", "/js/", "/images/**").permitAll()
-                        .requestMatchers("/", "/auth/**","/couple/create").permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/couple/**").permitAll()
+                        .requestMatchers("/", "/auth/**","/couple/create","/matching/questions").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/refresh/**","/users/**","/couple/**","/matching/**").hasRole("USER")
+                        .requestMatchers("/refresh/**","/users/**","/matching/**").hasRole("USER")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 )

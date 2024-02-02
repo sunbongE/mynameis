@@ -16,19 +16,6 @@ import java.util.stream.Collectors;
 public class QuestionProvider {
     private final QuestionRepository questionRepository;
 
-    //    public List<String> getQuestion(){
-//        List<Questions> questionEntityList = new ArrayList<>();
-//        questionEntityList = questionRepository.findAll();
-//
-//        List<String> contents = new ArrayList<>();
-//        for (Questions questions : questionEntityList) {
-//            contents.add(questions.getContents());
-//        }
-//
-//        return contents;
-//    }
-
-
     /**
      * 데이터베이스에서 모든 질문을 가져와서 질문 내용만을 추출하여 리스트로 반환합니다.
      *

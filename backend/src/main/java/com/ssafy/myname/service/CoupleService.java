@@ -2,7 +2,6 @@ package com.ssafy.myname.service;
 
 import com.ssafy.myname.db.entity.Couple;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.dto.request.couple.CoupleVideoDto;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,6 @@ public interface CoupleService {
     ResponseEntity<?> coupleAccept(User user, Couple couple);
     ResponseEntity<?> deleteCouple(Long coupleId);
     ResponseEntity<?> breakCouple(Couple couple,User user);
-    ResponseEntity<?> coupleVideo(CoupleVideoDto dto) throws OpenViduJavaClientException, OpenViduHttpException;
+    ResponseEntity<?> coupleVideo(String coupleId) throws OpenViduJavaClientException, OpenViduHttpException;
 
 }
