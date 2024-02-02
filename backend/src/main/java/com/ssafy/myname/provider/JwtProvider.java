@@ -32,12 +32,10 @@ public class JwtProvider {
     public String create(String userId, String type) {
         Date expiredDate;
         if (type.equals("AT")) {
-//            expiredDate = Date.from(Instant.now().plus(24, ChronoUnit.HOURS)); // 24시간
-            expiredDate = Date.from(Instant.now().plus(15, ChronoUnit.SECONDS)); // 24시간
+            expiredDate = Date.from(Instant.now().plus(24, ChronoUnit.HOURS)); // 24시간
         } else {
             expiredDate = Date.from(Instant.now().plus(15, ChronoUnit.DAYS)); // 15일.
         }
-//        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .setSubject(userId).setIssuedAt(new Date()).setExpiration(expiredDate)
@@ -95,8 +93,7 @@ public class JwtProvider {
 
         return null;
     }
-//    private Claims extractAllClaims(String token) {
-//        return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();}
+
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);}

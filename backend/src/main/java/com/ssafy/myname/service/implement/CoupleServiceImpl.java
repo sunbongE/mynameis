@@ -4,9 +4,7 @@ import com.ssafy.myname.db.entity.Couple;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CoupleRepository;
 import com.ssafy.myname.db.repository.UserRepository;
-import com.ssafy.myname.dto.request.couple.CoupleVideoDto;
 import com.ssafy.myname.provider.CoupleVideoProvider;
-import com.ssafy.myname.provider.MatchingProvider;
 import com.ssafy.myname.service.CoupleService;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
@@ -116,10 +114,9 @@ public class CoupleServiceImpl implements CoupleService {
     }
 
     @Override
-    public ResponseEntity<?> coupleVideo(CoupleVideoDto dto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<?> coupleVideo(String coupleId) throws OpenViduJavaClientException, OpenViduHttpException {
         // 방 만들고 방아이디는 커플 아이디.
-        Long coupleId = dto.getCoupleId();
-        String newCoupleId = coupleId.toString();
+        String newCoupleId = coupleId;
         String token = CoupleVideoProvider.coupleVideo(newCoupleId);
 
         // 방 입장토큰을 준다.

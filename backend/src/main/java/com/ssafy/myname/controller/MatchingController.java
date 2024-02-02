@@ -5,6 +5,7 @@ import com.ssafy.myname.db.repository.RoomRepository;
 import com.ssafy.myname.dto.request.matching.MatchRequestDto;
 import com.ssafy.myname.dto.response.matching.MatchingAcceptResponseDto;
 import com.ssafy.myname.provider.MatchingProvider;
+import com.ssafy.myname.provider.QuestionProvider;
 import com.ssafy.myname.service.MatchingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,7 +25,7 @@ import java.util.Map;
 public class MatchingController {
     private final MatchingService matchingService;
     private final MatchingProvider matchingProvider;
-//    private final RoomRepository roomRepository;
+    private final QuestionProvider questionProvider;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -92,4 +94,19 @@ public class MatchingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
+
+    @GetMapping("/questions")
+    public ResponseEntity<?> getQuestions(){
+        try {
+            List<String> questions = questionProvider.getQuestions();
+            return ResponseEntity.status(HttpStatus.OK).body(questions);
+        }catch (Exception e){
+            Map<String,String> body = new HashMap<>();
+            body.put("msg",e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+
+
+    }
+
 }

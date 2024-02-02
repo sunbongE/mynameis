@@ -124,11 +124,11 @@ public class CoupleController {
     }
 
     @GetMapping("/video")
-    public ResponseEntity<?> coupleVideo(@RequestBody CoupleVideoDto dto){
+    public ResponseEntity<?> coupleVideo(@RequestParam("coupleId") String coupleId){
         logger.info("** coupleVideo 호출");
-        logger.info("dto :{}",dto.toString());
+        logger.info("dto :{}",coupleId);
         try {
-            ResponseEntity<?> response = coupleService.coupleVideo(dto);
+            ResponseEntity<?> response = coupleService.coupleVideo(coupleId);
 
             return response;
 
