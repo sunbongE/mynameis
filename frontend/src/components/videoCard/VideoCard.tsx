@@ -13,9 +13,10 @@ const StyledVideoCard = styled.div<VideoCardProps>`
   width: ${(props) => (props.width ? props.width : '700px')};
   height: ${(props) => (props.height ? props.height : '350px')};
   border-radius: 20px;
-  background:
+  border: 1px solid lightgray;
+  /* background:
     url(<path-to-image>),
-    lightgray 0px -92.722px / 100% 197.778% no-repeat;
+    lightgray 0px -92.722px / 100% 197.778% no-repeat; */
 
   & focus-within {
     border: 3px solid #3aff42;

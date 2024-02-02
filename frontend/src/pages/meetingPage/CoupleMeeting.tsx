@@ -3,7 +3,8 @@ import VideoCard from '../../components/videoCard/VideoCard';
 import styled from 'styled-components';
 import axios from 'axios';
 import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager } from 'openvidu-browser';
-
+import { getCoupleRoomToken } from '../../apis/services/user/room';
+import { convertToObject } from 'typescript';
 const StyledMeetingContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -164,8 +165,13 @@ const CoupleMeeting = () => {
   };
 
   // token 가져오기 > 백에서 가져올거임
-  const getToken = () => {
-    return 'kkk';
+  const getToken = async () => {
+    try {
+      const token = await getCoupleRoomToken({ coupleId: 1 });
+      return token;
+    } catch (error) {
+      console.log('token 에러', error);
+    }
   };
 
   return (
