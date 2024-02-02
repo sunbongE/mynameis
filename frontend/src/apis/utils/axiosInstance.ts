@@ -4,7 +4,7 @@ const instance = axios.create({
   baseURL: 'http://localhost:8080',
 });
 
-const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJka2d1czAwIiwiaWF0IjoxNzA2ODM3MTk4LCJleHAiOjE3MDgxMzMxOTh9.4c_JPDf1MbX6MBH97F2mwvh2RjVnaACigstT6Uuvlfc';
+const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJka2d1cyIsImlhdCI6MTcwNjg0OTk1NCwiZXhwIjoxNzA4MTQ1OTU0fQ.EfvnI7WYRS1EN8KnFaLKthfRFNQE-FAj4s6XDWQcD5c';
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
   config.headers['Authorization'] = `Bearer ${accessToken}`;

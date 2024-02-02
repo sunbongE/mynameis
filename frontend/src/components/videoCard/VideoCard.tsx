@@ -14,15 +14,20 @@ const StyledVideoCard = styled.div<VideoCardProps>`
   position: relative;
   width: ${(props) => (props.width ? props.width : '700px')};
   height: ${(props) => (props.height ? props.height : '350px')};
-  border-radius: 20px;
-  border: 1px solid lightgray;
-  /* background:
-    url(<path-to-image>),
-    lightgray 0px -92.722px / 100% 197.778% no-repeat; */
 
-  & focus-within {
+  /* border: 1px solid lightgray; */
+  border: 1px solid black /* background:
+    url(<path-to-image>),
+    lightgray 0px -92.722px / 100% 197.778% no-repeat; */ & focus-within {
     border: 3px solid #3aff42;
   }
+`;
+
+const StyledVideo = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: 20px;
 `;
 
 /**
@@ -44,8 +49,8 @@ function VideoCard(props: VideoCardProps) {
 
   return (
     <StyledVideoCard width={props.width} height={props.height} streamManager={props.streamManager} userType={0}>
-      <video autoPlay={true} ref={videoRef}></video>
-      {props.children}
+      <StyledVideo autoPlay={true} ref={videoRef} width={'900'} height={'600px'}></StyledVideo>
+      {/* {props.children} */}
     </StyledVideoCard>
   );
 }
