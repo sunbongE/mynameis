@@ -17,7 +17,7 @@ public class Chat {
     private Long chatId; // 보내는 채팅 고유 번호.
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "chat_room_id"),
             @JoinColumn(name = "user_id")

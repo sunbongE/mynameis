@@ -1,12 +1,11 @@
 package com.ssafy.myname.db.entity;
 
 import com.ssafy.myname.db.entity.Chats.ChatJoinInfo;
-import com.ssafy.myname.db.entity.matching.JoinInfo;
+import com.ssafy.myname.db.entity.meeting.JoinInfo;
 import com.ssafy.myname.dto.request.auth.SignUpReqDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -74,10 +73,6 @@ public class User {
     @Column(length = 11, unique = true)
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "couple_id")
-    private Couple couple;
-
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'READY'")
@@ -104,6 +99,10 @@ public class User {
     // 참여정보 데이터들
     @OneToMany(mappedBy = "user")
     private List<JoinInfo> joinInfos = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "couple_id")
+    private Couple couple;
 
     public User() {
     }

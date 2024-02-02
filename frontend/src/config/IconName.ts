@@ -25,3 +25,7 @@ export const Check_green: string = '/icons/check_green.svg';
 export const Check_red: string = '/icons/check_red.svg';
 export const Report: string = './icons/report.svg';
 export const ReportRed: string = './icons/reportRed.svg';
+export const SendMsg: string = '/icons/send.svg';
+export const Out: string = '/icons/out.svg';
+export const Blink: string = '/icons/blink.svg';
+export const Video: string = '/icons/video.svg';

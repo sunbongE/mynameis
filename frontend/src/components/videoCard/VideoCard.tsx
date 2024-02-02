@@ -1,9 +1,13 @@
+import { StreamManager } from 'openvidu-browser';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface VideoCardProps {
   width: string;
   height: string;
   children?: React.ReactNode;
+  streamManager: StreamManager | undefined;
+  userType: number;
 }
 
 const StyledVideoCard = styled.div<VideoCardProps>`
@@ -29,8 +33,16 @@ const StyledVideoCard = styled.div<VideoCardProps>`
  * @returns
  */
 function VideoCard(props: VideoCardProps) {
-  return (
-    <StyledVideoCard width={props.width} height={props.height}>
+  const videoRef = useRef<HTMLVideoElement>(null);
+    useEffect(() => {
+      if (props.streamManager && videoRef.current) {
+        props.streamManager.addVideoElement(videoRef.current);
+      }
+    }, [props.streamManager]);
+
+return (
+    <StyledVideoCard width={props.width} height={props.height} streamManager={props.streamManager} userType={0}>
+      <video autoPlay={true} ref={videoRef}></video>
       {props.children}
     </StyledVideoCard>
   );

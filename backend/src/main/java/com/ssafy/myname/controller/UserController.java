@@ -2,7 +2,7 @@ package com.ssafy.myname.controller;
 
 import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.repository.RefreshTokenRepository;
+//import com.ssafy.myname.db.repository.RefreshTokenRepository;
 import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.RefreshTokenDto;
@@ -34,6 +34,9 @@ import java.util.Map;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+//    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtProvider jwtProvider;
+    private final AuthServiceImpl authServiceImpl;
     private final JwtService jwtService;
     private final UserService userService;
     private final UserRepository userRepository;
