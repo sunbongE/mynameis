@@ -13,7 +13,7 @@ const VoteCountHeart = (props: VoteCountHeartProps) => {
 
   return (
     <Icon src={iconSrc} width='40px'>
-      <span>{props.count}</span>
+      <span style={{ fontFamily: 'Pretendard Regular' }}>{props.count}</span>
     </Icon>
   );
 };

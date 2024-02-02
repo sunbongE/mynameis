@@ -3,10 +3,11 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface VideoCardProps {
-  streamManager: StreamManager | undefined;
-  userType: number;
   width: string;
   height: string;
+  children?: React.ReactNode;
+  streamManager: StreamManager | undefined;
+  userType: number;
 }
 
 const StyledVideoCard = styled.div<VideoCardProps>`
@@ -33,15 +34,16 @@ const StyledVideoCard = styled.div<VideoCardProps>`
  */
 function VideoCard(props: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    if (props.streamManager && videoRef.current) {
-      props.streamManager.addVideoElement(videoRef.current);
-    }
-  }, [props.streamManager]);
+    useEffect(() => {
+      if (props.streamManager && videoRef.current) {
+        props.streamManager.addVideoElement(videoRef.current);
+      }
+    }, [props.streamManager]);
 
-  return (
+return (
     <StyledVideoCard width={props.width} height={props.height} streamManager={props.streamManager} userType={0}>
       <video autoPlay={true} ref={videoRef}></video>
+      {props.children}
     </StyledVideoCard>
   );
 }
