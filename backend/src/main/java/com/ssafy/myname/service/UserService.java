@@ -16,4 +16,5 @@ public interface UserService {
     void emailUrl(String userId);
 
 
+    ResponseEntity<?> emailModify(String userId, String password);
 }

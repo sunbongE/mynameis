@@ -8,6 +8,7 @@ import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.alarm.ReadAlarmDto;
 import com.ssafy.myname.dto.request.auth.RefreshTokenDto;
 import com.ssafy.myname.dto.request.users.ModifyUserDto;
+import com.ssafy.myname.dto.request.users.PasswordChangeDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
 import com.ssafy.myname.provider.JwtProvider;
@@ -165,6 +166,12 @@ public class UserController {
     public void emailUrl(Principal principal){
         String userId = principal.getName();
         userService.emailUrl(userId);
+    }
+    @PatchMapping("/change")
+    public ResponseEntity<?> emailModify(Principal principal, @RequestBody PasswordChangeDto dto){
+        String userId = principal.getName();
+        ResponseEntity<?> response = userService.emailModify(userId,dto.getPassword());
+        return response;
     }
 
 }
