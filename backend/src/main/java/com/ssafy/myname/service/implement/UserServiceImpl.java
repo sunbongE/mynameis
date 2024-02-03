@@ -7,6 +7,8 @@ import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.users.ModifyUserDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
+import com.ssafy.myname.dto.response.email.EmailResponseDto;
+import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final Logger logger =  LoggerFactory.getLogger(this.getClass());
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
+    private final EmailProvider emailProvider;
 
     public GetUserInfoResDto getUserInfo(Principal principal) {
         logger.info("** getUserInfo ServiceImpl 실행 ");
@@ -84,5 +87,22 @@ public class UserServiceImpl implements UserService {
         user.setLeave(true);
         userRepository.save(user);
         return ResponseDto.ok();
+    }
+
+    @Override
+    public void emailUrl(String userId) {
+        try{
+            User user = userRepository.findByUserId(userId);
+            String email = user.getEmail();
+            boolean isSuccess = emailProvider.sendMail(email);
+            if(!isSuccess) {
+                logger.info("** 없는 이메일 ");
+            }
+
+        }catch (Exception e){
+            logger.info(e.getMessage());
+
+        }
+        logger.info("** 이메일 전송");
     }
 }
