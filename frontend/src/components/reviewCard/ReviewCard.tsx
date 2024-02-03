@@ -15,26 +15,26 @@ interface ReviewCardProps {
 }
 
 const ReviewCardContainer = styled.div<ReviewCardProps, any>`
-  width: 980px;
-  height: 357px;
+  width: 900px;
+  height: 380px;
   border-radius: 12px;
   background: ${(props) => (props.color === 'pink' ? '#E8B8C5' : '#E1A3B3')};
   display: flex;
   flex-direction: column;
-  padding: 80px 50px 0 50px;
+  padding: 100px 50px 0 50px;
 `;
 
 const ReviewText = styled.p`
   font-family: 'Pretendard Medium';
-  font-size: 24px;
+  font-size: 22px;
   color: #fff;
-  line-height: 40px;
+  line-height: 36px;
   margin-top: 10px;
 `;
 
 const Reivewer = styled.p`
-  font-family: 'Pretendard Medium';
-  font-size: 24px;
+  font-family: 'Pretendard Regular';
+  font-size: 20px;
   color: #fff;
   text-align: right;
 `;
