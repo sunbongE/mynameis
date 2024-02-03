@@ -10,7 +10,6 @@ import Room from '../pages/room/Room';
 import ChatPage from '../pages/chatPage/ChatPage';
 import CoupleMeeting from '../pages/meetingPage/CoupleMeeting';
 
-
 const Router = () => {
   return (
     <BrowserRouter>
@@ -18,8 +17,8 @@ const Router = () => {
         <Route path='/' element={<Main />} />;
         <Route path='/login' element={<Login />} />;
         <Route path='/signup' element={<SignUp />} />;
-        <Route path='/passwordreset' element={<PasswordReset/>} />;
-        <Route path='/emailauth' element={<EmailAuth/>} />;
+        <Route path='/passwordreset' element={<PasswordReset />} />;
+        <Route path='/emailauth' element={<EmailAuth />} />;
         <Route path='/chat' element={<ChatPage />} />;
         <Route path='/couple' element={<CoupleMeeting />} />
         <Route path='/history' element={<History />} />;
