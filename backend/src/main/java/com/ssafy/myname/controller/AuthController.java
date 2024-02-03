@@ -1,9 +1,8 @@
 package com.ssafy.myname.controller;
 
-import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.dto.request.auth.*;
-import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.*;
+import com.ssafy.myname.dto.response.email.EmailResponseDto;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.AuthService;
 import com.ssafy.myname.service.implement.JwtService;
@@ -21,8 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
@@ -49,15 +46,6 @@ public class AuthController {
     }
 
 
-    @PostMapping("/email-certification")
-    public ResponseEntity<? super EmailCertificationResponseDto> emailcertification(
-            @RequestBody @Valid EmailCertificationRequestDto requestBody
-    ) {
-        ResponseEntity<? super EmailCertificationResponseDto> response =
-                authService.emilCertification(requestBody);
-        return response;
-    }
-
     @PostMapping("/phone-certification")
     public ResponseEntity<? super PhoneCertificationResponseDto> phonecerfitication(
             @RequestBody @Valid PhoneCertificationRequestDto requestBody
@@ -68,13 +56,6 @@ public class AuthController {
         return response;
     }
 
-    @PostMapping("/check-certification")
-    public ResponseEntity<? super CheckCertificationResDto> checkCertification(
-            @RequestBody @Valid CheckCertificationReqDto requestBody
-    ) {
-        ResponseEntity<? super CheckCertificationResDto> response = authService.checkCertification(requestBody);
-        return response;
-    }
 
     @PostMapping("/check-phonecertification")
     public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(

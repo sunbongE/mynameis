@@ -25,6 +25,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -155,4 +156,15 @@ public class UserController {
             return ResponseDto.databaseError();
         }
     }
+
+    /**
+     * 회원의 비밀번호 변경가능한 페이지로 이동한다.
+     */
+    @Async
+    @PostMapping("/change")
+    public void emailUrl(Principal principal){
+        String userId = principal.getName();
+        userService.emailUrl(userId);
+    }
+
 }

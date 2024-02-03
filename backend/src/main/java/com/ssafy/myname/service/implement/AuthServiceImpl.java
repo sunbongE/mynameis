@@ -9,24 +9,21 @@ import com.ssafy.myname.db.repository.*;
 import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.*;
+import com.ssafy.myname.dto.response.email.EmailResponseDto;
 import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.provider.PhoneProvider;
 import com.ssafy.myname.service.AuthService;
 import com.ssafy.myname.service.RedisService;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -67,53 +64,8 @@ public class AuthServiceImpl implements AuthService {
         return IdCheckResponseDto.success();
     }
 
-    @Override // 이메일로 인증번호 발급해준다.
-    public ResponseEntity<? super EmailCertificationResponseDto> emilCertification(EmailCertificationRequestDto dto) {
-        try{
 
-            String userId = dto.getUserId();
-            String email = dto.getEmail();
 
-            boolean isExistId = userRepository.existsByUserId(userId);
-            if(isExistId) return EmailCertificationResponseDto.duplicateId();
-
-            String certificationNumber = CertificationNumber.getCertificationNumber();
-            boolean isSuccess =emailProvider.sendCertificationMail(email,certificationNumber);
-            if(!isSuccess) return EmailCertificationResponseDto.mailSendFail();
-
-            Certification certification = new Certification(userId, email, certificationNumber );
-            certificationRepository.save(certification);
-
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-        return EmailCertificationResponseDto.success();
-    }
-
-    @Override
-    public ResponseEntity<? super CheckCertificationResDto> checkCertification(CheckCertificationReqDto dto) {
-        try {
-            String userId = dto.getUserId();
-            String email = dto.getEmail();
-            String certificationNumber = dto.getCertificationNumber();
-
-            Certification certification = certificationRepository.findByUserId(userId);
-            if(certification==null) return CheckCertificationResDto.fail();
-
-            if(!isMatched(certification, email, certificationNumber)){
-                return SignUpResDto.fail();
-            }
-//            boolean isMatched = certification.getEmail().equals(email) && certification.getCertificationNumber().equals(certificationNumber);
-//            if(!isMatched) return  CheckCertificationResDto.fail();
-
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-
-        return CheckCertificationResDto.success();
-    }
 
     @Override // 회원가입
     public ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto) {

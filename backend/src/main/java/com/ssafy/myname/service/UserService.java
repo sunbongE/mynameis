@@ -13,6 +13,7 @@ public interface UserService {
     ResponseEntity<?> modifyUser(String userId, ModifyUserDto modifyUserDto);
 
     ResponseEntity<?> leave(String userId);
+    void emailUrl(String userId);
 
 
 }

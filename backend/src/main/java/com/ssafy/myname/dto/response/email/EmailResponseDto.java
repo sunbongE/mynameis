@@ -1,4 +1,4 @@
-package com.ssafy.myname.dto.response.auth;
+package com.ssafy.myname.dto.response.email;
 
 import com.ssafy.myname.commons.ResponseCode;
 import com.ssafy.myname.commons.ResponseMessage;
@@ -8,14 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Getter
-public class EmailCertificationResponseDto extends ResponseDto{
+public class EmailResponseDto extends ResponseDto{
 
-    private EmailCertificationResponseDto (){
+    private EmailResponseDto(){
         super();
     }
 
-    public static ResponseEntity<EmailCertificationResponseDto> success(){
-        EmailCertificationResponseDto responseBody = new EmailCertificationResponseDto();
+    public static ResponseEntity<EmailResponseDto> success(){
+        EmailResponseDto responseBody = new EmailResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
     public static ResponseEntity<ResponseDto> duplicateId(){
