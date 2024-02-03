@@ -124,16 +124,16 @@ public class CoupleController {
     }
 
     @GetMapping("/video")
-    public ResponseEntity<?> coupleVideo(@RequestParam("coupleId") String coupleId){
+    public ResponseEntity<?> coupleVideo(@RequestParam("coupleId") String coupleId) {
         logger.info("** coupleVideo 호출");
-        logger.info("dto :{}",coupleId);
+        logger.info("dto :{}", coupleId);
         try {
             ResponseEntity<?> response = coupleService.coupleVideo(coupleId);
 
             return response;
 
-        }catch (Exception e){
-           logger.info(e.getMessage());
+        } catch (Exception e) {
+            logger.info(e.getMessage());
             Map<String, String> body = new HashMap<>();
             body.put("msg", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
