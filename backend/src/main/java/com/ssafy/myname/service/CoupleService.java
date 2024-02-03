@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 public interface CoupleService {
     ResponseEntity<?> coupleAccept(User user, Couple couple);
     ResponseEntity<?> deleteCouple(Long coupleId);
-    ResponseEntity<?> breakCouple(Couple couple,User user);
+    ResponseEntity<?> breakCouple(String userId);
     ResponseEntity<?> coupleVideo(String coupleId) throws OpenViduJavaClientException, OpenViduHttpException;
 
 }

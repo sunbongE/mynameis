@@ -107,16 +107,16 @@ public class CoupleController {
         try {
 
             String userId = principal.getName();
-            User user = userRepository.findByUserId(userId);
-            Couple couple = user.getCouple();
+
 
             // 서비스에서 couple데이터 삭제 후 알림 발송
-            ResponseEntity<?> response = coupleService.breakCouple(couple,user);
+            ResponseEntity<?> response = coupleService.breakCouple(userId);
 
 
             return response;
 
         } catch (Exception e) {
+            logger.info(e.getMessage());
             Map<String, String> body = new HashMap<>();
             body.put("msg", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);

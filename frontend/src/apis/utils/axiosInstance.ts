@@ -16,7 +16,6 @@ const AfterLoginInstance = axios.create({
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
   // config.headers['Authorization'] = `Bearer ${Cookies.get('accessToken')}`;
-
   return config;
 };
 

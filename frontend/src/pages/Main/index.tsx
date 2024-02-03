@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { useRecoilState } from 'recoil';
 import { IsLoginAtom } from '../../recoil/atoms/userAuthAtom';
 
-
+import ActionButton from '../../components/actionButton/ActionButton';
 const MainContainer = styled.div`
   width: 100%;
   background-color: #f2eeea;
@@ -55,17 +55,14 @@ const Main = () => {
   const handleMyPage = () => {
     setMyPageOpen(!myPageOpen);
   };
-  const [faqopen, setFaqOpen] = useState<boolean>(false);
+  const [faqOpen, setFaqOpen] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleModalOpen = () => {
     setIsOpen(true);
   };
 
-
   const tempArray = ['일', '이', '삼', '사', '오'];
-
-
 
   const [scrolling, setScrolling] = useState(false);
   // useEffect(() => {
@@ -104,8 +101,8 @@ const Main = () => {
         준비페이지로 이동
       </Button>
       <Footer />
+      <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
     </MainContainer>
-
   );
 };
 

@@ -2,11 +2,14 @@ package com.ssafy.myname.controller;
 
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.RoomRepository;
+import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.dto.request.matching.EnterDto;
 import com.ssafy.myname.dto.request.matching.MatchRequestDto;
 import com.ssafy.myname.dto.response.matching.MatchingAcceptResponseDto;
 import com.ssafy.myname.provider.MatchingProvider;
 import com.ssafy.myname.provider.QuestionProvider;
 import com.ssafy.myname.service.MatchingService;
+import com.ssafy.myname.service.implement.MatchingServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +61,8 @@ public class MatchingController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("아직 구현 안했어요.");
             }
         } catch (Exception e) {
+            logger.info(e.getMessage());
+            logger.info("======================");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MatchingAcceptResponseDto.fail());
         }
     }
@@ -76,7 +81,7 @@ public class MatchingController {
 
     /**
      * 사용자가 내가 매칭이 잡혔는지 확인하는 요청을 보낸것.
-     * 성공 : 방번호, 토큰을 준다.
+     * 성공 : 방번호, 랜덤이름, 회원 정보, 토큰을 준다.
      * 실패 : 대기안내.
      * @param principal
      * @return
@@ -107,8 +112,32 @@ public class MatchingController {
             body.put("msg",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
+    }
 
+    /**
+     * 회원이 들어왔다는 것을 받는다.
+     * 남여 구분하여 Room데이터의 mCnt, wCnt 증가시킨다.
+     * @param dto roomId
+     */
+    @PostMapping("/enter")
+    private void enterMeeting(Principal principal, @RequestBody EnterDto dto){
+
+        try {
+            matchingService.enterMeeting(principal, dto);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+        }
 
     }
 
+    @PostMapping("/exit")
+    private void exitMeeting(Principal principal, @RequestBody EnterDto dto){
+        logger.info("** exitMeeting 실행");
+        try {
+            matchingService.exitMeeting(principal, dto);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+        }
+
+    }
 }

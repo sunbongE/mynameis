@@ -6,13 +6,17 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Setter
 @Getter
-@Table(name = "ALARM")
+@Table(name = "ALARM", indexes = {
+        @Index(name = "idx_receiver", columnList = "receiver")
+})
+@DynamicInsert
 public class Alarm {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +27,10 @@ public class Alarm {
     @Column(length = 100)
     private String msg;
 
-    @NotNull
     @ColumnDefault("false")
     @Column(name = "is_read")
     private Boolean isRead;
 
-    @NotNull
     @CreationTimestamp // insert문 적용시 자동으로 현재시간 입력.
     @Column(name = "create_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createDate;

@@ -95,7 +95,7 @@ const FaqCard = styled.div`
 
 const ActionButton = (props: ActionButtonProps) => {
   return (
-    <ActionButtonContainer>
+    <ActionButtonContainer className='action-button-container'>
       <StyledActionButton
         onClick={() => {
           props.setFaqOpen(!props.faqOpen);

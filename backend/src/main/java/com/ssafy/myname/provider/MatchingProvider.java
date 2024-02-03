@@ -3,12 +3,8 @@ package com.ssafy.myname.provider;
 import com.ssafy.myname.db.entity.MatchStatus;
 import com.ssafy.myname.db.entity.User;
 
-import com.ssafy.myname.db.entity.meeting.JoinInfo;
-import com.ssafy.myname.db.entity.meeting.Room;
-import com.ssafy.myname.db.entity.meeting.RoomType;
-import com.ssafy.myname.db.repository.JoinInfoRepository;
-import com.ssafy.myname.db.repository.RoomRepository;
-import com.ssafy.myname.db.repository.UserRepository;
+import com.ssafy.myname.db.entity.meeting.*;
+import com.ssafy.myname.db.repository.*;
 import io.openvidu.java.client.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +13,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class MatchingProvider {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final JoinInfoRepository joinInfoRepository;
+    private final MnameRepository mnameRepository;
+    private final WnameRepository wnameRepository;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -207,22 +205,25 @@ public class MatchingProvider {
 //    @Async
     public void createRoom(String type) throws OpenViduJavaClientException, OpenViduHttpException {
         // 타입별로 방을 만들어야한다.
+        int nameCnt = 0;
         Room room = new Room();
         if(type.equals("two")){
-            room.setMcnt(TWO);
-            room.setWcnt(TWO);
             room.setRoomType(RoomType.TWO_TO_TWO);
+            nameCnt = TWO;
         }else if (type.equals("three")){
-            room.setMcnt(THREE);
-            room.setWcnt(THREE);
             room.setRoomType(RoomType.THREE_TO_THREE);
+            nameCnt = THREE;
         } else if (type.equals("four")) {
-            room.setMcnt(FOUR);
-            room.setWcnt(FOUR);
             room.setRoomType(RoomType.FOUR_TO_FOUR);
+            nameCnt = FOUR;
         }
         roomRepository.save(room);
 
+        // 랜덤이름 가져오기.
+        Queue<String> manNames = new LinkedList<>(randomNames(nameCnt, true));
+        Queue<String> womanNames = new LinkedList<>(randomNames(nameCnt,false));
+//        logger.info("manNames :{}",manNames);
+//        logger.info("womanNames :{}",womanNames);
         Long roomId = room.getRoomId();
         // 활성화된 방 가져오기.
         Session activeRoom = openvidu.getActiveSession(roomId.toString());
@@ -237,23 +238,61 @@ public class MatchingProvider {
         Connection connection = activeRoom.createConnection(properties);
         String token = connection.getToken();
 
-        // joinInfo세팅
+        logger.info("joinInfo 생성하기.");
         while (!matchedTwoMan.isEmpty()){
             JoinInfo joinInfo = new JoinInfo();
             joinInfo.setRoom(room);
             joinInfo.setToken(token);
+            joinInfo.setRandomName(manNames.poll());
             joinInfo.setUser(userRepository.findByUserId(matchedTwoMan.poll()));
             joinInfoRepository.save(joinInfo);
+            logger.info("joinInfo : {}",joinInfo);
         }
+
 
         while (!matchedTwoWoman.isEmpty()){
             JoinInfo joinInfo = new JoinInfo();
             joinInfo.setRoom(room);
             joinInfo.setToken(token);
+            joinInfo.setRandomName(womanNames.poll());
             joinInfo.setUser(userRepository.findByUserId(matchedTwoWoman.poll()));
             joinInfoRepository.save(joinInfo);
+            logger.info("joinInfo : {}",joinInfo);
         }
     }
 
+    /**
+     *
+     * @param cnt : 받을 이름 개수
+     * @param gender : 성별.
+     * @return
+     */
+    public List<String> randomNames(int cnt, Boolean gender){
+        try{
+            List<String> randomNames = new ArrayList<>();
+
+
+            if(gender){
+                randomNames = mnameRepository.findAll()
+                        .stream()
+                        .map(MRandomName::getName)
+                        .collect(Collectors.toList());
+
+            }else {
+                randomNames = wnameRepository.findAll()
+                        .stream()
+                        .map(WRandomName::getName)
+                        .collect(Collectors.toList());
+            }
+            Collections.shuffle(randomNames,new Random());
+            return randomNames.subList(0,cnt);
+
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return Collections.EMPTY_LIST;
+        }
+
+
+    }
 
 }
