@@ -34,6 +34,8 @@ const StyledTitle = styled.p`
 const StyledContentsContainer = styled.div`
   margin-top: 30px;
   padding-bottom: 10px;
+  width: 34vw;
+  margin-bottom: 50px;
 `;
 
 const StyledContents = styled.p`
@@ -46,7 +48,7 @@ const StyledContents = styled.p`
 const StyledWarnContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 25px;
+  margin-top: 40px;
   margin-bottom: 5px;
 `;
 

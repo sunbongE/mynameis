@@ -30,3 +30,4 @@ export const BlinkRed: string = '/icons/blink_red.svg';
 export const BlinkCircle: string = '/icons/blink_circle.svg';
 export const Video: string = '/icons/video.svg';
 export const Warn: string = '/icons/warn.svg';
+export const Down: string = '/icons/down.svg';
