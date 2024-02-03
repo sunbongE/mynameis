@@ -26,4 +26,7 @@ export const Check_red: string = '/icons/check_red.svg';
 export const SendMsg: string = '/icons/send.svg';
 export const Out: string = '/icons/out.svg';
 export const Blink: string = '/icons/blink.svg';
+export const BlinkRed: string = '/icons/blink_red.svg';
+export const BlinkCircle: string = '/icons/blink_circle.svg';
 export const Video: string = '/icons/video.svg';
+export const Warn: string = '/icons/warn.svg';

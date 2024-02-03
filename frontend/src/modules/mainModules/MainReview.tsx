@@ -14,12 +14,13 @@ import ReviewCard from '../../components/reviewCard/ReviewCard';
 
 const StyledMainStartContainer = styled.div`
   width: 100%;
-  height: 900px;
+  height: 1000px;
   background-color: #f2eeea;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding-top: 150px;
 `;
 
 const StyledReviewSubTitle = styled.p`
