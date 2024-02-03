@@ -16,14 +16,10 @@ const GlobalStyle = createGlobalStyle`
  }
 
  .action-button-container {
-    position: fixed;
+   position: fixed;
    bottom: 30px;
    right: 30px;
   }
-
- 
-
-
 `;
 
 export default GlobalStyle;

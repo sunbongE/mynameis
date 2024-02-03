@@ -9,13 +9,10 @@ import ActionButton from './components/actionButton/ActionButton';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 const App = () => {
-  const [faqOpen, setFaqOpen] = useState<boolean>(false);
-
   return (
     <RecoilRoot>
       <GlobalStyle />
       <Router />
-      <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
     </RecoilRoot>
   );
 };

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
-
+import ActionButton from '../../components/actionButton/ActionButton';
 const MainContainer = styled.div`
   width: 100%;
   background-color: #f2eeea;
@@ -45,7 +45,7 @@ const Main = () => {
   const handleMyPage = () => {
     setMyPageOpen(!myPageOpen);
   };
-  const [faqopen, setFaqOpen] = useState<boolean>(false);
+  const [faqOpen, setFaqOpen] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleModalOpen = () => {
@@ -91,6 +91,7 @@ const Main = () => {
         준비페이지로 이동
       </Button>
       <Footer />
+      <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
     </MainContainer>
   );
 };
