@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
+import Cookies from 'js-cookie';
+import { useRecoilState } from 'recoil';
+import { IsLoginAtom } from '../../recoil/atoms/userAuthAtom';
+
 import ActionButton from '../../components/actionButton/ActionButton';
 const MainContainer = styled.div`
   width: 100%;
@@ -24,20 +28,26 @@ const ChatContainer = styled.div`
 const Main = () => {
   const navigate = useNavigate();
 
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
+  
 
   const handleLogin = () => {
     console.log('로그인');
     setIsLogin(true);
+    navigate('/login')
   };
 
   const handleLogout = () => {
     console.log('로그아웃');
     setMyPageOpen(false);
     setIsLogin(false);
+    Cookies.remove('accessToken');
+    alert('로그아웃 되었습니다.')
   };
+
   const handleSignUp = () => {
     console.log('회원가입');
+    navigate('/signup')
   };
 
   const [myPageOpen, setMyPageOpen] = useState<boolean>(false);
