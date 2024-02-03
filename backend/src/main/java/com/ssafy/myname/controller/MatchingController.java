@@ -81,7 +81,7 @@ public class MatchingController {
 
     /**
      * 사용자가 내가 매칭이 잡혔는지 확인하는 요청을 보낸것.
-     * 성공 : 방번호, 토큰을 준다.
+     * 성공 : 방번호, 랜덤이름, 회원 정보, 토큰을 준다.
      * 실패 : 대기안내.
      * @param principal
      * @return
@@ -132,9 +132,9 @@ public class MatchingController {
 
     @PostMapping("/exit")
     private void exitMeeting(Principal principal, @RequestBody EnterDto dto){
-
+        logger.info("** exitMeeting 실행");
         try {
-            matchingService.enterMeeting(principal, dto);
+            matchingService.exitMeeting(principal, dto);
         }catch (Exception e){
             logger.info(e.getMessage());
         }

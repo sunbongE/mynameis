@@ -46,6 +46,7 @@ public class MatchingServiceImpl implements MatchingService {
 
     @Override
     public void enterMeeting(Principal principal, EnterDto dto) {
+        logger.info("** enterMeeting Impl 실행");
         String roomId = dto.getRoomId();
         Optional<Room> opRoom = roomRepository.findById(Long.parseLong(roomId));
         if (opRoom.isPresent()) {
@@ -79,6 +80,11 @@ public class MatchingServiceImpl implements MatchingService {
                 // 방 데이터 삭제 , 필요하다면 반환값 지정할 예정.
                 roomRepository.deleteById(roomId);
             }
+
+            // 참여정보에서 나간 회원을 지운다.
+            logger.info("실행되나요?");
+            joinInfoRepository.deleteByUser(user);
+
         }
     }
 
