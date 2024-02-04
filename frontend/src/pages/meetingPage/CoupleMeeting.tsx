@@ -6,6 +6,7 @@ import { getCoupleRoomToken } from '../../apis/services/user/room';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
 import { createConstructor } from 'typescript';
+import { matchingCheck } from '../../apis/services/matching/matching';
 const StyledMeetingContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -145,6 +146,7 @@ const CoupleMeeting = () => {
         insertMode: 'APPEND',
         mirror: true,
         contentHint: 'grid',
+        subscriberName: '태호',
       };
 
       const newSubscriber = nSession.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
@@ -157,6 +159,7 @@ const CoupleMeeting = () => {
     nSession.on('streamDestroyed', (event: StreamEvent) => {
       if (event.stream.typeOfVideo === 'CUSTOM') {
         console.log('event.stream.typeOfVideo가 뭔디', event.stream.typeOfVideo);
+        console.log('event.stream.streamManager', event.stream.streamManager);
         deleteSubscriber(event.stream.streamManager);
         console.log('사용자 삭제 ing ', subscribers);
       }
@@ -202,11 +205,13 @@ const CoupleMeeting = () => {
   const getToken = async () => {
     try {
       const data = await getCoupleRoomToken({ coupleId: 1 });
-      // console.log('data token 받았어요', data.token);
+      // const data = await matchingCheck();
+      console.log(data);
+      console.log('data token 받았어요', data.token);
       console.log('data 받아', data);
       setInitMyData({
         mySessionId: data.videoId,
-        myUserName: '아현',
+        myUserName: data.randomName,
       });
       return data.token;
     } catch (error) {
@@ -220,13 +225,17 @@ const CoupleMeeting = () => {
         <VideoContainer>
           {publisher !== undefined && (
             <StreamContainer>
-              <VideoCard streamManager={publisher} userType={0} width='500px' height='400px' />
+              <VideoCard streamManager={publisher} userType={0} width='500px' height='400px'>
+                <div style={{ zIndex: 100, position: 'absolute' }}>{initMyData.myUserName}</div>
+              </VideoCard>
             </StreamContainer>
           )}
           {subscribers.map((sub, i) => (
             <StreamContainer key={i}>
               <span>{sub.id}</span>
-              <VideoCard streamManager={sub} userType={1} width='400px' height='300px' />
+              <VideoCard streamManager={sub} userType={1} width='400px' height='300px'>
+                <div style={{ zIndex: 100, position: 'absolute' }}>{'아아'}</div>
+              </VideoCard>
             </StreamContainer>
           ))}
         </VideoContainer>

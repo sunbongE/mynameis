@@ -5,13 +5,12 @@ export const instance = axios.create({
   baseURL: 'http://localhost:8080/',
 });
 
-const token = sessionStorage.getItem('accessToken');
 export const loginInstance = axios.create({
-  // baseURL: 'http://i10c207.p.ssafy.io:8081/',
   baseURL: 'http://localhost:8080',
+  // baseURL: 'http://i10c207.p.ssafy.io:8081/',
+  // withCredentials: true,
   headers: {
-    // 'Authorization':`Bearer ${Cookies.get('accessToken')}`
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${Cookies.get('accessToken')}`,
   },
 });
 
@@ -29,8 +28,7 @@ const handleResponseError = async (error: AxiosError) => {
 
   switch (status) {
     case 400:
-      if (data['data_header']) alert(data['data_header'].result_message);
-      // else alert('잘못된 정보를 입력하셨습니다.\n다시 확인해주세요');
+      // alert('이미 매칭에 참여 중입니다');
       break;
     case 401:
     // TODO

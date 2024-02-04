@@ -8,7 +8,6 @@ import Cookies from 'js-cookie';
 import { useRecoilState } from 'recoil';
 import { IsLoginAtom, TokenAtom } from '../../recoil/atoms/userAuthAtom';
 
-
 const StyledLoginContainer = styled.div`
   width: 537px;
   height: 70vh;
@@ -39,13 +38,12 @@ const StyledLoginText = styled.p`
 
 function Login() {
   const navigate = useNavigate();
-  const [AccessToken ,setAccessToken] = useRecoilState(TokenAtom)
-  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom)
+  const [AccessToken, setAccessToken] = useRecoilState(TokenAtom);
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
   const [loginData, setLoginData] = useState({
     userId: '',
     password: '',
   });
-
 
   const handleUserIdChange = (value: string) => {
     setLoginData((prevData) => ({ ...prevData, userId: value }));
@@ -65,16 +63,14 @@ function Login() {
 
   const onLogin = async () => {
     try {
-      console.log('logindata', loginData);
       const response = await userLogin(loginData);
-      console.log('response.data : ', response);
       const accessToken = response.token;
-      console.log(accessToken);
+
       // 프론트에서 토큰 쿠키 저장 : name, value, 만료기한
       if (accessToken) {
         Cookies.set('accessToken', accessToken, { expires: 7 });
         console.log('로그인 성공');
-        setIsLogin(true)
+        setIsLogin(true);
       }
       navigate('/');
     } catch (error) {

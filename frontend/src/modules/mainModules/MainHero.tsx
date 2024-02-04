@@ -79,7 +79,7 @@ const MainHero = () => {
 
   const [startModalOpen, setStartModalOpen] = useState<boolean>(false);
 
-  console.log('userInfo', userInfo.couple);
+  // console.log('userInfo', userInfo.couple);
   const handleVideoBtn = () => {
     console.log('화상 채팅 버튼 클릭');
 
