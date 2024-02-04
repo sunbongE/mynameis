@@ -25,8 +25,7 @@ const RadioInputBox = styled.div<RadioButtonStyleProps>`
 `;
 
 const RadioInput = styled.input<RadioButtonStyleProps>`
-  width: 0.1px;
-  height: 1px;
+  display: none;
   margin: -1px;
   position: absolute;
 
@@ -97,11 +96,13 @@ const SimpleRadioBox = styled.div`
 
 const SimpleRadioInput = styled.input`
   margin-right: 5px;
+  width: 14px;
+  height: 14px;
 `;
 
 const SimpleRadioLabel = styled.label`
   font-family: 'Pretendard SemiBold';
-  font-size: 14px;
+  font-size: 16px;
 `;
 
 /**
@@ -115,7 +116,7 @@ export const SimpleRadioButton = (props: RadioButtonProps) => {
     <>
       {props.values.map((value) => (
         <SimpleRadioBox key={value.value}>
-          <SimpleRadioInput type='radio' name={value.name} />
+          <SimpleRadioInput type='radio' name={value.name} checked={props.selected === value.id} onChange={() => props.setSelected(value.id)} />
           <SimpleRadioLabel htmlFor={value.name}>{value.value}</SimpleRadioLabel>
         </SimpleRadioBox>
       ))}

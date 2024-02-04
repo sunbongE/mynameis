@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import heroCouple from '../../assets/img/hero_couple.png';
 import heroSolo from '../../assets/img/hero_solo.png';
@@ -9,7 +9,9 @@ import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { UserInfo } from '../../recoil/atoms/userState';
 import { useNavigate } from 'react-router-dom';
-import instance from '../../apis/utils/axiosInstance';
+import { instance } from '../../apis/utils/axiosInstance';
+import MyModal from '../../components/modal/MyModal';
+import StartModal from './StartModal';
 const StyledMainHeroContainer = styled.div`
   width: 100%;
   height: calc(100vh - 64px);
@@ -75,6 +77,8 @@ const MainHero = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
 
+  const [startModalOpen, setStartModalOpen] = useState<boolean>(false);
+
   console.log('userInfo', userInfo.couple);
   const handleVideoBtn = () => {
     console.log('화상 채팅 버튼 클릭');
@@ -110,9 +114,14 @@ const MainHero = () => {
           </StyledHeroBtnContainer>
         )}
         {!userInfo.couple && (
-          <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
-            시작하기
-          </Button>
+          <>
+            <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
+              시작하기
+            </Button>
+            <MyModal isOpen={startModalOpen} setIsOpen={setStartModalOpen}>
+              <StartModal isOpen={startModalOpen} setIsOpen={setStartModalOpen} />
+            </MyModal>
+          </>
         )}
       </StyledHeroTextContainer>
 

@@ -1,21 +1,17 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
-// const instance = axios.create({
-//   baseURL: 'http://i10c207.p.ssafy.io:8081/',
-// });
-
 export const instance = axios.create({
   baseURL: 'http://localhost:8080/',
 });
 
+const token = sessionStorage.getItem('accessToken');
 export const loginInstance = axios.create({
   // baseURL: 'http://i10c207.p.ssafy.io:8081/',
   baseURL: 'http://localhost:8080',
-  // withCredentials: true,
   headers: {
     // 'Authorization':`Bearer ${Cookies.get('accessToken')}`
-    Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+    Authorization: `Bearer ${token}`,
   },
 });
 

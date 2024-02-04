@@ -6,7 +6,7 @@ import Main from '../pages/Main';
 // import SignUp from '../pages/auth/SignUpPage';
 // import PasswordReset from '../pages/auth/PasswordReset';
 // import EmailAuth from '../pages/auth/EmailAuth';
-// import Room from '../pages/room/Room';
+import Room from '../pages/room/Room';
 import ChatPage from '../pages/chatPage/ChatPage';
 import CoupleMeeting from '../pages/meetingPage/CoupleMeeting';
 
@@ -21,7 +21,7 @@ const Router = () => {
         <Route path='/chat' element={<ChatPage />} />;
         <Route path='/couple' element={<CoupleMeeting />} />
         {/* <Route path='/history' element={<History />} />; */}
-        {/* <Route path='/room' element={<Room />} />; */}
+        <Route path='/room' element={<Room />} />;
       </Routes>
     </BrowserRouter>
   );

@@ -29,12 +29,11 @@ const Main = () => {
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
-  
 
   const handleLogin = () => {
     console.log('로그인');
     setIsLogin(true);
-    navigate('/login')
+    navigate('/login');
   };
 
   const handleLogout = () => {
@@ -42,12 +41,12 @@ const Main = () => {
     setMyPageOpen(false);
     setIsLogin(false);
     Cookies.remove('accessToken');
-    alert('로그아웃 되었습니다.')
+    alert('로그아웃 되었습니다.');
   };
 
   const handleSignUp = () => {
     console.log('회원가입');
-    navigate('/signup')
+    navigate('/signup');
   };
 
   const [myPageOpen, setMyPageOpen] = useState<boolean>(false);
@@ -89,7 +88,7 @@ const Main = () => {
         showHeader={scrolling}
       />
       <MainSection />
-      <Button
+      {/* <Button
         backgroundColor={'#e1a4b4'}
         width={'200px'}
         height={'80px'}
@@ -99,7 +98,7 @@ const Main = () => {
         }}
       >
         준비페이지로 이동
-      </Button>
+      </Button> */}
       <Footer />
       <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
     </MainContainer>
