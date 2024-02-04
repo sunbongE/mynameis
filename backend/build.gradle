@@ -45,6 +45,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'jakarta.mail:jakarta.mail-api:1.6.7' // 최신 버전 사용 가능한지 확인하세요
 	implementation 'net.nurigo:sdk:4.2.7'
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {
