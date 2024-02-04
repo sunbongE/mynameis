@@ -17,4 +17,5 @@ public interface UserService {
 
 
     ResponseEntity<?> emailModify(String userId, String password);
+    void increaseReportPoint(String userId);
 }

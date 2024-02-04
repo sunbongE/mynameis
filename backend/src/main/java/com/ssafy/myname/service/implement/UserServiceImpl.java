@@ -117,4 +117,12 @@ public class UserServiceImpl implements UserService {
             return ResponseDto.databaseError();
         }
     }
+
+    @Override
+    public void increaseReportPoint(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디의 사용자를 찾을 수 없습니다."));
+        user.setReportPoint(user.getReportPoint() + 1);
+        userRepository.save(user);
+    }
 }

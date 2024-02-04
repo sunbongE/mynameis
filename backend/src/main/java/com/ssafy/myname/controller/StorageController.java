@@ -2,6 +2,7 @@ package com.ssafy.myname.controller;
 
 import com.ssafy.myname.service.FirebaseStorageService;
 import com.ssafy.myname.service.ProfanityFilter;
+import com.ssafy.myname.service.UserService;
 import com.ssafy.myname.vito.auth.AuthSTT;
 import com.ssafy.myname.vito.batch.GetTranscribe;
 import com.ssafy.myname.vito.batch.PostTranscribe;
@@ -20,12 +21,14 @@ public class StorageController {
     private final FirebaseStorageService storageService;
     private final AuthSTT auth;
     private final ProfanityFilter profanityFilter;
+    private final UserService userService;
 
     @Autowired
-    public StorageController(FirebaseStorageService storageService, AuthSTT auth, ProfanityFilter profanityFilter) {
+    public StorageController(FirebaseStorageService storageService, AuthSTT auth, ProfanityFilter profanityFilter, UserService userService) {
         this.storageService = storageService;
         this.auth = auth;
         this.profanityFilter = profanityFilter;
+        this.userService = userService;
     }
 
     @PostMapping("/upload")
@@ -82,6 +85,10 @@ public class StorageController {
 
                     if (isProfanityDetected) { // 욕설이나 성희롱 단어가 검출되었으면
                         String deleteMessage = storageService.deleteReport(reportId); // 동영상 파일 삭제
+
+                        // User의 'report_point' 필드의 값에 +1
+                        userService.increaseReportPoint(reportedId);
+
                         return new ResponseEntity<>(deleteMessage, HttpStatus.OK);
                     }
 
