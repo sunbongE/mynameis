@@ -1,8 +1,12 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+
+// const instance = axios.create({
+//   baseURL: 'http://i10c207.p.ssafy.io:8081/',
+// });
 
 const instance = axios.create({
-  baseURL: 'http://i10c207.p.ssafy.io:8081/',
+  baseURL: 'http://localhost:8080/',
 });
 
 // const loginInstance = axios.create({
@@ -13,11 +17,11 @@ const instance = axios.create({
 //   }
 // });
 
-const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJka2d1cyIsImlhdCI6MTcwNjg0OTk1NCwiZXhwIjoxNzA4MTQ1OTU0fQ.EfvnI7WYRS1EN8KnFaLKthfRFNQE-FAj4s6XDWQcD5c';
+// const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmh5biIsImlhdCI6MTcwNjk0ODcyNCwiZXhwIjoxNzA4MjQ0NzI0fQ.kma6Fp456A7yVoEjvnVxAUhWsFDx2hJ-98pfaqNHQmM';
 
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
-  config.headers['Authorization'] = `Bearer ${accessToken}`;
+  config.headers['Authorization'] = `Bearer ${sessionStorage.getItem('accessToken')}`;
 
   return config;
 };
@@ -54,14 +58,10 @@ const handleRequestError = (error: AxiosError) => {
   return Promise.reject(error);
 };
 
-instance.interceptors.request.use(setCommonHeaders, handleRequestError);
+// instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
-
 
 // loginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
 // loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
-
-
-
 
 export default instance;
