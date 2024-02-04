@@ -60,16 +60,17 @@ public class GetUserInfoResDto {
     @Override
     public String toString() {
         return "{" +
-                "name='" + name + '\'' +
-                ", coin=" + coin +
-                ", gender=" + gender +
-                ", birth='" + birth + '\'' +
-                ", area='" + area + '\'' +
-                ", job='" + job + '\'' +
-                ", tag=" + tag +
-                ", religion='" + religion + '\'' +
-                ", coupleId=" + coupleId +
-                '}';
+                "\"name\":\"" + name + "\"," +
+                "\"coin\":" + coin + "," +
+                "\"gender\":" + gender + "," +
+                "\"birth\":\"" + birth + "\"," +
+                "\"area\":\"" + area + "\"," +
+                "\"job\":\"" + job + "\"," +
+                "\"tag\":" + tag + "," +
+                "\"religion\":\"" + religion + "\"," +
+                "\"coupleId\":" + coupleId +
+                "}";
     }
+
 }
 
