@@ -130,26 +130,26 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", birth='" + birth + '\'' +
-                ", gender=" + gender +
-                ", area='" + area + '\'' +
-                ", religion='" + religion + '\'' +
-                ", job='" + job + '\'' +
-                ", coin=" + coin +
-                ", joinDate=" + joinDate +
-                ", updateDate=" + updateDate +
-                ", isLeave=" + isLeave +
-                ", role=" + role +
-                ", phone='" + phone + '\'' +
-                ", matchStatus=" + matchStatus +
-                ", reportPoint=" + reportPoint +
-                ", email='" + email + '\'' +
-                ", myAlarms=" + myAlarms +
-                ", tags=" + tags +
-                '}';
+        return "\'{" +
+                "\"userId\":\"" + userId + "\"," +
+                "\"password\":\"" + password + "\"," +
+                "\"name\":\"" + name + "\"," +
+                "\"birth\":\"" + birth + "\"," +
+                "\"gender\":" + gender + "," +
+                "\"area\":\"" + area + "\"," +
+                "\"religion\":\"" + religion + "\"," +
+                "\"job\":\"" + job + "\"," +
+                "\"coin\":" + coin + "," +
+                "\"joinDate\":\"" + joinDate + "\"," +
+                "\"updateDate\":\"" + updateDate + "\"," +
+                "\"isLeave\":" + isLeave + "," +
+                "\"role\":" + role + "," +
+                "\"phone\":\"" + phone + "\"," +
+                "\"matchStatus\":" + matchStatus + "," +
+                "\"reportPoint\":" + reportPoint + "," +
+                "\"email\":\"" + email + "\"," +
+                "\"myAlarms\":" + myAlarms + "," +
+                "\"tags\":" + tags +
+                "}\'";
     }
 }

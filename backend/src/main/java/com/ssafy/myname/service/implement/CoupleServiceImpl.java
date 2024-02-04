@@ -57,9 +57,10 @@ public class CoupleServiceImpl implements CoupleService {
                 women.setCouple(couple);
                 userRepository.save(women);
 
-
-
                 body.put("msg","커플이 되었습니다.");
+
+                // 커플 채팅방 테이블 생성.
+
                 return ResponseEntity.status(HttpStatus.OK).body(body);
             }
                 body.put("msg","한명이 수락했습니다.");
