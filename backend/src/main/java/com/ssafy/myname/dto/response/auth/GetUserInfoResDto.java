@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -66,7 +67,7 @@ public class GetUserInfoResDto {
                 "\"birth\":\"" + birth + "\"," +
                 "\"area\":\"" + area + "\"," +
                 "\"job\":\"" + job + "\"," +
-                "\"tag\":" + tag + "," +
+                "\"tag\":[" + tag.stream().map(t -> "\"" + t + "\"").collect(Collectors.joining(", ")) + "]," +
                 "\"religion\":\"" + religion + "\"," +
                 "\"coupleId\":" + coupleId +
                 "}";
