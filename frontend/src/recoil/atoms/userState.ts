@@ -8,6 +8,6 @@ export const userInfoState = atom<UserInfo>({
   key: 'userInfoState',
   default: {
     userId: '1',
-    couple: false,
+    couple: true,
   },
 });
