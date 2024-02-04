@@ -30,4 +30,5 @@ public class ChatRoom {
     private List<ChatJoinInfo> chatJoinInfo;
 
 
+
 }

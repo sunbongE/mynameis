@@ -1,5 +1,7 @@
 package com.ssafy.myname.controller;
 
+import com.ssafy.myname.db.repository.CoupleChatRoomRepository;
+import com.ssafy.myname.dto.request.chat.ChatRoomDto;
 import com.ssafy.myname.provider.MatchingProvider;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,12 +20,32 @@ import java.util.List;
 public class TestController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final MatchingProvider matchingProvider;
+    private final CoupleChatRoomRepository coupleChatRoomRepository;
+
     @GetMapping("/getRandomNames")
-    public ResponseEntity<?> getRandomName(){
+    public ResponseEntity<?> getRandomName() {
         List<String> man = matchingProvider.randomNames(2, true);
         List<String> woman = matchingProvider.randomNames(2, false);
-        logger.info("man : {}",man);
-        logger.info("woman : {}",woman);
+        logger.info("man : {}", man);
+        logger.info("woman : {}", woman);
+        return null;
+    }
+
+    @GetMapping("/createChatRoom")
+    public ChatRoomDto createChatRoom() {
+
+        try {
+            ChatRoomDto chatRoom = coupleChatRoomRepository.createChatRoom("45606");
+            if(coupleChatRoomRepository.findRoomById("45606")==null){
+
+                return null;
+
+            }
+            return coupleChatRoomRepository.findRoomById("45606");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }
