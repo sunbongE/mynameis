@@ -123,18 +123,22 @@ const Room = () => {
       getToken().then(async (token: string) => {
         console.log('가져온 token', token);
         session
-          .connect(token, { clientData: initMyData.myUserName })
+          .connect(token, { clientData: JSON.stringify(initMyData) })
           .then(async () => {
             // 4.2 user media 객체 생성
             OV.getUserMedia(cameraStream).then((mediaStream) => {
               const videoTrack = mediaStream.getVideoTracks()[0];
               publisherStream.videoSource = videoTrack;
               console.log('publisherStream', publisherStream);
-              const newPublisher = OV.initPublisher(initMyData.myUserName as string, publisherStream);
+              const newPublisher = OV.initPublisher(JSON.stringify(initMyData), publisherStream);
+              console.log('newPublisher가 뭐야', newPublisher);
 
               newPublisher.once('accessAllowed', async () => {
                 await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
+
                 setPublisher(newPublisher); //
+
+                console.log(publisher?.stream.connection.data);
               });
             });
           })
@@ -160,7 +164,8 @@ const Room = () => {
 
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
       const newSubscribers = [...subscribers, newSubscriber];
-      console.log(subscribers[0].stream.connection.data);
+      console.log(newSubscriber);
+      console.log(newSubscriber.stream.connection);
 
       setSubscribers(newSubscribers);
       console.log('들어온 사용자 subscribers ', newSubscribers);

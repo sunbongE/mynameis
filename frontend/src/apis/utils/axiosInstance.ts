@@ -21,6 +21,13 @@ const setCommonHeaders = async (config: any) => {
   return config;
 };
 
+const setLoginCommonHeaders = async (config: any) => {
+  config.headers['Content-Type'] = 'application/json';
+  config.headers['Authorization'] = `Bearer ${Cookies.get('accessToken')}`;
+
+  return config;
+};
+
 const handleResponseError = async (error: AxiosError) => {
   if (!error.response) return Promise.reject(error);
   const { status, data } = error.response as { status: number; data: any };
@@ -55,5 +62,5 @@ const handleRequestError = (error: AxiosError) => {
 // instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
-loginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
+loginInstance.interceptors.request.use(setLoginCommonHeaders, handleRequestError);
 loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
