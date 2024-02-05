@@ -28,8 +28,6 @@ public class UserServiceImpl implements UserService {
     private final Logger logger =  LoggerFactory.getLogger(this.getClass());
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
-    private final EmailProvider emailProvider;
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public GetUserInfoResDto getUserInfo(Principal principal) {
         logger.info("** getUserInfo ServiceImpl 실행 ");
@@ -86,35 +84,5 @@ public class UserServiceImpl implements UserService {
         return ResponseDto.ok();
     }
 
-    @Override
-    public void emailUrl(String userId) {
-        try{
-            User user = userRepository.findByUserId(userId);
-            String email = user.getEmail();
-            boolean isSuccess = emailProvider.sendMail(email);
-            if(!isSuccess) {
-                logger.info("** 없는 이메일 ");
-            }
 
-        }catch (Exception e){
-            logger.info(e.getMessage());
-
-        }
-        logger.info("** 이메일 전송");
-    }
-
-    @Override
-    public ResponseEntity<?> emailModify(String userId, String password) {
-        try {
-            User user = userRepository.findByUserId(userId);
-            String newPassword = passwordEncoder.encode(password);
-            user.setPassword(newPassword);
-            userRepository.save(user);
-
-            return ResponseDto.ok();
-        }catch (Exception e){
-            logger.info(e.getMessage());
-            return ResponseDto.databaseError();
-        }
-    }
 }
