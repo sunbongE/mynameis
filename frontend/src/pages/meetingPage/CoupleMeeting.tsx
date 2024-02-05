@@ -198,7 +198,7 @@ const CoupleMeeting = () => {
     setSession(undefined);
     setSubscribers([]);
     setInitMyData({ mySessionId: '', myUserName: '김아현' });
-    // setPublisher(undefined);
+    setPublisher(undefined);
   };
 
   // token 가져오기 > 백에서 가져올거임
