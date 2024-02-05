@@ -22,7 +22,10 @@ public interface AuthService {
     ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto);
     // 로그인
     ResponseEntity<? super SignInResDto> signIn(SignInReqDto dto);
+    void emailUrl(String userId);
 
+
+    ResponseEntity<?> emailModify(String email, String password);
 
 
 

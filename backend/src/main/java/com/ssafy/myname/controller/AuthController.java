@@ -1,6 +1,9 @@
 package com.ssafy.myname.controller;
 
+import com.ssafy.myname.db.entity.User;
+import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.*;
+import com.ssafy.myname.dto.request.users.PasswordChangeDto;
 import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.dto.response.email.EmailResponseDto;
 import com.ssafy.myname.provider.JwtProvider;
@@ -19,7 +22,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,6 +37,7 @@ public class AuthController {
     private final JwtProvider jwtProvider;
     private final AuthService authService;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
     @Value("${secret-key}")
     private String secretKey;
 
@@ -102,6 +111,41 @@ public class AuthController {
         }
         return NewAccessTokenResDto.success(newAccessToken,"AccessToken");
     }
+    /**
+     * 회원의 비밀번호 변경가능한 페이지로 이동한다.
+     */
+    @PostMapping("/change")
+    public ResponseEntity<?> emailUrl(@RequestBody ChangeUrlReqDto dto){
+        Map<String,String> response = new HashMap<>();
+        try{
+            User user = userRepository.findByUserId(dto.getUserId());
+            String email = user.getEmail();
+            if(user!=null && dto.getEmail().equals(email)){
+                sendEmail(dto.getEmail());
 
+                response.put("msg","이메일 발송");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+            response.put("msg","없는 회원 정보입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }catch (Exception e){
+
+            response.put("msg",e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @Async
+    private void sendEmail(String email) {
+        authService.emailUrl(email);
+    }
+
+    @PatchMapping("/change")
+    public ResponseEntity<?> emailModify(@RequestBody PasswordChangeDto dto,@RequestParam("email") String email){
+
+        ResponseEntity<?> response = authService.emailModify(email, dto.getPassword());
+        return response;
+    }
 
 }

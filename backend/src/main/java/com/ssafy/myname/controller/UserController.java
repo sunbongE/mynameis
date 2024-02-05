@@ -158,20 +158,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 회원의 비밀번호 변경가능한 페이지로 이동한다.
-     */
-    @Async
-    @PostMapping("/change")
-    public void emailUrl(Principal principal){
-        String userId = principal.getName();
-        userService.emailUrl(userId);
-    }
-    @PatchMapping("/change")
-    public ResponseEntity<?> emailModify(Principal principal, @RequestBody PasswordChangeDto dto){
-        String userId = principal.getName();
-        ResponseEntity<?> response = userService.emailModify(userId,dto.getPassword());
-        return response;
-    }
+
 
 }

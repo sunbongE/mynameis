@@ -15,6 +15,7 @@ import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.provider.PhoneProvider;
 import com.ssafy.myname.service.AuthService;
 import com.ssafy.myname.service.RedisService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +28,15 @@ import java.util.List;
 
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final CertificationRepository certificationRepository;
     private final PhoneCertificationRepository phoneCertificationRepository;
     private final EmailProvider emailProvider;
     private final PhoneProvider phoneProvider;
     private final JwtProvider jwtProvider;
-//    private final RefreshTokenRepository refreshTokenRepository;
     private final RedisService redisService;
     private final TagRepository tagRepository;
 
@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
-    private final Logger LOGGER =  LoggerFactory.getLogger(this.getClass());
+    private final Logger logger =  LoggerFactory.getLogger(this.getClass());
 
     @Override
     public ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto) {
@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override // 회원가입
     public ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto) {
-        LOGGER.info("signUp, dto:{}",dto.toString());
+        logger.info("signUp, dto:{}",dto.toString());
         try {
             // 아이디 중복확인
             String userId = dto.getUserId();
@@ -145,6 +145,36 @@ public class AuthServiceImpl implements AuthService {
         return SignInResDto.success(token, refreshToken);
     }
 
+    @Override
+    public void emailUrl(String email) {
+        try{
+            boolean isSuccess = emailProvider.sendMail(email);
+            if(!isSuccess) {
+                logger.info("** 없는 이메일 ");
+            }
+
+        }catch (Exception e){
+            logger.info(e.getMessage());
+
+        }
+        logger.info("** 이메일 전송");
+    }
+
+    @Override
+    public ResponseEntity<?> emailModify(String email, String password) {
+        try {
+            User user = userRepository.findByEmail(email);
+            String newPassword = passwordEncoder.encode(password);
+            user.setPassword(newPassword);
+            userRepository.save(user);
+
+            return ResponseDto.ok();
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+    }
+
 
     @Override // 휴대폰 번호로 인증번호 발급해준다
     public ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto) {
@@ -200,6 +230,7 @@ public class AuthServiceImpl implements AuthService {
     private boolean isExistUserPhone(String phone) {
         return userRepository.existsByPhone(phone);
     }
+
     private boolean isMatched(Certification certification,String email, String CertificationNumber){
         return certification.getEmail().equals(email) &&
                 certification.getCertificationNumber().equals(CertificationNumber);
