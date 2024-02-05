@@ -7,8 +7,11 @@ import VideoCard from '../../components/videoCard/VideoCard';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import MyModal from '../../components/modal/MyModal';
 import ExitModal from './ExitModal';
+import { StreamManager } from 'openvidu-browser';
 
 interface MeetingReadyProps {
+  streamManager: StreamManager | undefined;
+  userType: number;
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -60,7 +63,7 @@ const MeetingReady = (props: MeetingReadyProps) => {
         <Timer time={time} state={props.state} setState={props.setState} repeatCount={0} />
       </NoticeContainer>
       <VideoContainer>
-        <VideoCard width={'70vw'} height={'70vh'} streamManager={undefined} userType={0}>
+        <VideoCard width={'70vw'} height={'70vh'} streamManager={props.streamManager} userType={props.userType}>
           <HashtagContainer>
             <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#e1a4b4'}>{userInfo.nickName}</HashtagButton>
           </HashtagContainer>

@@ -1,4 +1,4 @@
-import instance from '../../utils/axiosInstance';
+import { instance } from '../../utils/axiosInstance';
 
 const authUrl = 'auth';
 

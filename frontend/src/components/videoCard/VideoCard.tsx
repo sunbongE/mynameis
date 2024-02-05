@@ -50,7 +50,7 @@ function VideoCard(props: VideoCardProps) {
   return (
     <StyledVideoCard width={props.width} height={props.height} streamManager={props.streamManager} userType={0}>
       <StyledVideo autoPlay={true} ref={videoRef} width={'900'} height={'600px'}></StyledVideo>
-      {/* {props.children} */}
+      {props.children}
     </StyledVideoCard>
   );
 }
