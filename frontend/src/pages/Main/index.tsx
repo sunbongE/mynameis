@@ -6,10 +6,13 @@ import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
 import Cookies from 'js-cookie';
-import { useRecoilState } from 'recoil';
-import { IsLoginAtom } from '../../recoil/atoms/userAuthAtom';
-
+import { useRecoilState, useRecoilValue,RecoilValue, useRecoilCallback } from 'recoil';
+import { TokenAtom} from '../../recoil/atoms/userAuthAtom';
+import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
+import { userInfoState } from '../../recoil/atoms/userState';
 import ActionButton from '../../components/actionButton/ActionButton';
+
+
 const MainContainer = styled.div`
   width: 100%;
   background-color: #f2eeea;
@@ -27,22 +30,23 @@ const ChatContainer = styled.div`
 
 const Main = () => {
   const navigate = useNavigate();
-
-  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
-  
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  const isLogin = useRecoilValue(isLoginSelector);
+  const setLoginState = useRecoilCallback(({ set }) => (newValue: boolean) => {
+    set(isLoginSelector, newValue);
+  });
 
   const handleLogin = () => {
     console.log('로그인');
-    setIsLogin(true);
     navigate('/login')
   };
 
   const handleLogout = () => {
     console.log('로그아웃');
     setMyPageOpen(false);
-    setIsLogin(false);
-    Cookies.remove('accessToken');
+    setLoginState(false);
     alert('로그아웃 되었습니다.')
+    window.location.reload()
   };
 
   const handleSignUp = () => {
@@ -80,7 +84,6 @@ const Main = () => {
     <MainContainer>
       <Header
         isLogin={isLogin}
-        setIsLogin={setIsLogin}
         onClickLogin={handleLogin}
         onClickLogout={handleLogout}
         onClickSignUp={handleSignUp}

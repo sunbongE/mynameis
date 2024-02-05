@@ -1,16 +1,17 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8080/',
 });
 
-const AfterLoginInstance = axios.create({
-  baseURL: 'http://i10c207.p.ssafy.io:8081/',
-  withCredentials: true,
-  // headers: {
-  //   'Authorization':`Bearer ${Cookies.get('accessToken')}`
-  // }
+export const loginInstance = axios.create({
+  baseURL: 'http://localhost:8080',
+  // baseURL: 'http://i10c207.p.ssafy.io:8081/',
+  // withCredentials: true,
+  headers: {
+    Authorization: `Bearer ${Cookies.get('accessToken')}`,
+  },
 });
 
 const setCommonHeaders = async (config: any) => {
@@ -54,11 +55,7 @@ const handleRequestError = (error: AxiosError) => {
 instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
-
-AfterLoginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
-AfterLoginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
-
-
-
+loginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
+loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 export default instance;
