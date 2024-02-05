@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VideoCard from '../../components/videoCard/VideoCard';
 import styled from 'styled-components';
-import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent } from 'openvidu-browser';
+import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, Session } from 'openvidu-browser';
 import { getCoupleRoomToken } from '../../apis/services/user/room';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
@@ -46,19 +46,55 @@ const CoupleMeeting = () => {
     navigate('/');
   };
 
-  // sessionId 받아오기 > backend에서 받아옴
+  // var nOV: OpenVidu;
+  // var nSession: Session;
+
+  const initOV = () => {
+    // 1. OpenVidu 객체 생성
+    const nOV = new OpenVidu();
+    setOV(nOV);
+    // 2. Session 초기화
+    const nSession = nOV.initSession();
+    setSession(nSession);
+    // openvidu log 멈춰!!
+    nOV.enableProdMode();
+  };
+
   useEffect(() => {
     if (initMyData.mySessionId === '') {
-      joinSession();
+      console.log('initOV가 되니? 안되는 것 같은데..??????');
+      initOV();
     }
-
-    console.log('mySessionId', initMyData.mySessionId);
   }, [initMyData.mySessionId]);
 
+  useEffect(() => {
+    if (session) {
+      joinSession();
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    // 2. session에서 나간 사용자 삭제
+    session.on('streamDestroyed', (event: StreamEvent) => {
+      if (event.stream.typeOfVideo === 'CUSTOM') {
+        console.log('event.stream.typeOfVideo가 뭔디', event.stream.typeOfVideo);
+        deleteSubscriber(event.stream.streamManager);
+        console.log('사용자 삭제 ing ', subscribers);
+      }
+    });
+
+    // 3. 예외처리
+    session.on('exception', (exception: ExceptionEvent) => {
+      console.warn(exception);
+    });
+  }, [subscribers]);
+
   // 새로고침
-  const beforeUnLoad = (e: BeforeUnloadEvent) => {
-    e.stopPropagation();
-    e.returnValue = '';
+  const beforeUnLoad = (event: BeforeUnloadEvent) => {
+    console.log('beforeUnLoad 새로고침이 일어났지');
+    event.stopPropagation();
+    event.returnValue = '';
     leaveSession();
   };
 
@@ -68,22 +104,14 @@ const CoupleMeeting = () => {
     return () => {
       window.removeEventListener('beforeunload', beforeUnLoad);
     };
-  }, []);
+  });
 
   // 방 생성 로직 (publish 과정)
   const joinSession = () => {
-    console.log('왜 시작을 못하니');
-    // 1. OpenVidu 객체 생성
-    const nOV = new OpenVidu();
-    // openvidu log 멈춰!!
-    nOV.enableProdMode();
+    if (!OV) return;
+    if (!session) return;
 
-    // 2. Session 초기화
-    const nSession = nOV.initSession();
-
-    // 3. 미팅을 종료하거나 뒤로가기 등의 이벤트를 통해 세션을 disconnect 해주기 위해 state에 저장
-    setOV(nOV);
-    setSession(nSession);
+    console.log('joinSession 시작해주겠니...?');
 
     // 4. session에 connect 과정
     const connection = async (): Promise<void> => {
@@ -96,7 +124,7 @@ const CoupleMeeting = () => {
         resolution: '640x480', // The resolution of your video
         frameRate: 30, // The frame rate of your video
         insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-        mirror: true,
+        mirror: false,
         contentHint: 'grid',
       };
 
@@ -115,18 +143,18 @@ const CoupleMeeting = () => {
       // 4.1 token 가져오기
       getToken().then(async (token: string) => {
         console.log('가져온 token', token);
-        nSession
+        session
           .connect(token, { clientData: initMyData.myUserName })
           .then(async () => {
             // 4.2 user media 객체 생성
-            nOV.getUserMedia(cameraStream).then((mediaStream) => {
+            OV.getUserMedia(cameraStream).then((mediaStream) => {
               const videoTrack = mediaStream.getVideoTracks()[0];
               publisherStream.videoSource = videoTrack;
               console.log('publisherStream', publisherStream);
-              const newPublisher = nOV.initPublisher(initMyData.myUserName as string, publisherStream);
+              const newPublisher = OV.initPublisher(initMyData.myUserName as string, publisherStream);
 
               newPublisher.once('accessAllowed', async () => {
-                await nSession.publish(newPublisher); // 개별 사용자가 개시하는 스트림
+                await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
                 setPublisher(newPublisher); //
               });
             });
@@ -136,20 +164,21 @@ const CoupleMeeting = () => {
           });
       });
     };
+    connection();
 
     // subscribe 과정
     // 다른 사용자 파악
     // 1. session에 참가한 사용자 추가
-    nSession.on('streamCreated', (event: StreamEvent) => {
+    session.on('streamCreated', (event: StreamEvent) => {
       console.log('제가 들어왔어요', event);
       const subscriberOptions = {
         insertMode: 'APPEND',
-        mirror: true,
+        mirror: false,
         contentHint: 'grid',
         subscriberName: '태호',
       };
 
-      const newSubscriber = nSession.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
+      const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
       const newSubscribers = [...subscribers, newSubscriber];
 
       setSubscribers(newSubscribers);
@@ -159,7 +188,6 @@ const CoupleMeeting = () => {
     nSession.on('streamDestroyed', (event: StreamEvent) => {
       if (event.stream.typeOfVideo === 'CUSTOM') {
         console.log('event.stream.typeOfVideo가 뭔디', event.stream.typeOfVideo);
-        console.log('event.stream.streamManager', event.stream.streamManager);
         deleteSubscriber(event.stream.streamManager);
         console.log('사용자 삭제 ing ', subscribers);
       }
@@ -246,5 +274,16 @@ const CoupleMeeting = () => {
     </StyledMeetingContainer>
   );
 };
+
+const StyledMeetingContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const VideoContainer = styled.div``;
+const StreamContainer = styled.div``;
 
 export default CoupleMeeting;

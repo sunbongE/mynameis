@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { UserInfo } from '../../recoil/atoms/userState';
 import { useNavigate } from 'react-router-dom';
+import { CoupleMeetingUtilsProps } from '../../utils/CoupleMeetingUtilsProps';
 import { instance } from '../../apis/utils/axiosInstance';
 import MyModal from '../../components/modal/MyModal';
 import StartModal from './StartModal';
@@ -73,6 +74,7 @@ const StyledHeroDownText = styled.p`
   color: #efefef;
   text-align: center;
 `;
+
 const MainHero = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
