@@ -107,7 +107,8 @@ const ConfirmationCodeInput = (props: InputProps) => {
       if (props.onEnterKeyUp) {
         props.onEnterKeyUp(inputValue);
       }
-      setInputValue(''); // 입력값 초기화
+      console.log(inputValue)
+      setInputValue(inputValue); // 입력값 초기화
     }
   };
 

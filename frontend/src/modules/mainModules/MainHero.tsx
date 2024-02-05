@@ -76,8 +76,9 @@ const StyledHeroDownText = styled.p`
 `;
 
 const MainHero = () => {
+  const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
+
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
 
   const [startModalOpen, setStartModalOpen] = useState<boolean>(false);
 
@@ -96,42 +97,46 @@ const MainHero = () => {
     navigate('/couple');
   };
   return (
-    <StyledMainHeroContainer>
-      {!userInfo.couple && <StyledHeroImage src={heroSolo} alt='hero Solo' />}
-      {userInfo.couple && <StyledHeroImage src={heroCouple} alt='hero Solo' />}
+    <>
+      {userInfo && !userInfo.coupleId && (
+        <StyledMainHeroContainer>
+          {!userInfo.coupleId && <StyledHeroImage src={heroSolo} alt='hero Solo' />}
+          {userInfo.coupleId && <StyledHeroImage src={heroCouple} alt='hero Solo' />}
 
-      <StyledHeroTextContainer>
-        <StyledHeroTitle>저의 이름은</StyledHeroTitle>
-        <StyledHeroSubtitle1>매 단계, 새로운 이야기.</StyledHeroSubtitle1>
-        <StyledHeroSubtitle2>나만의 매력을 풀어가는 소개팅을 즐겨보세요.</StyledHeroSubtitle2>
+          <StyledHeroTextContainer>
+            <StyledHeroTitle>저의 이름은</StyledHeroTitle>
+            <StyledHeroSubtitle1>매 단계, 새로운 이야기.</StyledHeroSubtitle1>
+            <StyledHeroSubtitle2>나만의 매력을 풀어가는 소개팅을 즐겨보세요.</StyledHeroSubtitle2>
 
-        {userInfo.couple && (
-          <StyledHeroBtnContainer>
-            <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
-              채팅하기
-            </Button>
-            <Button backgroundColor='#fff' width='100px' height='40px' borderRadius='15px' fontColor='#E1A4B4' onButtonClick={handleVideoBtn}>
-              화상채팅
-            </Button>
-          </StyledHeroBtnContainer>
-        )}
-        {!userInfo.couple && (
-          <>
-            <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
-              시작하기
-            </Button>
-            <MyModal isOpen={startModalOpen} setIsOpen={setStartModalOpen}>
-              <StartModal isOpen={startModalOpen} setIsOpen={setStartModalOpen} />
-            </MyModal>
-          </>
-        )}
-      </StyledHeroTextContainer>
+            {userInfo.coupleId && (
+              <StyledHeroBtnContainer>
+                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white' >
+                  채팅하기
+                </Button>
+                <Button backgroundColor='#fff' width='100px' height='40px' borderRadius='15px' fontColor='#E1A4B4' onButtonClick={handleVideoBtn}>
+                  화상채팅
+                </Button>
+              </StyledHeroBtnContainer>
+            )}
+            {!userInfo.coupleId && (
+              <>
+                <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
+                  시작하기
+                </Button>
+                <MyModal isOpen={startModalOpen} setIsOpen={setStartModalOpen}>
+                  <StartModal isOpen={startModalOpen} setIsOpen={setStartModalOpen} />
+                </MyModal>
+              </>
+            )}
+          </StyledHeroTextContainer>
 
-      <StyledHeroDownContainer>
-        <StyledHeroDownText>My name is</StyledHeroDownText>
-        <Icon src={Down} />
-      </StyledHeroDownContainer>
-    </StyledMainHeroContainer>
+          <StyledHeroDownContainer>
+            <StyledHeroDownText>My name is</StyledHeroDownText>
+            <Icon src={Down} />
+          </StyledHeroDownContainer>
+        </StyledMainHeroContainer>
+      )}
+    </>
   );
 };
 

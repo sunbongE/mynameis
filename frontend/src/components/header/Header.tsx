@@ -6,12 +6,14 @@ import { Bell, Coin } from '../../config/IconName';
 import Button from '../button/Button';
 import { addCommaInNumber } from '../../utils/numberUtil';
 import MyPageCard from '../myPageCard/MyPageCard';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/userState';
 
 interface HeaderProps {
   isLogin: boolean;
   isMyPageOpen: boolean;
   showHeader: boolean;
-  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLogin?: React.Dispatch<React.SetStateAction<boolean>>;
   onClickLogin: () => void;
   onClickLogout: () => void;
   onClickSignUp: () => void;
@@ -56,15 +58,20 @@ const StyledButtonContainer = styled.div`
   column-gap: 10px;
 `;
 const Header = (props: HeaderProps) => {
+  // const isLogin = useRecoilValue(isLoginSelector);
+  // const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  // {userInfo && userInfo.coin &&(
+
+  // )}
   return (
     <HeaderContainer>
       <Logo />
       <LeftContents>
-        {props.isLogin && (
+        {props.isLogin ? (
           <>
             <StyledPointContainer>
               <Icon src={Coin} width='24px' height='24px' />
-              <StyledPoint>{addCommaInNumber(1000)}</StyledPoint>
+              <StyledPoint>{addCommaInNumber(10000)}</StyledPoint>
             </StyledPointContainer>
             <Icon src={Bell} width='24px' height='24px' />
             <StyledButtonContainer>
@@ -75,9 +82,7 @@ const Header = (props: HeaderProps) => {
               <Button onButtonClick={props.onClickLogout} backgroundColor='#fff' width='85px' height='33px' borderRadius='15px' children={<p>로그아웃</p>} fontColor='#E1A3B3' borderColor='#E1A3B3' fontSize='16px' />
             </StyledButtonContainer>
           </>
-        )}
-
-        {!props.isLogin && (
+        ) : (
           <StyledButtonContainer>
             <Button onButtonClick={props.onClickSignUp} backgroundColor='#E1A3B3' width='85px' height='33px' borderRadius='15px' children={<p>회원가입</p>} fontColor='#fff' fontSize='16px' />
             <Button onButtonClick={props.onClickLogin} backgroundColor='#fff' width='85px' height='33px' borderRadius='15px' children={<p>로그인</p>} fontColor='#E1A3B3' borderColor='#E1A3B3' fontSize='16px' />

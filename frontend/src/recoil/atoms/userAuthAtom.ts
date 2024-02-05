@@ -1,18 +1,15 @@
-import { atom, selector } from 'recoil';
+import {atom} from 'recoil';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 export const TokenAtom = atom({
-    key:"TokenAtom",
-    default:undefined,
-})
-
-const isLoginSelector = selector({
-  key: 'isLoginSelector',
-  get: ({get}) => !!get(TokenAtom),
-//   set: ({set}, newValue) => set(myAtom, newValue),
+  key: 'TokenAtom',
+  default: undefined,
+  effects_UNSTABLE: [persistAtom],
 });
 
-export const IsLoginAtom= atom({
-    key:'isLoginAtom',
-    default:false,   
-})
-
+// export const IsLoginAtom = atom({
+//   key: 'isLoginAtom',
+//   default: false,
+// });

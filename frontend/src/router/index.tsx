@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Main from '../pages/Main';
 // import History from '../pages/History';
 import Login from '../pages/auth/LoginPage';
-// import SignUp from '../pages/auth/SignUpPage';
+import SignUp from '../pages/auth/SignUpPage';
 // import PasswordReset from '../pages/auth/PasswordReset';
 // import EmailAuth from '../pages/auth/EmailAuth';
 import Room from '../pages/room/Room';
@@ -15,7 +15,8 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Main />} />;
-        <Route path='/login' element={<Login />} />;{/* <Route path='/signup' element={<SignUp />} />; */}
+        <Route path='/login' element={<Login />} />;
+        <Route path='/signup' element={<SignUp />} />;
         {/* <Route path='/passwordreset' element={<PasswordReset />} />; */}
         {/* <Route path='/emailauth' element={<EmailAuth />} />; */}
         <Route path='/chat' element={<ChatPage />} />;

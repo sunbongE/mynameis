@@ -5,6 +5,9 @@ import { Star, Triangle } from '../../config/IconName';
 import Button from '../button/Button';
 import { Person, Cake, Bag, Location, Coin, Crown } from '../../config/IconName';
 import { addCommaInNumber, formatDate } from '../../utils/numberUtil';
+import { useRecoilState } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/userState';
+import { column } from 'stylis';
 
 interface MyPageCardProps {}
 
@@ -116,134 +119,149 @@ const TriangleContainer = styled.div`
 
 const MyPageCard = (props: MyPageCardProps) => {
   // recoil에서 회원 정보 가져오기?
-  const user = { name: '한소희', coin: 1000, gender: false, birth: '20000814', area: '광주광역시', job: '개발자', tag: ['여행가기', '노래'], religion: '기독교', coupleId: null, isValid: 'true' };
+  // const user = { name: '한소희', coin: 1000, gender: false, birth: '20000814', area: '광주광역시', job: '개발자', tag: ['여행가기', '노래'], religion: '기독교', coupleId: null, isValid: 'true' };
+
+  const [userInfo, setuser] = useRecoilState(userInfoState);
+
+  console.log(userInfo);
 
   return (
     <>
-      <TriangleContainer>
-        <Icon src={Triangle} width='28px' />
-      </TriangleContainer>
-      <MyPageContainer>
-        <UserInfo>
-          <Icon src={Star} width='20px' />
-          <StyledText fontSize='20px'>{user.name}님</StyledText>
-          <Button backgroundColor='white' width='38px' height='18px' borderRadius='8px' borderColor='#e1a4b4' fontColor='#e1a4b4' fontSize='9px'>
-            {user.coupleId ? '커플' : '솔로'}
-          </Button>
-        </UserInfo>
-        <UserDetailContainer width='100%'>
-          <UserDetailHeader>
-            <UserDetailTitle>회원정보</UserDetailTitle>
-            <Button backgroundColor='white' width='38px' height='18px' borderRadius='8px' borderColor='#e1a4b4' fontColor='#e1a4b4' fontSize='9px'>
-              수정
-            </Button>
-          </UserDetailHeader>
-          <UserDetailBody>
-            <UserDetailBodyItem width='50%'>
-              <Icon src={Person} width='12px' />
-              <StyledText fontSize='12px'>{user.gender ? '남성' : '여성'}</StyledText>
-            </UserDetailBodyItem>
-            <UserDetailBodyItem width='50%'>
-              <Icon src={Bag} width='14px' />
-              <StyledText fontSize='12px'>{user.job}</StyledText>
-            </UserDetailBodyItem>
-            <UserDetailBodyItem width='50%'>
-              <Icon src={Cake} width='12px' />
-              <StyledText fontSize='12px'>{formatDate(user.birth)}</StyledText>
-            </UserDetailBodyItem>
-            <UserDetailBodyItem width='50%'>
-              <Icon src={Location} width='10px' />
-              <StyledText fontSize='12px'>{user.area}</StyledText>
-            </UserDetailBodyItem>
-            <UserDetailBodyItem width='50%'>
-              <Icon src={Crown} width='12px' />
-              <StyledText fontSize='12px'>{user.religion}</StyledText>
-            </UserDetailBodyItem>
-          </UserDetailBody>
-        </UserDetailContainer>
-        <UserDetailBox>
-          <UserDetailContainer width='55%'>
-            <UserDetailHeader>
-              <UserDetailTitle>나를 표현하는 단어</UserDetailTitle>
+      {userInfo && !userInfo.coupleId && userInfo.tag && (
+        <>
+          <TriangleContainer>
+            <Icon src={Triangle} width='28px' />
+          </TriangleContainer>
+          <MyPageContainer>
+            <UserInfo>
+              <Icon src={Star} width='20px' />
+              <StyledText fontSize='20px'>{userInfo.name}님</StyledText>
               <Button backgroundColor='white' width='38px' height='18px' borderRadius='8px' borderColor='#e1a4b4' fontColor='#e1a4b4' fontSize='9px'>
-                수정
+                {userInfo.coupleId ? '커플' : '솔로'}
               </Button>
-            </UserDetailHeader>
-            <UserDetailBody>
-              <UserDetailBodyItem width='100%'>
-                <StyledText fontSize='12px'># {user.tag[0]}</StyledText>
-              </UserDetailBodyItem>
-              <UserDetailBodyItem width='100%'>
-                <StyledText fontSize='12px'># {user.tag[1]}</StyledText>
-              </UserDetailBodyItem>
-              <UserDetailBodyItem width='100%'>
-                <StyledText fontSize='12px'># 패러글라이딩</StyledText>
-              </UserDetailBodyItem>
-            </UserDetailBody>
-          </UserDetailContainer>
-          <UserDetailContainer width='42%' backgroundColor='#FF9393' padding='10px'>
-            <UserDetailHeader>
-              <UserDetailBodyItem width='100%'>
-                <Icon src={Coin} width='20px' height='20px' />
-                <StyledText fontSize='12px' fontColor='white'>
-                  보유 코인
-                </StyledText>
-              </UserDetailBodyItem>
-            </UserDetailHeader>
-            <TextContainer>
-              <StyledText fontSize='22px' fontColor='white'>
-                {addCommaInNumber(user.coin)} 코인
-              </StyledText>
-            </TextContainer>
-            <CoinButtonContainer>
-              <Button
-                backgroundColor={'white'}
-                width={'64px'}
-                height={'30px'}
-                borderRadius={'12px'}
-                fontColor='#FF9393'
-                fontSize='12px'
-                onButtonClick={() => {
-                  console.log('코인 충전');
+            </UserInfo>
+            <UserDetailContainer width='100%'>
+              <UserDetailHeader>
+                <UserDetailTitle>회원정보</UserDetailTitle>
+                <Button backgroundColor='white' width='38px' height='18px' borderRadius='8px' borderColor='#e1a4b4' fontColor='#e1a4b4' fontSize='9px'>
+                  수정
+                </Button>
+              </UserDetailHeader>
+              <UserDetailBody>
+                <UserDetailBodyItem width='50%'>
+                  <Icon src={Person} width='12px' />
+                  <StyledText fontSize='12px'>{userInfo.gender ? '남성' : '여성'}</StyledText>
+                </UserDetailBodyItem>
+                <UserDetailBodyItem width='50%'>
+                  <Icon src={Bag} width='14px' />
+                  <StyledText fontSize='12px'>{userInfo.job}</StyledText>
+                </UserDetailBodyItem>
+                <UserDetailBodyItem width='50%'>
+                  <Icon src={Cake} width='12px' />
+                  <StyledText fontSize='12px'>{formatDate(userInfo.birth)}</StyledText>
+                </UserDetailBodyItem>
+                <UserDetailBodyItem width='50%'>
+                  <Icon src={Location} width='10px' />
+                  <StyledText fontSize='12px'>{userInfo.area}</StyledText>
+                </UserDetailBodyItem>
+                <UserDetailBodyItem width='50%'>
+                  <Icon src={Crown} width='12px' />
+                  <StyledText fontSize='12px'>{userInfo.religion}</StyledText>
+                </UserDetailBodyItem>
+              </UserDetailBody>
+            </UserDetailContainer>
+            <UserDetailBox>
+              <UserDetailContainer width='55%'>
+                <UserDetailHeader>
+                  <UserDetailTitle>나를 표현하는 단어</UserDetailTitle>
+                  <Button backgroundColor='white' width='38px' height='18px' borderRadius='8px' borderColor='#e1a4b4' fontColor='#e1a4b4' fontSize='9px'>
+                    수정
+                  </Button>
+                </UserDetailHeader>
+                <UserDetailBody>
+                  <UserDetailBodyItem width='100%'>
+                    <div style={{ width:'100%', display: 'flex', flexDirection:'column', gap: '10px'}}>
+                    {userInfo.tag.map((tag, index) => (
+                      <StyledText key={index} fontSize='12px'>
+                        # {tag}
+                      </StyledText>
+                    ))}
+                    </div>
+                  </UserDetailBodyItem>
+                  {/* <StyledText fontSize='12px'># {userInfo.tag[0]}</StyledText>
+                  <UserDetailBodyItem width='100%'>
+                    <StyledText fontSize='12px'># {userInfo.tag[1]}</StyledText>
+                  </UserDetailBodyItem>
+                  <UserDetailBodyItem width='100%'>
+                    <StyledText fontSize='12px'># {userInfo.tag[2]}</StyledText>
+                  </UserDetailBodyItem> */}
+                </UserDetailBody>
+              </UserDetailContainer>
+              <UserDetailContainer width='42%' backgroundColor='#FF9393' padding='10px'>
+                <UserDetailHeader>
+                  <UserDetailBodyItem width='100%'>
+                    <Icon src={Coin} width='20px' height='20px' />
+                    <StyledText fontSize='12px' fontColor='white'>
+                      보유 코인
+                    </StyledText>
+                  </UserDetailBodyItem>
+                </UserDetailHeader>
+                <TextContainer>
+                  <StyledText fontSize='22px' fontColor='white'>
+                    {addCommaInNumber(userInfo.coin)} 코인
+                  </StyledText>
+                </TextContainer>
+                <CoinButtonContainer>
+                  <Button
+                    backgroundColor={'white'}
+                    width={'64px'}
+                    height={'30px'}
+                    borderRadius={'12px'}
+                    fontColor='#FF9393'
+                    fontSize='12px'
+                    onButtonClick={() => {
+                      console.log('코인 충전');
+                    }}
+                  >
+                    충전
+                  </Button>
+                </CoinButtonContainer>
+              </UserDetailContainer>
+            </UserDetailBox>
+            {userInfo.coupleId && (
+              <UserDetailBox>
+                <UserDetailContainer
+                  width='48%'
+                  onClick={() => {
+                    console.log('채팅방이동');
+                  }}
+                >
+                  <TextContainer>커플 채팅방</TextContainer>
+                </UserDetailContainer>
+                <UserDetailContainer
+                  width='48%'
+                  onClick={() => {
+                    console.log('헤어져');
+                  }}
+                >
+                  <TextContainer>헤어지기</TextContainer>
+                </UserDetailContainer>
+              </UserDetailBox>
+            )}
+            <TextContainer padding='20px 0 0 0'>
+              <StyledText
+                fontSize='10px'
+                fontColor='#dddddd'
+                onClick={() => {
+                  console.log('탈퇴');
                 }}
               >
-                충전
-              </Button>
-            </CoinButtonContainer>
-          </UserDetailContainer>
-        </UserDetailBox>
-        {user.coupleId && (
-          <UserDetailBox>
-            <UserDetailContainer
-              width='48%'
-              onClick={() => {
-                console.log('채팅방이동');
-              }}
-            >
-              <TextContainer>커플 채팅방</TextContainer>
-            </UserDetailContainer>
-            <UserDetailContainer
-              width='48%'
-              onClick={() => {
-                console.log('헤어져');
-              }}
-            >
-              <TextContainer>헤어지기</TextContainer>
-            </UserDetailContainer>
-          </UserDetailBox>
-        )}
-        <TextContainer padding='20px 0 0 0'>
-          <StyledText
-            fontSize='10px'
-            fontColor='#dddddd'
-            onClick={() => {
-              console.log('탈퇴');
-            }}
-          >
-            회원탈퇴
-          </StyledText>
-        </TextContainer>
-      </MyPageContainer>
+                회원탈퇴
+              </StyledText>
+            </TextContainer>
+          </MyPageContainer>
+        </>
+      )}
     </>
   );
 };
