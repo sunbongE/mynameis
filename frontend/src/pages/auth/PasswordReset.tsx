@@ -3,6 +3,7 @@ import { SimpleInput, ConfirmationCodeInput, PasswordInput } from '../../compone
 import Button from '../../components/button/Button';
 import { useState } from 'react';
 import CustomDropdown from '../../components/dropdown/Dropdown';
+import { userPasswordReset } from '../../apis/services/user/user';
 
 const StyledPasswordResetContainer = styled.div`
   width: 537px;
@@ -51,8 +52,17 @@ function PasswordReset() {
   
   const handleNewPasswordConfirmChange = (value:string) => {
     setnewPasswordConfirm(value)
-    console.log(value)
   }
+
+  const onPasswordReset = async () => {
+    console.log('뉴패스워드 : ',newPassword)
+    try {
+      const response = userPasswordReset(newPassword)
+      console.log(response)
+    } catch (error) {
+      console.error('비밀번호 변경 실패')
+    }
+  } 
 
 
     return (
@@ -64,7 +74,7 @@ function PasswordReset() {
                     <SimpleInput placeholder='비밀번호 입력' id='PasswordReset' value={newPassword} onInputChange={handleNewPasswordChange} />
                     <PasswordInput placeholder='비밀번호 확인' value={newPasswordConfirm} onInputChange={handleNewPasswordConfirmChange} isReturn={true} originValue={newPassword} />
                 </div>
-                <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF'>비밀번호 변경</Button>
+                <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={onPasswordReset}>비밀번호 변경</Button>
             </StyledPasswordResetInputContainer>
         </StyledPasswordResetContainer>
     );

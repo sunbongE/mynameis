@@ -28,6 +28,17 @@ export const userPhoneAuthentication = async (params: { phoneId: string; certifi
   return response.data;
 };
 
+export const userEmailAuthentication = async (params: { userId: string; email: string }) => {
+  const response = await instance.post(`${userUrl}/change`, params);
+  return response.data;
+};
+
+export const userPasswordReset = async (newPassword: string) => {
+  const response = await instance.patch(`${userUrl}/change`, newPassword);
+  return response.data;
+};
+
+
 export const getUserInfo = async () => {
   try {
     const token = Cookies.get('accessToken')
