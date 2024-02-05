@@ -29,12 +29,13 @@ export const userPhoneAuthentication = async (params: { phoneId: string; certifi
 };
 
 export const userEmailAuthentication = async (params: { userId: string; email: string }) => {
-  const response = await instance.post(`${userUrl}/change`, params);
+  const response = await instance.post(`${authUrl}/change`, params);
   return response.data;
 };
 
-export const userPasswordReset = async (newPassword: string) => {
-  const response = await instance.patch(`${userUrl}/change`, newPassword);
+export const userPasswordReset = async (params: {password: string}, query: string) => {
+
+  const response = await instance.patch(`${authUrl}/change${query}`, params);
   return response.data;
 };
 

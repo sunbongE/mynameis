@@ -34,6 +34,7 @@ const StyledLoginText = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  cursor: pointer;
 `;
 
 function Login() {

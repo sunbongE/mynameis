@@ -73,7 +73,7 @@ function EmailAuth() {
     console.log(emailAuthData)
     try {
       const response = userEmailAuthentication(emailAuthData)
-      console.log(response)
+      console.log('응답', response)
       alert('이메일 인증 성공 : 입럭하신 이메일로 가신 후 링크를 눌러주세요.')
       // if (response) {
 

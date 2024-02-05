@@ -62,6 +62,13 @@ const StyledCheckText = styled.p<{ isMatch: boolean }>`
   line-height: normal;
 `;
 
+const StyledConfirmed = styled.div`
+  height: 15px;
+  display: flex;
+  margin-right: 10px;
+
+`;
+
 const SimpleInput = (props: InputProps) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -137,13 +144,13 @@ const ConfirmationCodeInput = (props: InputProps) => {
         <StyledCheckedContainer>
           {isReturnMatch && (
             <>
-              <Icon src={Check_green} width='12px' />
+              <Icon src={Check_green} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>인증번호가 일치해요</StyledCheckText>
             </>
           )}
           {!isReturnMatch && (
             <>
-              <Icon src={Check_red} width='12px' />
+              <Icon src={Check_red} width='12px' height='12px' marginRight='5px'/>
               <StyledCheckText isMatch={isReturnMatch}>인증번호가 일치하지 않아요</StyledCheckText>
             </>
           )}
@@ -191,13 +198,13 @@ const PasswordInput = (props: InputProps) => {
         <StyledCheckedContainer>
           {isReturnMatch && (
             <>
-              <Icon src={Check_green} width='12px' />
+              <Icon src={Check_green} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치해요</StyledCheckText>
             </>
           )}
           {!isReturnMatch && (
             <>
-              <Icon src={Check_red} width='12px' />
+              <Icon src={Check_red} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치하지 않아요</StyledCheckText>
             </>
           )}
