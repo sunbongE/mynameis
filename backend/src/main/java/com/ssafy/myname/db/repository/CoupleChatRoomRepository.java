@@ -34,7 +34,7 @@ public class CoupleChatRoomRepository {
     private HashOperations<String, String, String> hashOpsEnterInfo;
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> valueOps;
-    private HashOperations<String, String, ChatRoom> opsHashChatRoom;
+    private HashOperations<String, String, ChatRoomDto> opsHashChatRoom;
 
     // 채팅방의 대화 메시지를 발행하기 위한 redis topic 정보. 서버별로 채팅방에 매치되는 topic정보를 Map에 넣어 roomId로 찾을수 있도록 한다.
     private Map<String, ChannelTopic> topics;

@@ -35,13 +35,9 @@ public class TestController {
     public ChatRoomDto createChatRoom() {
 
         try {
-            ChatRoomDto chatRoom = coupleChatRoomRepository.createChatRoom("45606");
-            if(coupleChatRoomRepository.findRoomById("45606")==null){
-
-                return null;
-
-            }
-            return coupleChatRoomRepository.findRoomById("45606");
+            ChatRoomDto chatRoom = coupleChatRoomRepository.createChatRoom("123123");
+            ChatRoomDto chatRoom2 = coupleChatRoomRepository.createChatRoom("xogh");
+            return coupleChatRoomRepository.findRoomById("xogh");
 
         } catch (Exception e) {
             e.printStackTrace();
