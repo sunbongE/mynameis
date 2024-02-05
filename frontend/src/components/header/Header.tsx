@@ -71,7 +71,7 @@ const Header = (props: HeaderProps) => {
           <>
             <StyledPointContainer>
               <Icon src={Coin} width='24px' height='24px' />
-              <StyledPoint>{addCommaInNumber(1000)}</StyledPoint>
+              <StyledPoint>{addCommaInNumber(10000)}</StyledPoint>
             </StyledPointContainer>
             <Icon src={Bell} width='24px' height='24px' />
             <StyledButtonContainer>
