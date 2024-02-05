@@ -5,20 +5,8 @@ import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, S
 import { getCoupleRoomToken } from '../../apis/services/user/room';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
-import { createConstructor } from 'typescript';
-import { matchingCheck } from '../../apis/services/matching/matching';
-const StyledMeetingContainer = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-const VideoContainer = styled.div``;
-const StreamContainer = styled.div``;
 
-interface MyData {
+export interface MyData {
   mySessionId: String;
   myUserName: String;
 }
@@ -175,7 +163,6 @@ const CoupleMeeting = () => {
         insertMode: 'APPEND',
         mirror: false,
         contentHint: 'grid',
-        subscriberName: '태호',
       };
 
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
@@ -184,21 +171,6 @@ const CoupleMeeting = () => {
       setSubscribers(newSubscribers);
       console.log('들어온 사용자 subscribers ', newSubscribers);
     });
-    // 2. session에서 나간 사용자 삭제
-    nSession.on('streamDestroyed', (event: StreamEvent) => {
-      if (event.stream.typeOfVideo === 'CUSTOM') {
-        console.log('event.stream.typeOfVideo가 뭔디', event.stream.typeOfVideo);
-        deleteSubscriber(event.stream.streamManager);
-        console.log('사용자 삭제 ing ', subscribers);
-      }
-    });
-
-    // 3. 예외처리
-    nSession.on('exception', (exception: ExceptionEvent) => {
-      console.warn(exception);
-    });
-
-    connection();
   };
 
   /// 세션에서 나간 사람들 삭제
@@ -233,13 +205,11 @@ const CoupleMeeting = () => {
   const getToken = async () => {
     try {
       const data = await getCoupleRoomToken({ coupleId: 1 });
-      // const data = await matchingCheck();
-      console.log(data);
-      console.log('data token 받았어요', data.token);
+      // console.log('data token 받았어요', data.token);
       console.log('data 받아', data);
       setInitMyData({
         mySessionId: data.videoId,
-        myUserName: data.randomName,
+        myUserName: '아현',
       });
       return data.token;
     } catch (error) {
@@ -253,17 +223,13 @@ const CoupleMeeting = () => {
         <VideoContainer>
           {publisher !== undefined && (
             <StreamContainer>
-              <VideoCard streamManager={publisher} userType={0} width='500px' height='400px'>
-                <div style={{ zIndex: 100, position: 'absolute' }}>{initMyData.myUserName}</div>
-              </VideoCard>
+              <VideoCard streamManager={publisher} userType={0} width='500px' height='400px' />
             </StreamContainer>
           )}
           {subscribers.map((sub, i) => (
             <StreamContainer key={i}>
               <span>{sub.id}</span>
-              <VideoCard streamManager={sub} userType={1} width='400px' height='300px'>
-                <div style={{ zIndex: 100, position: 'absolute' }}>{'아아'}</div>
-              </VideoCard>
+              <VideoCard streamManager={sub} userType={1} width='400px' height='300px' />
             </StreamContainer>
           ))}
         </VideoContainer>
