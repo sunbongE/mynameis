@@ -64,11 +64,11 @@ function Login() {
   const onLogin = async () => {
     try {
       const response = await userLogin(loginData);
-      const accessToken = response.token;
+      const accessToken = response.refreshToken;
 
       // 프론트에서 토큰 쿠키 저장 : name, value, 만료기한
       if (accessToken) {
-        Cookies.set('accessToken', accessToken, { expires: 7 });
+        Cookies.set('accessToken', accessToken);
         console.log('로그인 성공');
         setIsLogin(true);
       }

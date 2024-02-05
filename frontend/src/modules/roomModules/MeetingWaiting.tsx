@@ -8,14 +8,17 @@ import MyModal from '../../components/modal/MyModal';
 import ExitModal from './ExitModal';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
+import { StreamManager } from 'openvidu-browser';
 
 interface LoadingProps {
+  streamManager: StreamManager | undefined;
+  userType: number;
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const MeetingWaiting = (props: LoadingProps) => {
-  const [seconds, setSeconds] = useState<number>(200000);
+  const [seconds, setSeconds] = useState<number>(10);
   const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
   const [matchingInfo, setMatchingInfo] = useRecoilState<MatchingInfo>(matchingInfoState);
 
@@ -39,11 +42,14 @@ const MeetingWaiting = (props: LoadingProps) => {
         <StyledText fontSize='28px' margin='20px'>
           저의 이름은
         </StyledText>
-        <StyledText fontSize='18px'>당신의 이름은 "{matchingInfo.randomName}" 입니다.</StyledText>
+
+        <StyledText fontSize='18px'>당신의 이름은 "{props.streamManager !== undefined && typeof JSON.parse(props.streamManager.stream.connection.data)}" 입니다.</StyledText>
+        <StyledText fontSize='18px'>당신의 이름은 "{props.streamManager !== undefined && JSON.parse(props.streamManager.stream.connection.data).clientData}" 입니다.</StyledText>
+        {/* <StyledText fontSize='18px'>당신의 이름은 "{typeof props.streamManager?.stream.connection.data}" 입니다.</StyledText> */}
       </LoadingHeader>
       <VideoContainer>
         {/* **********여기에 openvidu 화면 추가해야함******** */}
-        <VideoCard width={'600px'} height={'300px'} streamManager={undefined} userType={0} />
+        <VideoCard width={'600px'} height={'320px'} streamManager={props.streamManager} userType={props.userType} />
       </VideoContainer>
       <StyledText fontSize='18px' margin='0 0 10px 0'>
         좋은 시간 보낼 준비 되셨나요?
