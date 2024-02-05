@@ -233,13 +233,11 @@ public class MatchingProvider {
             activeRoom = openvidu.createSession(new SessionProperties.Builder().customSessionId(roomId.toString()).build());
         }
 
-        // 여기서 접속가능한 토큰 발급
-        ConnectionProperties properties = ConnectionProperties.fromJson(new HashMap<>()).build();
-        Connection connection = activeRoom.createConnection(properties);
-        String token = connection.getToken();
 
         logger.info("joinInfo 생성하기.");
         while (!matchedTwoMan.isEmpty()){
+            String token = createEnterToken(activeRoom);
+
             JoinInfo joinInfo = new JoinInfo();
             joinInfo.setRoom(room);
             joinInfo.setToken(token);
@@ -251,6 +249,8 @@ public class MatchingProvider {
 
 
         while (!matchedTwoWoman.isEmpty()){
+            String token = createEnterToken(activeRoom);
+
             JoinInfo joinInfo = new JoinInfo();
             joinInfo.setRoom(room);
             joinInfo.setToken(token);
@@ -259,6 +259,14 @@ public class MatchingProvider {
             joinInfoRepository.save(joinInfo);
             logger.info("joinInfo : {}",joinInfo);
         }
+    }
+
+    private String createEnterToken(Session activeRoom) throws OpenViduJavaClientException, OpenViduHttpException {
+        // 여기서 접속가능한 토큰 발급
+        ConnectionProperties properties = ConnectionProperties.fromJson(new HashMap<>()).build();
+        Connection connection = activeRoom.createConnection(properties);
+        String token = connection.getToken();
+        return token;
     }
 
     /**
