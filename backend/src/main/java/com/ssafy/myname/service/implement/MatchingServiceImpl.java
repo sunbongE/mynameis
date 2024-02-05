@@ -68,6 +68,8 @@ public class MatchingServiceImpl implements MatchingService {
         Optional<Room> opRoom = roomRepository.findById(roomId);
         if (opRoom.isPresent()) {
             User user = userRepository.findByUserId(principal.getName());
+            user.setMatchStatus(MatchStatus.READY);
+            userRepository.save(user);
             Room room = opRoom.get();
             if (user.getGender()) {
                 room.setMcnt(room.getMcnt() - 1);

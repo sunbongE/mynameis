@@ -7,8 +7,13 @@ import VideoCard from '../../components/videoCard/VideoCard';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import MyModal from '../../components/modal/MyModal';
 import ExitModal from './ExitModal';
+import { StreamManager } from 'openvidu-browser';
+import { matchingInfoState } from '../../recoil/atoms/matchingState';
+import { useRecoilValue } from 'recoil';
 
 interface MeetingReadyProps {
+  streamManager: StreamManager | undefined;
+  userType: number;
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -49,9 +54,20 @@ const HashtagContainer = styled.div`
 const MeetingReady = (props: MeetingReadyProps) => {
   const [time, setTime] = useState(15);
   const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
+  const matchingInfo = useRecoilValue(matchingInfoState);
+  const [userInfo, setUserInfo] = useState({
+    mySessionId: '',
+    myUserName: matchingInfo.randomName,
+    myGender: matchingInfo.gender,
+    myBirth: matchingInfo.birth,
+    myArea: matchingInfo.area,
+    myJob: matchingInfo.job,
+    myTag: matchingInfo.tag,
+    myUserId: matchingInfo.userId,
+  });
 
   // recoil에서 가져올 사용자 정보
-  const userInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'] };
+  // const userInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'] };
 
   return (
     <StyledContainer>
@@ -60,9 +76,9 @@ const MeetingReady = (props: MeetingReadyProps) => {
         <Timer time={time} state={props.state} setState={props.setState} repeatCount={0} />
       </NoticeContainer>
       <VideoContainer>
-        <VideoCard width={'70vw'} height={'70vh'} streamManager={undefined} userType={0}>
+        <VideoCard width={'70vw'} height={'70vh'} streamManager={props.streamManager} userType={props.userType}>
           <HashtagContainer>
-            <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#e1a4b4'}>{userInfo.nickName}</HashtagButton>
+            <HashtagButton backgroundColor={userInfo.myGender ? '#A5A4E1' : '#e1a4b4'}>{userInfo.myUserName}</HashtagButton>
           </HashtagContainer>
         </VideoCard>
       </VideoContainer>
