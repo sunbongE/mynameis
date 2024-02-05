@@ -10,6 +10,7 @@ import { userInfoState } from '../../recoil/atoms/userState';
 import { UserInfo } from '../../recoil/atoms/userState';
 import { useNavigate } from 'react-router-dom';
 import instance from '../../apis/utils/axiosInstance';
+import { CoupleMeetingUtilsProps } from '../../utils/CoupleMeetingUtilsProps';
 const StyledMainHeroContainer = styled.div`
   width: 100%;
   height: calc(100vh - 64px);
@@ -71,6 +72,7 @@ const StyledHeroDownText = styled.p`
   color: #efefef;
   text-align: center;
 `;
+
 const MainHero = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
