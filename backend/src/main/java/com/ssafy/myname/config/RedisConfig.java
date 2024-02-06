@@ -2,6 +2,7 @@ package com.ssafy.myname.config;
 
 import com.ssafy.myname.service.RedisKeyExpirationListener;
 //import com.ssafy.myname.service.RedisSubscriber;
+import com.ssafy.myname.service.RedisSubscriber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,15 +49,7 @@ public class RedisConfig {
 //        container.setConnectionFactory(connectionFactory);
 //        container.addMessageListener(listenerAdapter, channelTopic);
 //        return container;
-//    }
-
-    /**
-     * 실제 메시지를 처리하는 subscriber 설정 추가
-     */
-//    @Bean
-//    public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
-//        return new MessageListenerAdapter(subscriber, "sendMessage");
-//    }
+//    } dfgdfgdfgdfgdf
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -86,11 +79,18 @@ public class RedisConfig {
 //    }
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
-                                                                       RedisKeyExpirationListener keyExpirationListener) {
+                                                                       MessageListenerAdapter listenerAdapter,
+                                                                       ChannelTopic channelTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-//        container.addMessageListener(new MessageListenerAdapter(keyExpirationListener), new PatternTopic("__keyevent@0__:expired"));
+        container.addMessageListener(listenerAdapter, channelTopic);
         return container;
     }
-
+    /**
+     * 실제 메시지를 처리하는 subscriber 설정 추가
+     */
+    @Bean
+    public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
+        return new MessageListenerAdapter(subscriber, "sendMessage");
+    }
 }
