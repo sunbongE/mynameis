@@ -48,8 +48,8 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const socketUrl = 'http://localhost:8080/ws-stomp';
   const client = useRef<CompatClient>();
+
   useEffect(() => {
-    console.log('확인되니?');
     if (userInfo === null) return;
     // setCoupleId(userInfo.coupleId);
     if (coupleId === null) return;
@@ -58,7 +58,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     client.current = Stomp.over(() => sock);
     console.log(client);
     client.current.connect(
-      { 'token ': `Bearer ${Cookies.get('accessToken')}` },
+      { 'token ': `Bearer ${Cookies.get('accessToken')}`, reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
       () => {
         client.current?.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
           console.log('메세지를 받았어요', message.body);
@@ -83,6 +83,11 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
   };
 
   const handleEnterMessage = () => {
+    console.log('들어오긴했어');
+    if (!client.current || !client.current.connected) {
+      console.error('STOMP client is not connected. 여기야');
+      return;
+    }
     console.log('전송할 메세지', message);
     if (userInfo === null) return;
     if (userInfo.name === null) return;
@@ -92,16 +97,22 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     const newMessage: WebSocketMessage = {
       type: 'ENTER',
       roomId: coupleId,
-      sender: userInfo?.name,
-      msg: '',
+      sender: userInfo.name,
+      msg: 'dkfjkd',
     };
 
-    if (stompClient) {
-      stompClient.send('/pub/chat/message', { 'token ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    console.log('stompClient!!', client.current);
+    if (client.current) {
+      client.current.send('/pub/chat/message', { 'token ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     }
   };
 
   const handleSendMessage = () => {
+    if (!client.current || !client.current.connected) {
+      console.error('STOMP client is not connected.');
+      return;
+    }
+
     console.log('전송할 메세지', message);
     if (userInfo === null) return;
     if (userInfo.name === null) return;
@@ -116,12 +127,17 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     };
     console.log('!!! ', newMessage);
     setChatMessages([...chatMessages, newMessage]);
-    if (stompClient) {
-      stompClient.send('/pub/chat/message', { 'token ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    if (client.current) {
+      client.current.send('/pub/chat/message', { 'token ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     }
   };
 
   const handleEnterPress = (msg: string) => {
+    if (!client.current || !client.current.connected) {
+      console.error('STOMP client is not connected.');
+      return;
+    }
+
     if (userInfo === null) return;
 
     if (userInfo.name === null) return;
@@ -137,8 +153,8 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
       msg: message,
     };
     setChatMessages([...chatMessages, newMessage]);
-    if (stompClient) {
-      stompClient.publish({ destination: '/pub/chat/message', body: JSON.stringify(newMessage) });
+    if (client.current) {
+      client.current.publish({ destination: '/pub/chat/message', body: JSON.stringify(newMessage) });
     }
   };
 
