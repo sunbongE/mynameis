@@ -31,11 +31,13 @@ const SenderMessageForm = () => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<Client | null>(null);
+  const socketUrl = 'http://localhost:8080/ws-stomp';
 
   useEffect(() => {
-    const sock = new SockJS('http://localhost:8080/ws-stomp');
+    const sock = new SockJS(socketUrl);
     const client = new Client({
-      brokerURL: 'ws://localhost:8080/ws-stomp',
+      brokerURL: socketUrl,
+      webSocketFactory: () => sock,
       onConnect: () => {
         setStompClient(client);
         client.subscribe('/sub', (message: IMessage) => {
@@ -44,10 +46,12 @@ const SenderMessageForm = () => {
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
         });
       },
-      connectHeaders: {
-        Authorization: `Bearer ${Cookies.get('accessToken')}`,
-      },
+
+      // connectHeaders: {
+      //   Authorization: `Bearer ${Cookies.get('accessToken')}`,
+      // },
     });
+
     client.activate();
   }, []);
 
