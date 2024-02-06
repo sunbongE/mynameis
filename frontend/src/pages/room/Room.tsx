@@ -28,26 +28,68 @@ const Room = () => {
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined); // 방 생성한 사람
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]); // 나를 제외한 참여자들
 
-  // sessionId 받아오기
+  const initOV = () => {
+    // 1. OpenVidu 객체 생성
+    const nOV = new OpenVidu();
+    setOV(nOV);
+    // 2. Session 초기화
+    const nSession = nOV.initSession();
+    setSession(nSession);
+    // openvidu log 멈춰!!
+    nOV.enableProdMode();
+  };
+
   useEffect(() => {
     if (initMyData.mySessionId === '') {
-      joinSession();
+      console.log('initOV가 되니? 안되는 것 같은데..??????');
+      initOV();
     }
   }, [initMyData.mySessionId]);
+
+  useEffect(() => {
+    if (session) {
+      joinSession();
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    // 2. session에서 나간 사용자 삭제
+    session.on('streamDestroyed', (event: StreamEvent) => {
+      if (event.stream.typeOfVideo === 'CUSTOM') {
+        console.log('event.stream.typeOfVideo가 뭔디', event.stream.typeOfVideo);
+        deleteSubscriber(event.stream.streamManager);
+        console.log('사용자 삭제 ing ', subscribers);
+      }
+    });
+
+    // 3. 예외처리
+    session.on('exception', (exception: ExceptionEvent) => {
+      console.warn(exception);
+    });
+  }, [subscribers]);
+
+  // 새로고침
+  const beforeUnLoad = (event: BeforeUnloadEvent) => {
+    console.log('beforeUnLoad 새로고침이 일어났지');
+    event.stopPropagation();
+    event.returnValue = '';
+    leaveSession();
+  };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', beforeUnLoad);
+
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnLoad);
+    };
+  });
 
   // 방 생성 로직 (publish 과정)
   const joinSession = () => {
     // 1. OpenVidu 객체 생성
-    const nOV = new OpenVidu();
-
-    nOV.enableProdMode();
-
-    // 2. Session 초기화
-    const nSession = nOV.initSession();
-
-    // 3. 미팅을 종료하거나 뒤로가기 등의 이벤트를 통해 세션을 disconnect 해주기 위해 state에 저장
-    setOV(nOV);
-    setSession(nSession);
+    if (!OV) return;
+    if (!session) return;
 
     // 4. session에 connect 과정
     const connection = async (): Promise<void> => {
@@ -77,42 +119,26 @@ const Room = () => {
         contentHint: 'grid',
       };
 
-      // token 가져오기 (recoil에 저장된 token에서)
-      const getToken = async () => {
-        try {
-          const data = await matchingCheck();
-          const sessionId = getSessionId(data.data.token);
-          const updateInitMyData = {
-            ...initMyData,
-            mySessionId: String(sessionId),
-            myUserName: matchingInfo.randomName,
-          };
-          setInitMyData(updateInitMyData);
-          return data.data.token;
-        } catch (error) {
-          console.log('token 에러', error);
-        }
-      };
-
       // 4.1 token 가져오기
       getToken().then(async (token: string) => {
         console.log('가져온 token', token);
-        nSession
-          .connect(token, { clientData: initMyData.myUserName })
-          .then(async (res) => {
-            console.log('내 초기 정보예요', initMyData);
+        session
+          .connect(token, { clientData: JSON.stringify(initMyData) })
+          .then(async () => {
             // 4.2 user media 객체 생성
-            nOV.getUserMedia(cameraStream).then((mediaStream) => {
+            OV.getUserMedia(cameraStream).then((mediaStream) => {
               const videoTrack = mediaStream.getVideoTracks()[0];
               publisherStream.videoSource = videoTrack;
               console.log('publisherStream', publisherStream);
-              const newPublisher = nOV.initPublisher(initMyData.myUserName as string, publisherStream);
-              console.log('publisher', newPublisher);
+              const newPublisher = OV.initPublisher(JSON.stringify(initMyData), publisherStream);
+              console.log('newPublisher가 뭐야', newPublisher);
 
               newPublisher.once('accessAllowed', async () => {
-                await nSession.publish(newPublisher); // 개별 사용자가 개시하는 스트림
-                console.log('내 정보11', newPublisher.stream.connection.data);
+                await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
+
                 setPublisher(newPublisher); //
+
+                console.log(publisher?.stream.connection.data);
               });
             });
           })
@@ -121,39 +147,29 @@ const Room = () => {
           });
       });
     };
+    connection();
 
     // subscribe 과정
     // 다른 사용자 파악
     // 1. session에 참가한 사용자 추가
-    nSession.on('streamCreated', (event: StreamEvent) => {
+    session.on('streamCreated', (event: StreamEvent) => {
       console.log('제가 들어왔어요', event);
       const subscriberOptions = {
         insertMode: 'APPEND',
-        mirror: true,
+        mirror: false,
         contentHint: 'grid',
-        subscriberName: 'dd',
+        subscriberSessionId: event.stream.connection.connectionId,
+        subscriberUserName: event.stream.connection.data,
       };
 
-      const newSubscriber = nSession.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
+      const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
       const newSubscribers = [...subscribers, newSubscriber];
+      console.log(newSubscriber);
+      console.log(newSubscriber.stream.connection);
 
       setSubscribers(newSubscribers);
+      console.log('들어온 사용자 subscribers ', newSubscribers);
     });
-
-    // 2. session에서 나간 사용자 삭제
-    nSession.on('streamDestroyed', (event: StreamEvent) => {
-      if (event.stream.typeOfVideo === 'CUSTOM') {
-        deleteSubscriber(event.stream.streamManager);
-        console.log('사용자 삭제 ing ', subscribers);
-      }
-    });
-
-    // 3. 예외처리
-    nSession.on('exception', (exception: ExceptionEvent) => {
-      console.warn(exception);
-    });
-
-    connection();
   };
 
   /// 세션에서 나간 사람들 삭제
@@ -182,6 +198,23 @@ const Room = () => {
     setSubscribers([]);
     setInitMyData({ mySessionId: '', myUserName: '', myGender: false, myArea: '', myBirth: '', myJob: '', myTag: [], myUserId: '' });
     setPublisher(undefined);
+  };
+
+  // token 가져오기 (recoil에 저장된 token에서)
+  const getToken = async () => {
+    try {
+      const data = await matchingCheck();
+      const sessionId = getSessionId(data.data.token);
+      const updateInitMyData = {
+        ...initMyData,
+        mySessionId: String(sessionId),
+        myUserName: matchingInfo.randomName,
+      };
+      setInitMyData(updateInitMyData);
+      return data.data.token;
+    } catch (error) {
+      console.log('token 에러', error);
+    }
   };
 
   return (

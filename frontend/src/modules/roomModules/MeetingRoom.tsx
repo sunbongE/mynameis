@@ -26,7 +26,7 @@ interface MeetingRoomProps {
 
 const MeetingRoom = (props: MeetingRoomProps) => {
   const [notice, setNotice] = useState<string>('공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.');
-  const [time, setTime] = useState<number>(3); // 공지 부분 타이머 시간, 초단위
+  const [time, setTime] = useState<number>(10); // 공지 부분 타이머 시간, 초단위
   const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
@@ -163,6 +163,59 @@ const MeetingRoom = (props: MeetingRoomProps) => {
             </HashtagWrapper>
           </InfoContainer>
         </VideoCard>
+        {props.subscribers.map((sub) => (
+          <VideoCard width={'40vw'} height={'37vh'} streamManager={sub} userType={1}>
+            <InfoContainer>
+              <HashtagContainer justifyContent='space-between'>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <HashtagButton backgroundColor='#e1a4b4'>{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}</HashtagButton>
+                </div>
+              </HashtagContainer>
+              <HashtagWrapper>
+                {props.state.includes('step1') && (
+                  <HashtagContainer>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myArea}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{calcAge(JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myBirth)}세
+                    </HashtagButton>
+                  </HashtagContainer>
+                )}
+                {props.state === 'step12' || props.state === 'step12_vote' ? (
+                  <HashtagContainer>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[0]}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[1]}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[2]}
+                    </HashtagButton>
+                  </HashtagContainer>
+                ) : (
+                  props.state.includes('step123') && (
+                    <HashtagContainer>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[0]}
+                      </HashtagButton>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[1]}
+                      </HashtagButton>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[2]}
+                      </HashtagButton>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myJob}
+                      </HashtagButton>
+                    </HashtagContainer>
+                  )
+                )}
+              </HashtagWrapper>
+            </InfoContainer>
+          </VideoCard>
+        ))}
         {/* {userInfos.map((userInfo) => (
           <VideoCard width={'40vw'} height={'37vh'} streamManager={undefined} userType={0}>
             <InfoContainer>
