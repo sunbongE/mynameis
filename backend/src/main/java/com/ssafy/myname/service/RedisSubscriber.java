@@ -15,25 +15,38 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedisSubscriber implements MessageListener {		// 1.
+public class RedisSubscriber{		// 1.
     private final ObjectMapper objectMapper;
     private final RedisTemplate redisTemplate;
     private final SimpMessageSendingOperations messagingTemplate;
 
     // Redis 에서 메시지가 발행(publish)되면, onMessage 가 해당 메시지를 읽어서 처리
-    @Override
-    public void onMessage(Message message, byte[] pattern) {		// 3.
+//    @Override
+//    public void onMessage(Message message, byte[] pattern) {		// 3.
+//        try {
+//            // redis 에서 발행된 데이터를 받아 역직렬화
+//            String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
+//
+//            // 4. 해당 객체를 ChatDto 객체로 맵핑
+//            ChatDto roomMessage = objectMapper.readValue(publishMessage, ChatDto.class);
+//
+//            // 5. Websocket 구독자에게 채팅 메시지 전송
+//            messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//        }
+//    }
+    /**
+     * Redis에서 메시지가 발행(publish)되면 대기하고 있던 Redis Subscriber가 해당 메시지를 받아 처리한다.
+     */
+    public void sendMessage(String publishMessage) {
         try {
-            // redis 에서 발행된 데이터를 받아 역직렬화
-            String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
-
-            // 4. 해당 객체를 ChatDto 객체로 맵핑
-            ChatDto roomMessage = objectMapper.readValue(publishMessage, ChatDto.class);
-
-            // 5. Websocket 구독자에게 채팅 메시지 전송
-            messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
+            // ChatMessage 객채로 맵핑
+            ChatDto chatMessage = objectMapper.readValue(publishMessage, ChatDto.class);
+            // 채팅방을 구독한 클라이언트에게 메시지 발송
+            messagingTemplate.convertAndSend("/sub/chat/room/" + chatMessage.getRoomId(), chatMessage);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Exception {}", e);
         }
     }
 }
