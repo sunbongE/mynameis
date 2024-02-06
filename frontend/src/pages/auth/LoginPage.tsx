@@ -34,6 +34,7 @@ const StyledLoginText = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  cursor: pointer;
 `;
 
 function Login() {
@@ -96,7 +97,7 @@ function Login() {
         <h2>로그인</h2>
         <StyledLoginInputContainer>
           <SimpleInput placeholder='아이디' value={loginData.userId} onInputChange={handleUserIdChange} />
-          <SimpleInput placeholder='비밀번호' value={loginData.password} onInputChange={handlePasswordChange} onEnterKeyUp={onLogin} />
+          <PasswordInput placeholder='비밀번호' value={loginData.password} onInputChange={handlePasswordChange} onEnterKeyUp={onLogin} />
           <StyledLoginText onClick={goToEmailAuth}>비밀번호를 잊어버리셨나요?</StyledLoginText>
           <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={onLogin}>
             로그인

@@ -250,13 +250,14 @@ function SignUp() {
     try {
       const response = await userPhoneAuthentication({ phoneId: submitPhoneNumber, certificationNumber: phoneAuthNumber });
       setIsPhoneAuth(true);
-      if (isPhoneAuth) {
-        await setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
-      }
+      setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
+  
+      console.log('핸드폰 등록 : ',registrationData.phone)
       console.log('휴대폰 인증 성공', response, submitPhoneNumber);
       alert('휴대폰 인증에 성공했습니다.');
     } catch (error) {
       console.log('휴대폰 인증 실패', error, submitPhoneNumber);
+      console.log('핸드폰 등록 : ',registrationData.phone)
       alert('휴대폰 인증에 실패했습니다.');
     }
   };
