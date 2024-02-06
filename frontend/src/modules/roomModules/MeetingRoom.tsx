@@ -60,7 +60,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setVoteModalOpen(true);
     } else if (props.state === 'step1234') {
       setNotice('참여자 분들의 얼굴이 공개되었습니다! 1명당 5분씩 자유롭게 질문 시간을 가져보세요. 질문 시간 후에는 밸런스 게임이 시작됩니다.');
-      setTime(5);
+      setTime(10);
       setRepeatCount(4);
     } else if (props.state === 'step12345') {
       setNotice('이번 주제는 “10년지기 이성친구 1명 vs 가끔 안부 묻는 이성친구 40명” 입니다. 10분 동안 대화를 나눠보세요!');
