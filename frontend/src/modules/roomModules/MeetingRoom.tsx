@@ -64,8 +64,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setTime(10);
       setRepeatCount(4);
     } else if (props.state === 'step12345') {
-      handleBalanceGame();
-      console.log(balanceGame);
       setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
       setTime(10);
       setRepeatCount(3);
@@ -75,24 +73,16 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     }
   }, [props.state]);
 
-  const [balanceGame, setBalanceGame] = useState<String[]>([]);
-
-  const handleBalanceGame = async () => {
-    const data = await getBalanceGame();
-    setBalanceGame(data.data.questions.slice(1, -1).split(', '));
-  };
-
-  // const myInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' };
-
-  const userInfos = [
-    { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' },
-    { userId: 'ssafy2', gender: false, nickName: '영숙', area: '인천', birth: '19990520', tags: ['ESFJ', '영화보기', '게임'], job: '공무원' },
-    { userId: 'ssafy3', gender: true, nickName: '영철', area: '서울', birth: '19990520', tags: ['ENFP', '영화보기', '클라이밍'], job: '대학생' },
-    { userId: 'ssafy4', gender: true, nickName: '상철', area: '경기', birth: '19990520', tags: ['INFP', '수영', '넷플릭스보기'], job: '의사' },
-  ];
+  const [balanceGame, setBalanceGame] = useState<String[]>([
+    '아프지만 말하지 않는 연인 vs 아프지 않지만 항상 아프다고 말하는 연인',
+    '돈을 잃어도 화를 내는 연인 vs 돈을 아끼는 데 최고인 연인',
+    '싸움 뒤에 모든 것을 얘기하는 연인 vs 싸움 뒤에 전혀 영향받지 않는 듯한 연인',
+  ]);
 
   // 투표 관련 파트
-  const voteValues = userInfos.filter((user) => user.gender !== myInfo.myGender).map((user) => ({ id: user.userId, name: 'gender', value: user.nickName }));
+  const voteValues = props.subscribers
+    .filter((subscriber) => JSON.parse(JSON.parse(subscriber.stream.connection.data).clientData).myGender !== myInfo.myGender)
+    .map((user) => ({ id: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserId, name: 'gender', value: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserName }));
   const [selectedValue, setSelectedValue] = useState<string>('');
   const [voteModalOpen, setVoteModalOpen] = useState(false);
 

@@ -5,8 +5,9 @@ import MeetingReady from '../../modules/roomModules/MeetingReady';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
 import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent } from 'openvidu-browser';
-import { matchingCheck } from '../../apis/services/matching/matching';
+import { matchingCancel, matchingCheck } from '../../apis/services/matching/matching';
 import { getSessionId } from '../../utils/numberUtil';
+import Cookies from 'js-cookie';
 
 const Room = () => {
   const [state, setState] = useState('loading');
@@ -186,11 +187,14 @@ const Room = () => {
   };
 
   // 세션 종료
-  const leaveSession = () => {
+  const leaveSession = async () => {
     console.log('세션 남아있나요? 남아있으면 종료해주세요', session);
     if (session) {
       session.disconnect();
     }
+    Cookies.remove('OVJSESSIONID'); // 쿠키에서 OVJSESSIONID 삭제
+    const data = await matchingCancel(); // 매칭 취소 요청
+    console.log('저 매칭 취소했어요', data.data);
 
     // 상태값 초기화
     setOV(null);
