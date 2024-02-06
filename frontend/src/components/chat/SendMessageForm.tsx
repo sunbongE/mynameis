@@ -6,9 +6,10 @@ import Icon from '../icon/Icon';
 import { SendMsg } from '../../config/IconName';
 import { Client, IMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ChatMessage } from '../../recoil/atoms/textState';
 import { chatMessagesState } from '../../recoil/atoms/textState';
+import { userInfoState, UserInfo } from '../../recoil/atoms/userState';
 import Cookies from 'js-cookie';
 
 const StyledMsgFormContainer = styled.div`
@@ -23,33 +24,45 @@ const StyledMsgFormContainer = styled.div`
 `;
 
 interface WebSocketMessage {
+  type: string;
+  roomId: string;
+  sender: string;
   msg: string;
-  time: string;
-  role: string;
 }
+
+// interface WebSocketMessage {
+//   msg: string;
+//   time: string;
+//   role: string;
+// }
+
 const SenderMessageForm = () => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
+  const userInfo: UserInfo | null = useRecoilValue(userInfoState);
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<Client | null>(null);
   const socketUrl = 'http://localhost:8080/ws-stomp';
 
   useEffect(() => {
+    if (userInfo === null) return;
+    if (userInfo.coupleId === null) return;
+
     const sock = new SockJS(socketUrl);
     const client = new Client({
       brokerURL: socketUrl,
       webSocketFactory: () => sock,
       onConnect: () => {
         setStompClient(client);
-        client.subscribe('/sub', (message: IMessage) => {
+        client.subscribe(`/sub/chat/room/${userInfo?.coupleId}`, (message: IMessage) => {
           console.log('메세지를 받았어요', message.body);
           const newMessage: WebSocketMessage = JSON.parse(message.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
         });
       },
 
-      // connectHeaders: {
-      //   Authorization: `Bearer ${Cookies.get('accessToken')}`,
-      // },
+      connectHeaders: {
+        Authorization: `Bearer ${Cookies.get('accessToken')}`,
+      },
     });
 
     client.activate();
@@ -60,29 +73,39 @@ const SenderMessageForm = () => {
   };
 
   const handleSendMessage = () => {
+    if (userInfo === null) return;
+    if (userInfo.name === null) return;
+    if (userInfo.coupleId === null) return;
+
     console.log('sendMessageForm 메세지 전송할게요', message);
     const newMessage: WebSocketMessage = {
+      type: 'TALK',
+      roomId: userInfo.coupleId,
+      sender: userInfo?.name,
       msg: message,
-      time: '12:35',
-      role: 'sender',
     };
     setChatMessages([...chatMessages, newMessage]);
     if (stompClient) {
-      stompClient.publish({ destination: '/pub', body: JSON.stringify(newMessage) });
+      stompClient.publish({ destination: '/pub/chat/message', body: JSON.stringify(newMessage) });
     }
   };
 
   const handleEnterPress = (msg: string) => {
+    if (userInfo === null) return;
+    if (userInfo.name === null) return;
+    if (userInfo.coupleId === null) return;
+
     setMessage(msg);
     console.log('message!!', message);
     const newMessage: WebSocketMessage = {
+      type: 'TALK',
+      roomId: userInfo.coupleId,
+      sender: userInfo?.name,
       msg: message,
-      time: '12:35',
-      role: 'sender',
     };
     setChatMessages([...chatMessages, newMessage]);
     if (stompClient) {
-      stompClient.publish({ destination: '/pub', body: JSON.stringify(newMessage) });
+      stompClient.publish({ destination: '/pub/chat/message', body: JSON.stringify(newMessage) });
     }
   };
 
