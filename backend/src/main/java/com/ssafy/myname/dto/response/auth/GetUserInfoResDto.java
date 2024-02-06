@@ -16,6 +16,8 @@ public class GetUserInfoResDto {
 
     @NotBlank
     private String name;
+    @NotBlank
+    private String userId;
 
     private int coin;
 
@@ -43,6 +45,7 @@ public class GetUserInfoResDto {
     }
 
     public GetUserInfoResDto(User user) {
+        this.userId = user.getUserId();
         this.name = user.getName();
         this.coin = user.getCoin();
         this.gender = user.getGender();
