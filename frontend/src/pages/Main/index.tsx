@@ -97,6 +97,7 @@ const Main = () => {
       </Button> */}
       <Footer />
       <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
+
       <ChatPage />
     </MainContainer>
   );
