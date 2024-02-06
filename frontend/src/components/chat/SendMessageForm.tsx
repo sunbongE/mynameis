@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { SimpleInput2 } from '../input/Input';
 import Button from '../button/Button';
 import Icon from '../icon/Icon';
 import { SendMsg } from '../../config/IconName';
-import { Client, IMessage } from '@stomp/stompjs';
+import { Client, CompatClient, IMessage, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ChatMessage } from '../../recoil/atoms/textState';
@@ -41,9 +41,9 @@ const SenderMessageForm = () => {
   const userInfo: UserInfo | null = useRecoilValue(userInfoState);
   const [coupleId, setCoupleId] = useState<string | null>('1');
   const [message, setMessage] = useState('');
-  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const socketUrl = 'http://localhost:8080/ws-stomp';
-
+const client = useRef<CompatClient>();
   useEffect(() => {
     console.log('확인되니?');
     if (userInfo === null) return;
@@ -52,25 +52,34 @@ const SenderMessageForm = () => {
     if (coupleId === null) return;
 
     const sock = new SockJS(socketUrl);
-    const client = new Client({
-      brokerURL: socketUrl,
-      webSocketFactory: () => sock,
-      onConnect: () => {
-        setStompClient(client);
-        client.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
-          console.log('메세지를 받았어요', message.body);
-          const newMessage: WebSocketMessage = JSON.parse(message.body);
-          setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-        });
-      },
+    client.current = Stomp.over(() => sock);
+    console.log(client);
+    client.current.connect({}, () => {
+    client.current?.subscribe(`/sub/chat/room/${coupleId}`,(message: IMessage) => {
+        //       console.log('메세지를 받았어요', message.body);
+        //       const newMessage: WebSocketMessage = JSON.parse(message.body);
+        //       setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+        //     } )
+    })}, (error:any) => {console.log("error: ",error)}, {} )} );
+    // const client = new Client({
+    //   brokerURL: socketUrl,
+    //   Stomp.over(() =>SockJS)
+    //   onConnect: () => {
+    //     setStompClient(client);
+    //     client.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
+    //       console.log('메세지를 받았어요', message.body);
+    //       const newMessage: WebSocketMessage = JSON.parse(message.body);
+    //       setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+    //     });
+    //   },
 
-      connectHeaders: {
-        Authorization: `Bearer ${Cookies.get('accessToken')}`,
-      },
-    });
+    //   connectHeaders: {
+    //     Authorization: `Bearer ${Cookies.get('accessToken')}`,
+    //   },
+    // });
 
-    client.activate();
-  }, []);
+    // client.activate();
+
 
   const handleMessageChange = (msg: string) => {
     setMessage(msg);
@@ -92,18 +101,18 @@ const SenderMessageForm = () => {
     console.log('!!! ', newMessage);
     setChatMessages([...chatMessages, newMessage]);
     if (stompClient) {
-      stompClient.publish({ destination: '/pub/chat/message', body: JSON.stringify(newMessage) });
+      stompClient.send('/pub/chat/message', newMessage);
     }
   };
 
   const handleEnterPress = (msg: string) => {
-    console.log('enter 전송할 메세지', msg);
+
     if (userInfo === null) return;
-    console.log('enter 전송할 메세지22', msg);
+
     if (userInfo.name === null) return;
-    console.log('enter 전송할 메세지3', msg);
+    
     if (coupleId === null) return;
-    console.log('enter 전송할 메세지4', msg);
+    
     setMessage(msg);
     console.log('message!!', message);
     const newMessage: WebSocketMessage = {
