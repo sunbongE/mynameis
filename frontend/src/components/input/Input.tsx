@@ -86,15 +86,40 @@ const SimpleInput = (props: InputProps) => {
       // 여기에서는 콜백 함수로 받아온 onEnterKeyUp 함수 호출
       if (props.onEnterKeyUp) {
         props.onEnterKeyUp(inputValue);
+        setInputValue(''); // 입력값 초기화
       }
       setInputValue(''); // 입력값 초기화
     }
   };
 
   return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} onKeyUp={handleEnterKeyPress}></StyledInput>;
-
 };
 
+const SimpleInput2 = (props: InputProps) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSimpleInputChange = (e: any) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    if (props.onInputChange) {
+      props.onInputChange(newValue);
+    }
+    // setInputValue('');
+  };
+
+  const handleEnterKeyPress = (e: any) => {
+    if (e.key === 'Enter' && inputValue.trim() !== '') {
+      // 엔터 키를 눌렀고, 입력값이 비어있지 않다면 Chip 생성
+      // 여기에서는 콜백 함수로 받아온 onEnterKeyUp 함수 호출
+      if (props.onEnterKeyUp) {
+        props.onEnterKeyUp(inputValue);
+      }
+      setInputValue(''); // 입력값 초기화
+    }
+  };
+
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} onKeyUp={handleEnterKeyPress}></StyledInput>;
+};
 const ConfirmationCodeInput = (props: InputProps) => {
   const [isReturnMatch, setIsReturnMatch] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -114,7 +139,7 @@ const ConfirmationCodeInput = (props: InputProps) => {
       if (props.onEnterKeyUp) {
         props.onEnterKeyUp(inputValue);
       }
-      console.log(inputValue)
+      console.log(inputValue);
       setInputValue(inputValue); // 입력값 초기화
     }
   };
@@ -214,4 +239,4 @@ const PasswordInput = (props: InputProps) => {
   );
 };
 
-export { SimpleInput, ConfirmationCodeInput, PasswordInput };
+export { SimpleInput, SimpleInput2, ConfirmationCodeInput, PasswordInput };

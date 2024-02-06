@@ -1,9 +1,14 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { SimpleInput } from '../input/Input';
+import { SimpleInput2 } from '../input/Input';
 import Button from '../button/Button';
 import Icon from '../icon/Icon';
 import { SendMsg } from '../../config/IconName';
+import { Client, IMessage } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { useRecoilState } from 'recoil';
+import { ChatMessage } from '../../recoil/atoms/textState';
+import { chatMessagesState } from '../../recoil/atoms/textState';
 
 const StyledMsgFormContainer = styled.div`
   width: 320px;
@@ -16,27 +21,66 @@ const StyledMsgFormContainer = styled.div`
   box-shadow: 0px 2px 4px 0px rgba(243, 219, 225, 0.25);
 `;
 
+interface WebSocketMessage {
+  msg: string;
+  time: string;
+  role: string;
+}
 const SenderMessageForm = () => {
+  const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
   const [message, setMessage] = useState('');
+  const [stompClient, setStompClient] = useState<Client | null>(null);
 
-  const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value);
+  useEffect(() => {
+    const sock = new SockJS('http://localhost:8080/ws-stomp');
+    const client = new Client({
+      brokerURL: 'ws://localhost:8080/ws-stomp',
+      onConnect: () => {
+        setStompClient(client);
+        client.subscribe('/sub', (message: IMessage) => {
+          console.log('메세지를 받았어요', message.body);
+          const newMessage: WebSocketMessage = JSON.parse(message.body);
+          setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+        });
+      },
+    });
+    client.activate();
+  }, []); // 처음 한 번만 실행
+
+  const handleMessageChange = (msg: string) => {
+    setMessage(msg);
   };
 
   const handleSendMessage = () => {
-    console.log('메세지 전송할게요', message);
+    console.log('sendMessageForm 메세지 전송할게요', message);
+    const newMessage: WebSocketMessage = {
+      msg: message,
+      time: '12:35',
+      role: 'sender',
+    };
+    setChatMessages([...chatMessages, newMessage]);
+    if (stompClient) {
+      stompClient.publish({ destination: '/pub', body: JSON.stringify(newMessage) });
+    }
   };
 
-  const handleEnterPress = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      setMessage(''); // Clear the input value
-      handleSendMessage();
+  const handleEnterPress = (msg: string) => {
+    setMessage(msg);
+    console.log('message!!', message);
+    const newMessage: WebSocketMessage = {
+      msg: message,
+      time: '12:35',
+      role: 'sender',
+    };
+    setChatMessages([...chatMessages, newMessage]);
+    if (stompClient) {
+      stompClient.publish({ destination: '/pub', body: JSON.stringify(newMessage) });
     }
   };
 
   return (
     <StyledMsgFormContainer>
-      {/* <SimpleInput placeholder='메세지를 입력하세요' value={message} height='40px' fontsize='12px' onChange={handleMessageChange} onEnterPress={handleEnterPress} /> */}
+      <SimpleInput2 placeholder='메세지를 입력하세요' value={message} height='40px' fontSize='12px' onInputChange={handleMessageChange} onEnterKeyUp={handleEnterPress} />
       <Button backgroundColor='#E1A4B4' width='45px' height='40px' borderRadius='10px' children={<Icon src={SendMsg} />} onButtonClick={handleSendMessage} />
     </StyledMsgFormContainer>
   );
