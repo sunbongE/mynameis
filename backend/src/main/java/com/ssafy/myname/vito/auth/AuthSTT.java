@@ -50,12 +50,10 @@ public class AuthSTT {
         // JSON 역직렬화
         JSONObject jsonResponse = new JSONObject(response);
         if(jsonResponse.has("access_token")) {
-            // access_token 값 추출
-            String token = jsonResponse.getString("access_token");
+            String token = jsonResponse.getString("access_token");  // access_token 값 추출
             return token;  // token 반환
         } else {
-            // 오류 메시지 추출
-            String error = jsonResponse.getString("msg");
+            String error = jsonResponse.getString("msg");  // 오류 메시지 추출
             throw new IOException("STT_Authentication error: " + error);
         }
     }
