@@ -8,16 +8,19 @@ import { addCommaInNumber } from '../../utils/numberUtil';
 import MyPageCard from '../myPageCard/MyPageCard';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
+import CoinList from '../coinListItem/CoinList';
 
 interface HeaderProps {
   isLogin: boolean;
   isMyPageOpen: boolean;
+  isCoinPageOpen: boolean;
   showHeader: boolean;
   setIsLogin?: React.Dispatch<React.SetStateAction<boolean>>;
   onClickLogin: () => void;
   onClickLogout: () => void;
   onClickSignUp: () => void;
   onClickMyPage: () => void;
+  onCoinClick: () => void;
 }
 
 const HeaderContainer = styled.div`
@@ -59,25 +62,25 @@ const StyledButtonContainer = styled.div`
 `;
 const Header = (props: HeaderProps) => {
   // const isLogin = useRecoilValue(isLoginSelector);
-  // const [userInfo, setUserInfo] = useRecoilState(userInfoState)
-  // {userInfo && userInfo.coin &&(
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
 
-  // )}
   return (
+    <>
+    {userInfo && (    
     <HeaderContainer>
       <Logo />
       <LeftContents>
         {props.isLogin ? (
           <>
-            <StyledPointContainer>
+            <StyledPointContainer onClick={props.onCoinClick}>
               <Icon src={Coin} width='24px' height='24px' />
-              <StyledPoint>{addCommaInNumber(10000)}</StyledPoint>
+              <StyledPoint>{addCommaInNumber(userInfo.coin)}</StyledPoint>
             </StyledPointContainer>
             <Icon src={Bell} width='24px' height='24px' />
             <StyledButtonContainer>
               <MyPageContainer>
                 <Button onButtonClick={props.onClickMyPage} backgroundColor='#E1A3B3' width='85px' height='33px' borderRadius='15px' children={<p>마이페이지</p>} fontColor='#fff' fontSize='16px' />
-                {props.isMyPageOpen && <MyPageCard />}
+                {props.isMyPageOpen && <MyPageCard isCoinOpenPage={props.isCoinPageOpen} onCoinClick={props.onCoinClick} />}
               </MyPageContainer>
               <Button onButtonClick={props.onClickLogout} backgroundColor='#fff' width='85px' height='33px' borderRadius='15px' children={<p>로그아웃</p>} fontColor='#E1A3B3' borderColor='#E1A3B3' fontSize='16px' />
             </StyledButtonContainer>
@@ -91,6 +94,8 @@ const Header = (props: HeaderProps) => {
         {/* 로그인, 회원가입 */}
       </LeftContents>
     </HeaderContainer>
+      )}
+    </>
   );
 };
 
