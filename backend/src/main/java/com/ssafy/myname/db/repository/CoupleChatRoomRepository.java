@@ -28,10 +28,10 @@ public class CoupleChatRoomRepository {
     private void init() {
         opsHashChatRoom = redisTemplate.opsForHash();
     }
-    // 모든 채팅방 조회
-    public List<ChatRoomDto> findAllRoom() {
-        return opsHashChatRoom.values(CHAT_ROOMS);
-    }
+//    // 모든 채팅방 조회
+//    public List<ChatRoomDto> findAllRoom() {
+//        return opsHashChatRoom.values(CHAT_ROOMS);
+//    }
     // 특정 채팅방 조회
     public ChatRoomDto findRoomById(String id) {
         return opsHashChatRoom.get(CHAT_ROOMS, id);
