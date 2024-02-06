@@ -20,6 +20,12 @@ const GlobalStyle = createGlobalStyle`
    bottom: 30px;
    right: 30px;
   }
+/* 
+  .chat-container {
+    position: fixed;
+    bottom: 0px;
+    right: 100px;
+  } */
 `;
 
 export default GlobalStyle;

@@ -23,6 +23,10 @@ const StyledMsgFormContainer = styled.div`
   box-shadow: 0px 2px 4px 0px rgba(243, 219, 225, 0.25);
 `;
 
+interface SendMsgFormProps {
+  isOpenChat: boolean;
+}
+
 interface WebSocketMessage {
   type: string;
   roomId: string;
@@ -36,53 +40,65 @@ interface WebSocketMessage {
 //   role: string;
 // }
 
-const SenderMessageForm = () => {
+const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
   const userInfo: UserInfo | null = useRecoilValue(userInfoState);
   const [coupleId, setCoupleId] = useState<string | null>('1');
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const socketUrl = 'http://localhost:8080/ws-stomp';
-const client = useRef<CompatClient>();
+  const client = useRef<CompatClient>();
   useEffect(() => {
     console.log('확인되니?');
     if (userInfo === null) return;
-
     // setCoupleId(userInfo.coupleId);
     if (coupleId === null) return;
 
     const sock = new SockJS(socketUrl);
     client.current = Stomp.over(() => sock);
     console.log(client);
-    client.current.connect({}, () => {
-    client.current?.subscribe(`/sub/chat/room/${coupleId}`,(message: IMessage) => {
-        //       console.log('메세지를 받았어요', message.body);
-        //       const newMessage: WebSocketMessage = JSON.parse(message.body);
-        //       setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-        //     } )
-    })}, (error:any) => {console.log("error: ",error)}, {} )} );
-    // const client = new Client({
-    //   brokerURL: socketUrl,
-    //   Stomp.over(() =>SockJS)
-    //   onConnect: () => {
-    //     setStompClient(client);
-    //     client.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
-    //       console.log('메세지를 받았어요', message.body);
-    //       const newMessage: WebSocketMessage = JSON.parse(message.body);
-    //       setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-    //     });
-    //   },
+    client.current.connect(
+      { 'token ': Cookies.get('accessToken') },
+      () => {
+        client.current?.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
+          console.log('메세지를 받았어요', message.body);
+          const newMessage: WebSocketMessage = JSON.parse(message.body);
+          setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+        });
+      },
+      (error: any) => {
+        console.log('error: ', error);
+      },
+      {}
+    );
 
-    //   connectHeaders: {
-    //     Authorization: `Bearer ${Cookies.get('accessToken')}`,
-    //   },
-    // });
-
-    // client.activate();
-
+    if (isOpenChat) {
+      handleEnterMessage();
+      console.log('보내졌니????? handleEnterMessage');
+    }
+  }, [message, isOpenChat]);
 
   const handleMessageChange = (msg: string) => {
     setMessage(msg);
+  };
+
+  const handleEnterMessage = () => {
+    console.log('전송할 메세지', message);
+    if (userInfo === null) return;
+    if (userInfo.name === null) return;
+    if (coupleId === null) return;
+
+    console.log('sendMessageForm 메세지 전송할게요', message);
+    const newMessage: WebSocketMessage = {
+      type: 'ENTER',
+      roomId: coupleId,
+      sender: userInfo?.name,
+      msg: '',
+    };
+
+    if (stompClient) {
+      stompClient.send('/pub/chat/message', { 'token ': Cookies.get('accessToken') }, JSON.stringify(newMessage));
+    }
   };
 
   const handleSendMessage = () => {
@@ -101,18 +117,17 @@ const client = useRef<CompatClient>();
     console.log('!!! ', newMessage);
     setChatMessages([...chatMessages, newMessage]);
     if (stompClient) {
-      stompClient.send('/pub/chat/message', newMessage);
+      stompClient.send('/pub/chat/message', { 'token ': Cookies.get('accessToken') }, JSON.stringify(newMessage));
     }
   };
 
   const handleEnterPress = (msg: string) => {
-
     if (userInfo === null) return;
 
     if (userInfo.name === null) return;
-    
+
     if (coupleId === null) return;
-    
+
     setMessage(msg);
     console.log('message!!', message);
     const newMessage: WebSocketMessage = {
