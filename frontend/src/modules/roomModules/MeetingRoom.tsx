@@ -16,6 +16,7 @@ import ReportModal from './ReportModal';
 import { StreamManager, Subscriber } from 'openvidu-browser';
 import { useRecoilValue } from 'recoil';
 import { matchingInfoState } from '../../recoil/atoms/matchingState';
+import { getBalanceGame } from '../../apis/services/matching/matching';
 
 interface MeetingRoomProps {
   publisher: StreamManager | undefined;
@@ -26,7 +27,7 @@ interface MeetingRoomProps {
 
 const MeetingRoom = (props: MeetingRoomProps) => {
   const [notice, setNotice] = useState<string>('공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.');
-  const [time, setTime] = useState<number>(10); // 공지 부분 타이머 시간, 초단위
+  const [time, setTime] = useState<number>(2); // 공지 부분 타이머 시간, 초단위
   const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
@@ -63,7 +64,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setTime(10);
       setRepeatCount(4);
     } else if (props.state === 'step12345') {
-      setNotice('이번 주제는 “10년지기 이성친구 1명 vs 가끔 안부 묻는 이성친구 40명” 입니다. 10분 동안 대화를 나눠보세요!');
+      handleBalanceGame();
+      console.log(balanceGame);
+      setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
       setTime(10);
       setRepeatCount(3);
     } else if (props.state === 'step12345_vote') {
@@ -72,7 +75,12 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     }
   }, [props.state]);
 
-  useEffect(() => {}, [props.publisher]);
+  const [balanceGame, setBalanceGame] = useState<String[]>([]);
+
+  const handleBalanceGame = async () => {
+    const data = await getBalanceGame();
+    setBalanceGame(data.data.questions.slice(1, -1).split(', '));
+  };
 
   // const myInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' };
 
@@ -102,9 +110,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         <NoticeBox noticeText={notice} />
         <Timer repeatCount={repeatCount} time={time} state={props.state} setState={props.setState} />
       </NoticeContainer>
-      {/* ******************************************************** */}
-      {/* ********** 4단계가 지나면 openvidu 카메라 ON ************* */}
-      {/* ******************************************************** */}
       <VideoContainer>
         <VideoCard width={'40vw'} height={'37vh'} streamManager={props.publisher} userType={0}>
           <InfoContainer>
@@ -218,65 +223,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
             </InfoContainer>
           </VideoCard>
         ))}
-        {/* {userInfos.map((userInfo) => (
-          <VideoCard width={'40vw'} height={'37vh'} streamManager={undefined} userType={0}>
-            <InfoContainer>
-              <HashtagContainer justifyContent='space-between'>
-                <div style={{ display: 'flex', gap: '4px' }}>
-                  <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#E1A4B4'}>{userInfo.nickName}</HashtagButton>
-                  {props.state.includes('step123') && myInfo.myUserId === userInfo.userId && <VoteCountHeart color={userInfo.gender ? 'purple' : 'pink'} count={1} />}
-                </div>
-                {userInfo.userId !== myInfo.myUserId && (
-                  <ClickBox onClick={() => handleReport(userInfo.userId)}>
-                    <Icon src={Report} width='24px' height='24px' />
-                  </ClickBox>
-                )}
-              </HashtagContainer>
-              <HashtagWrapper>
-                {props.state.includes('step1') && (
-                  <HashtagContainer>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.area}
-                    </HashtagButton>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{calcAge(userInfo.birth)}세
-                    </HashtagButton>
-                  </HashtagContainer>
-                )}
-                {props.state === 'step12' || props.state === 'step12_vote' ? (
-                  <HashtagContainer>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.tags[0]}
-                    </HashtagButton>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.tags[1]}
-                    </HashtagButton>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.tags[2]}
-                    </HashtagButton>
-                  </HashtagContainer>
-                ) : (
-                  props.state.includes('step123') && (
-                    <HashtagContainer>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.tags[0]}
-                      </HashtagButton>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.tags[1]}
-                      </HashtagButton>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.tags[2]}
-                      </HashtagButton>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.job}
-                      </HashtagButton>
-                    </HashtagContainer>
-                  )
-                )}
-              </HashtagWrapper>
-            </InfoContainer>
-          </VideoCard>
-        ))} */}
       </VideoContainer>
       <VideoButtonContainer>
         <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />

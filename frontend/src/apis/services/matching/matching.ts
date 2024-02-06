@@ -1,4 +1,4 @@
-import { loginInstance } from '../../utils/axiosInstance';
+import { instance, loginInstance } from '../../utils/axiosInstance';
 
 const matchingUrl = 'matching';
 
@@ -14,5 +14,10 @@ export const matchingCheck = async () => {
 
 export const matchingCancel = async () => {
   const response = await loginInstance.post(`${matchingUrl}/cancle`);
+  return response;
+};
+
+export const getBalanceGame = async () => {
+  const response = await instance.get(`${matchingUrl}/questions`);
   return response;
 };

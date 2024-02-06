@@ -225,6 +225,18 @@ const Room = () => {
     }
   }, [state]);
 
+  // useEffect(() => {
+  //   if (!session) return;
+
+  //   session.on('publisherStartSpeaking', (event) => {
+  //     console.log('User ' + event.connection.connectionId + ' start speaking');
+  //   });
+
+  //   session.on('publisherStopSpeaking', (event) => {
+  //     console.log('User ' + event.connection.connectionId + ' stop speaking');
+  //   });
+  // });
+
   // token 가져오기 (recoil에 저장된 token에서)
   const getToken = async () => {
     try {
