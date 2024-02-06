@@ -9,6 +9,7 @@ import SockJS from 'sockjs-client';
 import { useRecoilState } from 'recoil';
 import { ChatMessage } from '../../recoil/atoms/textState';
 import { chatMessagesState } from '../../recoil/atoms/textState';
+import Cookies from 'js-cookie';
 
 const StyledMsgFormContainer = styled.div`
   width: 320px;
@@ -43,9 +44,12 @@ const SenderMessageForm = () => {
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
         });
       },
+      connectHeaders: {
+        Authorization: `Bearer ${Cookies.get('accessToken')}`,
+      },
     });
     client.activate();
-  }, []); // 처음 한 번만 실행
+  }, []);
 
   const handleMessageChange = (msg: string) => {
     setMessage(msg);
