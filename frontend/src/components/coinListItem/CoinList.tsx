@@ -6,6 +6,8 @@ import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import Icon from '../icon/Icon';
 import Button from '../button/Button';
+import { userCoinPaymentRequest } from '../../apis/services/user/user';
+import { useNavigate } from 'react-router-dom';
 
 interface CoinProps {
   isOpen: boolean;
@@ -36,8 +38,8 @@ const CoinHeader = styled.div`
 `;
 
 function CoinList(props: CoinProps) {
+  const navigate = useNavigate()
   const [selectedCoinId, setSelectedCoinId] = useState<number | null>(null);
-
   const coinItems = [
     {
       orderId: 10,
@@ -79,7 +81,7 @@ function CoinList(props: CoinProps) {
   const handleItemClick = (item: { orderId: number; coinText: string; coinPrice: string }) => {
     setSelectedCoinId((prevId) => (prevId === item.orderId ? null : item.orderId));
     setCoinInfoData({
-      partner_user_id: userInfo?.userId,
+      partner_user_id: userInfo ? userInfo.userId : '',
       partner_order_id: item.orderId,
       item_name: item.coinText,
       total_amount: parseInt(item.coinPrice.replace(/\D/g, ''), 10), // 숫자만 추출하여 정수로 변환
@@ -89,24 +91,63 @@ function CoinList(props: CoinProps) {
   const userInfo = useRecoilValue(userInfoState);
 
   const [coinInfoData, setCoinInfoData] = useState({
-    partner_user_id: userInfo?.userId,
+    partner_user_id: userInfo ? userInfo.userId : '',
     partner_order_id: 0,
     item_name: '',
     total_amount: 0,
   });
 
-  useEffect(() => {
-    console.log('coinInfoData!!!', coinInfoData);
-  }, [coinInfoData]);
+  const [coinPaymentData, setCoinPaymentData] = useState({
+    tid:'',
+    partner_user_id: userInfo ? userInfo.userId : '',
+    partner_order_id: coinInfoData.partner_order_id,
+    pg_token:''
+  })
+
 
   const kakaoPayment = async () => {
     try {
-      console.log('결제 성공');
-      console.log('!!!', coinInfoData);
+      if (userInfo) {
+        const response = await userCoinPaymentRequest(coinInfoData);
+        console.log(response);
+
+        alert('결제를 위해 새 창이 열립니다. 팝업 차단 기능을 확인해주세요.');
+        const tid = response.tid;
+        const pcUrl = response.next_redirect_pc_url;
+        const newWindow = window.open(pcUrl, '_blank');
+        // window.location.href = pcUrl;
+        localStorage.setItem("tid", tid);
+
+        console.log(window.location.search, '==================')
+        
+        if (newWindow) {
+          newWindow.onload = () => {
+            console.log('새 창의 위치 : ', newWindow.location.search);
+          };
+        }
+
+        console.log(window.location.search, '==================')
+        // setCoinPaymentData({
+        //   tid:tid,
+        //   pg_token: '',
+        // })
+
+
+
+        navigate('/')
+
+        
+        // 코인 가격
+        coinInfoData.total_amount;
+        // 코인 갯수
+        coinInfoData.partner_order_id;
+
+        console.log('결제 요청 성공');
+      }
       // const response = await
     } catch (error) {
       console.error('결제요청 실패');
-      console.log(coinInfoData);
+      // console.log(pcUrl.window.location)
     }
   };
 
