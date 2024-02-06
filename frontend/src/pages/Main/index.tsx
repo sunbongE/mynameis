@@ -13,19 +13,20 @@ import { userInfoState } from '../../recoil/atoms/userState';
 import ActionButton from '../../components/actionButton/ActionButton';
 import ChatPage from '../chatPage/ChatPage';
 
+interface Position {
+  x: number;
+  y: number;
+}
 const MainContainer = styled.div`
   width: 100%;
   background-color: #f2eeea;
+  /* position: relative; */
 `;
 
 const ImgContainer = styled.div`
   width: 400px;
   height: 400px;
   border: 1px solid black;
-`;
-
-const ChatContainer = styled.div`
-  background-color: #000;
 `;
 
 const Main = () => {
@@ -68,22 +69,30 @@ const Main = () => {
 
   const tempArray = ['일', '이', '삼', '사', '오'];
 
-  const [scrolling, setScrolling] = useState(false);
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     setScrolling(window.scrollY > 0 ? true : false);
-  //   };
-  //   window.addEventListener('scroll', handleScroll);
+  const [scrolling, setScrolling] = useState<boolean>(false);
 
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, []);
+  const initialPosition: Position = {
+    x: window.innerWidth - 420 - 100,
+    y: window.innerHeight - 520 + 20,
+  };
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    console.log('스크롤 값', scrollPosition);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrollPosition]);
+  const [isOpenChat, setIsOpenChat] = useState(false);
   return (
     <MainContainer>
       <Header isLogin={isLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} showHeader={scrolling} />
-      <MainSection />
+      <MainSection isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />
       {/* <Button
         backgroundColor={'#e1a4b4'}
         width={'200px'}
@@ -97,8 +106,7 @@ const Main = () => {
       </Button> */}
       <Footer />
       <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
-
-      <ChatPage />
+      {isOpenChat && <ChatPage initialPosition={{ x: initialPosition.x, y: initialPosition.y }} isOpenChat={isOpenChat} />}
     </MainContainer>
   );
 };
