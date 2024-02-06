@@ -23,6 +23,7 @@ public class GetTranscribe {
         Scanner s = new Scanner(responseStream).useDelimiter("\\A");
         String response = s.hasNext() ? s.next() : "";
         s.close();
+
         //System.out.println(response);  // 응답 결과 테스트
 
         JSONObject jsonResponse = new JSONObject(response);
