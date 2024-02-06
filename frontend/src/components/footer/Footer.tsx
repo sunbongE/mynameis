@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import Button from '../button/Button';
 const StyledFooter = styled.div`
   height: 180px;
   display: flex;

@@ -21,10 +21,10 @@ public class EmailProvider {
 
 
     // 이메일에 보내는 메시지를 생성.
-    private String getCertificationMsg(){
+    private String getCertificationMsg(String email){
         String certificationMsg="";
         certificationMsg += "<h1 style='text-align: center;'>[저의 이름은 서비스] 비밀번호 변경 링크<h1>\n";
-        certificationMsg += "<a href="+CHANGE_URL+">이동하기</a>";
+        certificationMsg += "<a href="+CHANGE_URL+"?email="+email+">이동하기</a>";
         return certificationMsg;
     }
 
@@ -35,7 +35,7 @@ public class EmailProvider {
             MimeMessage msg = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(msg,true);
 
-            String htmlContent = getCertificationMsg();
+            String htmlContent = getCertificationMsg(email);
 
             messageHelper.setTo(email);
             messageHelper.setSubject(SUBJECT);

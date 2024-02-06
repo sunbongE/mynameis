@@ -1,23 +1,29 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
-const instance = axios.create({
-  baseURL: 'http://i10c207.p.ssafy.io:8081/',
+export const instance = axios.create({
+  baseURL: 'http://localhost:8080/',
 });
 
-// const loginInstance = axios.create({
-//   baseURL: 'http://i10c207.p.ssafy.io:8081/',
-//   withCredentials: true,
-//   headers: {
-//     'Authorization':`Bearer ${Cookies.get('accessToken')}`
-//   }
-// });
-
-const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJka2d1cyIsImlhdCI6MTcwNjg0OTk1NCwiZXhwIjoxNzA4MTQ1OTU0fQ.EfvnI7WYRS1EN8KnFaLKthfRFNQE-FAj4s6XDWQcD5c';
+export const loginInstance = axios.create({
+  baseURL: 'http://localhost:8080',
+  // baseURL: 'http://i10c207.p.ssafy.io:8081/',
+  // withCredentials: true,
+  headers: {
+    Authorization: `Bearer ${Cookies.get('accessToken')}`,
+  },
+});
 
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
-  config.headers['Authorization'] = `Bearer ${accessToken}`;
+  // config.headers['Authorization'] = `Bearer ${accessToken}`;
+
+  return config;
+};
+
+const setLoginCommonHeaders = async (config: any) => {
+  config.headers['Content-Type'] = 'application/json';
+  config.headers['Authorization'] = `Bearer ${Cookies.get('accessToken')}`;
 
   return config;
 };
@@ -29,8 +35,7 @@ const handleResponseError = async (error: AxiosError) => {
 
   switch (status) {
     case 400:
-      if (data['data_header']) alert(data['data_header'].result_message);
-      // else alert('잘못된 정보를 입력하셨습니다.\n다시 확인해주세요');
+      // alert('이미 매칭에 참여 중입니다');
       break;
     case 401:
     // TODO
@@ -54,14 +59,10 @@ const handleRequestError = (error: AxiosError) => {
   return Promise.reject(error);
 };
 
-instance.interceptors.request.use(setCommonHeaders, handleRequestError);
+// instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
-
-// loginInstance.interceptors.request.use(setCommonHeaders, handleRequestError);
-// loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
-
-
-
+loginInstance.interceptors.request.use(setLoginCommonHeaders, handleRequestError);
+loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 export default instance;

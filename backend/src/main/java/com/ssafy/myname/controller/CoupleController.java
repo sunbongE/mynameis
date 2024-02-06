@@ -44,6 +44,7 @@ public class CoupleController {
             Map<String, Object> errorBody = new HashMap<>();
             errorBody.put("error", "can not create coupleTBL");
             errorBody.put("message", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);
         }
     }
@@ -85,12 +86,14 @@ public class CoupleController {
                 logger.info(e.getMessage());
                 body.put("msg", "커플은 한 쌍만 가능합니다.");
                 body.put("error", e.getMessage());
+
                 return ResponseEntity.badRequest().body(body);
             }
 
         } else { // 커플이 거절된 경우.
             // 커플아이디로 커플 데이터 삭제.
             ResponseEntity<?> response = coupleService.deleteCouple(coupleId);
+
             return response;
         }
     }
@@ -119,23 +122,26 @@ public class CoupleController {
             logger.info(e.getMessage());
             Map<String, String> body = new HashMap<>();
             body.put("msg", e.getMessage());
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
 
     @GetMapping("/video")
-    public ResponseEntity<?> coupleVideo(@RequestParam("coupleId") String coupleId){
+    public ResponseEntity<?> coupleVideo(Principal principal ,@RequestParam("coupleId") String coupleId) {
         logger.info("** coupleVideo 호출");
-        logger.info("dto :{}",coupleId);
+        logger.info("dto :{}", coupleId);
         try {
-            ResponseEntity<?> response = coupleService.coupleVideo(coupleId);
+            String userId = principal.getName();
+            ResponseEntity<?> response = coupleService.coupleVideo(userId,coupleId);
 
             return response;
 
-        }catch (Exception e){
-           logger.info(e.getMessage());
+        } catch (Exception e) {
+            logger.info(e.getMessage());
             Map<String, String> body = new HashMap<>();
             body.put("msg", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }

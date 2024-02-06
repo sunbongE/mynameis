@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.*;
 
 @Service
@@ -57,9 +58,10 @@ public class CoupleServiceImpl implements CoupleService {
                 women.setCouple(couple);
                 userRepository.save(women);
 
-
-
                 body.put("msg","커플이 되었습니다.");
+
+                // 커플 채팅방 테이블 생성.
+
                 return ResponseEntity.status(HttpStatus.OK).body(body);
             }
                 body.put("msg","한명이 수락했습니다.");
@@ -129,15 +131,17 @@ public class CoupleServiceImpl implements CoupleService {
     }
 
     @Override
-    public ResponseEntity<?> coupleVideo(String coupleId) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<?> coupleVideo(String userId , String coupleId) throws OpenViduJavaClientException, OpenViduHttpException {
         // 방 만들고 방아이디는 커플 아이디.
         String newCoupleId = coupleId;
         String token = CoupleVideoProvider.coupleVideo(newCoupleId);
+        User user = userRepository.findByUserId(userId);
 
         // 방 입장토큰을 준다.
         Map<String,String> body = new HashMap<>();
         body.put("videoId",newCoupleId);
         body.put("token",token);
+        body.put("name",user.getName());
 
          return ResponseEntity.status(HttpStatus.OK).body(body);
     }

@@ -13,18 +13,34 @@ import VoteModal from './VoteModal';
 import ExitModal from './ExitModal';
 import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
 import ReportModal from './ReportModal';
+import { StreamManager, Subscriber } from 'openvidu-browser';
+import { useRecoilValue } from 'recoil';
+import { matchingInfoState } from '../../recoil/atoms/matchingState';
 
 interface MeetingRoomProps {
+  publisher: StreamManager | undefined;
+  subscribers: Subscriber[];
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const MeetingRoom = (props: MeetingRoomProps) => {
   const [notice, setNotice] = useState<string>('공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.');
-  const [time, setTime] = useState<number>(3); // 공지 부분 타이머 시간, 초단위
+  const [time, setTime] = useState<number>(10); // 공지 부분 타이머 시간, 초단위
   const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
+  const matchingInfo = useRecoilValue(matchingInfoState);
+  const [myInfo, setMyInfo] = useState({
+    mySessionId: '',
+    myUserName: matchingInfo.randomName,
+    myGender: matchingInfo.gender,
+    myBirth: matchingInfo.birth,
+    myArea: matchingInfo.area,
+    myJob: matchingInfo.job,
+    myTag: matchingInfo.tag,
+    myUserId: matchingInfo.userId,
+  });
 
   useEffect(() => {
     if (props.state === 'step12') {
@@ -56,7 +72,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     }
   }, [props.state]);
 
-  const myInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' };
+  useEffect(() => {}, [props.publisher]);
+
+  // const myInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' };
 
   const userInfos = [
     { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' },
@@ -66,7 +84,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
   ];
 
   // 투표 관련 파트
-  const voteValues = userInfos.filter((user) => user.gender !== myInfo.gender).map((user) => ({ id: user.userId, name: 'gender', value: user.nickName }));
+  const voteValues = userInfos.filter((user) => user.gender !== myInfo.myGender).map((user) => ({ id: user.userId, name: 'gender', value: user.nickName }));
   const [selectedValue, setSelectedValue] = useState<string>('');
   const [voteModalOpen, setVoteModalOpen] = useState(false);
 
@@ -88,15 +106,125 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       {/* ********** 4단계가 지나면 openvidu 카메라 ON ************* */}
       {/* ******************************************************** */}
       <VideoContainer>
-        {userInfos.map((userInfo) => (
+        <VideoCard width={'40vw'} height={'37vh'} streamManager={props.publisher} userType={0}>
+          <InfoContainer>
+            <HashtagContainer justifyContent='space-between'>
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <HashtagButton backgroundColor={myInfo.myGender ? '#A5A4E1' : '#E1A4B4'}>{myInfo.myUserName}</HashtagButton>
+                {props.state.includes('step123') && <VoteCountHeart color={myInfo.myGender ? 'purple' : 'pink'} count={1} />}
+              </div>
+              {myInfo.myUserId !== myInfo.myUserId && (
+                <ClickBox onClick={() => handleReport(myInfo.myUserId)}>
+                  <Icon src={Report} width='24px' height='24px' />
+                </ClickBox>
+              )}
+            </HashtagContainer>
+            <HashtagWrapper>
+              {props.state.includes('step1') && (
+                <HashtagContainer>
+                  <HashtagButton fontSize='14px' padding='6px'>
+                    #{myInfo.myArea}
+                  </HashtagButton>
+                  <HashtagButton fontSize='14px' padding='6px'>
+                    #{calcAge(myInfo.myBirth)}세
+                  </HashtagButton>
+                </HashtagContainer>
+              )}
+              {props.state === 'step12' || props.state === 'step12_vote' ? (
+                <HashtagContainer>
+                  <HashtagButton fontSize='14px' padding='6px'>
+                    #{myInfo.myTag[0]}
+                  </HashtagButton>
+                  <HashtagButton fontSize='14px' padding='6px'>
+                    #{myInfo.myTag[1]}
+                  </HashtagButton>
+                  <HashtagButton fontSize='14px' padding='6px'>
+                    #{myInfo.myTag[2]}
+                  </HashtagButton>
+                </HashtagContainer>
+              ) : (
+                props.state.includes('step123') && (
+                  <HashtagContainer>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{myInfo.myTag[0]}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{myInfo.myTag[1]}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{myInfo.myTag[2]}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{myInfo.myJob}
+                    </HashtagButton>
+                  </HashtagContainer>
+                )
+              )}
+            </HashtagWrapper>
+          </InfoContainer>
+        </VideoCard>
+        {props.subscribers.map((sub) => (
+          <VideoCard width={'40vw'} height={'37vh'} streamManager={sub} userType={1}>
+            <InfoContainer>
+              <HashtagContainer justifyContent='space-between'>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <HashtagButton backgroundColor='#e1a4b4'>{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}</HashtagButton>
+                </div>
+              </HashtagContainer>
+              <HashtagWrapper>
+                {props.state.includes('step1') && (
+                  <HashtagContainer>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myArea}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{calcAge(JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myBirth)}세
+                    </HashtagButton>
+                  </HashtagContainer>
+                )}
+                {props.state === 'step12' || props.state === 'step12_vote' ? (
+                  <HashtagContainer>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[0]}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[1]}
+                    </HashtagButton>
+                    <HashtagButton fontSize='14px' padding='6px'>
+                      #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[2]}
+                    </HashtagButton>
+                  </HashtagContainer>
+                ) : (
+                  props.state.includes('step123') && (
+                    <HashtagContainer>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[0]}
+                      </HashtagButton>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[1]}
+                      </HashtagButton>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myTag[2]}
+                      </HashtagButton>
+                      <HashtagButton fontSize='14px' padding='6px'>
+                        #{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myJob}
+                      </HashtagButton>
+                    </HashtagContainer>
+                  )
+                )}
+              </HashtagWrapper>
+            </InfoContainer>
+          </VideoCard>
+        ))}
+        {/* {userInfos.map((userInfo) => (
           <VideoCard width={'40vw'} height={'37vh'} streamManager={undefined} userType={0}>
             <InfoContainer>
               <HashtagContainer justifyContent='space-between'>
                 <div style={{ display: 'flex', gap: '4px' }}>
                   <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#E1A4B4'}>{userInfo.nickName}</HashtagButton>
-                  {props.state.includes('step123') && myInfo.userId === userInfo.userId && <VoteCountHeart color={userInfo.gender ? 'purple' : 'pink'} count={1} />}
+                  {props.state.includes('step123') && myInfo.myUserId === userInfo.userId && <VoteCountHeart color={userInfo.gender ? 'purple' : 'pink'} count={1} />}
                 </div>
-                {userInfo.userId !== myInfo.userId && (
+                {userInfo.userId !== myInfo.myUserId && (
                   <ClickBox onClick={() => handleReport(userInfo.userId)}>
                     <Icon src={Report} width='24px' height='24px' />
                   </ClickBox>
@@ -146,7 +274,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
               </HashtagWrapper>
             </InfoContainer>
           </VideoCard>
-        ))}
+        ))} */}
       </VideoContainer>
       <VideoButtonContainer>
         <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />

@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -60,16 +61,17 @@ public class GetUserInfoResDto {
     @Override
     public String toString() {
         return "{" +
-                "name='" + name + '\'' +
-                ", coin=" + coin +
-                ", gender=" + gender +
-                ", birth='" + birth + '\'' +
-                ", area='" + area + '\'' +
-                ", job='" + job + '\'' +
-                ", tag=" + tag +
-                ", religion='" + religion + '\'' +
-                ", coupleId=" + coupleId +
-                '}';
+                "\"name\":\"" + name + "\"," +
+                "\"coin\":" + coin + "," +
+                "\"gender\":" + gender + "," +
+                "\"birth\":\"" + birth + "\"," +
+                "\"area\":\"" + area + "\"," +
+                "\"job\":\"" + job + "\"," +
+                "\"tag\":[" + tag.stream().map(t -> "\"" + t + "\"").collect(Collectors.joining(", ")) + "]," +
+                "\"religion\":\"" + religion + "\"," +
+                "\"coupleId\":" + coupleId +
+                "}";
     }
+
 }
 
