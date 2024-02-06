@@ -46,7 +46,7 @@ function EmailAuth() {
   const [emailAuthData, setEmailAuthData] = useState({
     userId: '',
     email: '',
-  })
+  });
 
   const handleUserIdChange = (value: string) => {
     setUserIdInput(value);
@@ -54,19 +54,17 @@ function EmailAuth() {
 
   const handleEmailChange = (value: string) => {
     setEmailInput(value);
-    updateEmail(value, emailDropdown)
+    updateEmail(value, emailDropdown);
   };
-  
+
   const handleEmailDropdown = (value: string) => {
     setEmailDropdown(value);
-    updateEmail(emailInput, value)
+    updateEmail(emailInput, value);
   };
 
   const updateEmail = (emailName: string, emailDomain: string) => {
     const EmailFull = `${emailName}@${emailDomain}`;
   };
-
-
 
   return (
     <StyledEmailContainer>

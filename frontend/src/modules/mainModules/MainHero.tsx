@@ -98,7 +98,7 @@ const MainHero = () => {
   };
   return (
     <>
-      {userInfo && !userInfo.coupleId && (
+      {userInfo && (
         <StyledMainHeroContainer>
           {!userInfo.coupleId && <StyledHeroImage src={heroSolo} alt='hero Solo' />}
           {userInfo.coupleId && <StyledHeroImage src={heroCouple} alt='hero Solo' />}
@@ -110,7 +110,7 @@ const MainHero = () => {
 
             {userInfo.coupleId && (
               <StyledHeroBtnContainer>
-                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white' >
+                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
                   채팅하기
                 </Button>
                 <Button backgroundColor='#fff' width='100px' height='40px' borderRadius='15px' fontColor='#E1A4B4' onButtonClick={handleVideoBtn}>

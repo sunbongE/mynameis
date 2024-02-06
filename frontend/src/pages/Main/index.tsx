@@ -6,12 +6,12 @@ import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
 import Cookies from 'js-cookie';
-import { useRecoilState, useRecoilValue,RecoilValue, useRecoilCallback } from 'recoil';
-import { TokenAtom} from '../../recoil/atoms/userAuthAtom';
+import { useRecoilState, useRecoilValue, RecoilValue, useRecoilCallback } from 'recoil';
+import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
 import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
 import { userInfoState } from '../../recoil/atoms/userState';
 import ActionButton from '../../components/actionButton/ActionButton';
-
+import ChatPage from '../chatPage/ChatPage';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -30,7 +30,7 @@ const ChatContainer = styled.div`
 
 const Main = () => {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const isLogin = useRecoilValue(isLoginSelector);
   const setLoginState = useRecoilCallback(({ set }) => (newValue: boolean) => {
     set(isLoginSelector, newValue);
@@ -38,15 +38,15 @@ const Main = () => {
 
   const handleLogin = () => {
     console.log('로그인');
-    navigate('/login')
+    navigate('/login');
   };
 
   const handleLogout = () => {
     console.log('로그아웃');
     setMyPageOpen(false);
     setLoginState(false);
-    alert('로그아웃 되었습니다.')
-    window.location.reload()
+    alert('로그아웃 되었습니다.');
+    window.location.reload();
   };
 
   const handleSignUp = () => {
@@ -82,15 +82,7 @@ const Main = () => {
 
   return (
     <MainContainer>
-      <Header
-        isLogin={isLogin}
-        onClickLogin={handleLogin}
-        onClickLogout={handleLogout}
-        onClickSignUp={handleSignUp}
-        onClickMyPage={handleMyPage}
-        isMyPageOpen={myPageOpen}
-        showHeader={scrolling}
-      />
+      <Header isLogin={isLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} showHeader={scrolling} />
       <MainSection />
       {/* <Button
         backgroundColor={'#e1a4b4'}
@@ -105,6 +97,7 @@ const Main = () => {
       </Button> */}
       <Footer />
       <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
+      <ChatPage />
     </MainContainer>
   );
 };
