@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Slf4j
-@RestController
+@RestController("/chat")
 @RequiredArgsConstructor
 public class ChatController {
 
@@ -24,7 +24,7 @@ public class ChatController {
     private final CoupleChatRoomRepository chatRoomRepository;
     private final RedisTemplate redisTemplate;
 
-    @MessageMapping("/chat/message")
+    @MessageMapping("/message")
     public void message(ChatDto msg, Principal principal){
         String userId = principal.getName();
 
