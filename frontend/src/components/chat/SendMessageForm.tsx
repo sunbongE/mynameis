@@ -58,7 +58,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     client.current = Stomp.over(() => sock);
     console.log(client);
     client.current.connect(
-      { 'token ': Cookies.get('accessToken') },
+      { 'token ': `Bearer ${Cookies.get('accessToken')}` },
       () => {
         client.current?.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
           console.log('메세지를 받았어요', message.body);
@@ -97,7 +97,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     };
 
     if (stompClient) {
-      stompClient.send('/pub/chat/message', { 'token ': Cookies.get('accessToken') }, JSON.stringify(newMessage));
+      stompClient.send('/pub/chat/message', { 'token ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     }
   };
 
@@ -117,7 +117,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     console.log('!!! ', newMessage);
     setChatMessages([...chatMessages, newMessage]);
     if (stompClient) {
-      stompClient.send('/pub/chat/message', { 'token ': Cookies.get('accessToken') }, JSON.stringify(newMessage));
+      stompClient.send('/pub/chat/message', { 'token ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     }
   };
 
