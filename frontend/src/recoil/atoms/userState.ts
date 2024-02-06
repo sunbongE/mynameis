@@ -6,6 +6,7 @@ const { persistAtom } = recoilPersist();
 
 
 export interface UserInfo {
+  userId:string;
   name:string;
   coin:number;
   gender:boolean;
@@ -20,6 +21,7 @@ export interface UserInfo {
 export const userInfoState = atom<UserInfo | null>({
   key: 'userInfoState',
   default: {
+    userId:'',
     name: '',
     coin: 0,
     gender: false,

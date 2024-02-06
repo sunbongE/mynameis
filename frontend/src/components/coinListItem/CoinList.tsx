@@ -40,65 +40,75 @@ function CoinList(props: CoinProps) {
 
   const coinItems = [
     {
-      id: 10,
-      coinText: '코인 10개',
+      orderId: 10,
+      coinText: `코인 10개`,
       coinPrice: `\\ 1,000`,
     },
     {
-      id: 30,
+      orderId: 30,
       coinText: '코인 30개',
       coinPrice: `\\ 3,000`,
     },
     {
-      id: 50,
+      orderId: 50,
       coinText: '코인 50개',
       coinPrice: `\\ 5,000`,
     },
     {
-      id: 110,
+      orderId: 110,
       coinText: '코인 110개',
       coinPrice: `\\ 10,000`,
     },
     {
-      id: 220,
+      orderId: 220,
       coinText: '코인 220개',
       coinPrice: `\\ 20,000`,
     },
     {
-      id: 345,
+      orderId: 345,
       coinText: '코인 345개',
       coinPrice: `\\ 30,000`,
     },
     {
-      id: 600,
+      orderId: 600,
       coinText: '코인 600개',
       coinPrice: `\\ 50,000`,
     },
   ];
 
-  const handleItemClick = (id: number) => {
-    setSelectedCoinId((prevId) => (prevId === id ? null : id));
+  const handleItemClick = (item: { orderId: number; coinText: string; coinPrice: string }) => {
+    setSelectedCoinId((prevId) => (prevId === item.orderId ? null : item.orderId));
+    setCoinInfoData({
+      partner_user_id: userInfo?.userId,
+      partner_order_id: item.orderId,
+      item_name: item.coinText,
+      total_amount: parseInt(item.coinPrice.replace(/\D/g, ''), 10), // 숫자만 추출하여 정수로 변환
+    });
   };
 
   const userInfo = useRecoilValue(userInfoState);
 
   const [coinInfoData, setCoinInfoData] = useState({
-    partner_user_id:'',
-    partner_order_id:0,
-    item_name:'',
-    total_amount:0,
-  })
+    partner_user_id: userInfo?.userId,
+    partner_order_id: 0,
+    item_name: '',
+    total_amount: 0,
+  });
 
-//   useEffect
+  useEffect(() => {
+    console.log('coinInfoData!!!', coinInfoData);
+  }, [coinInfoData]);
 
   const kakaoPayment = async () => {
     try {
-        console.log('결제 성공')
-        // const response = await 
+      console.log('결제 성공');
+      console.log('!!!', coinInfoData);
+      // const response = await
     } catch (error) {
-        console.error('결제요청 실패')
+      console.error('결제요청 실패');
+      console.log(coinInfoData);
     }
-  }
+  };
 
   return (
     <>
@@ -114,7 +124,7 @@ function CoinList(props: CoinProps) {
             <h2 style={{ marginBottom: '30px' }}>내 코인 {userInfo.coin}개</h2>
             <StyledCoinList>
               {coinItems.map((item) => (
-                <CoinListItem key={item.id} id={item.id} coinText={item.coinText} coinPrice={item.coinPrice} isSelected={selectedCoinId === item.id} onClick={() => handleItemClick(item.id)} />
+                <CoinListItem key={item.orderId} id={item.orderId} coinText={item.coinText} coinPrice={item.coinPrice} isSelected={selectedCoinId === item.orderId} onClick={() => handleItemClick(item)} />
               ))}
               <Button onButtonClick={kakaoPayment} backgroundColor={'#E1A3B3'} width={'339.2px'} height={'38.4px'} borderRadius={'16px'} children={<p>결제하기</p>} fontColor='#fff' fontSize='18px'></Button>
             </StyledCoinList>
