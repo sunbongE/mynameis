@@ -40,16 +40,7 @@ public class RedisConfig {
     /**
      * redis에 발행(publish)된 메시지 처리를 위한 리스너 설정
      */
-//    @Bean
-//    @Primary
-//    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory,
-//                                                              MessageListenerAdapter listenerAdapter,
-//                                                              ChannelTopic channelTopic) {
-//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(connectionFactory);
-//        container.addMessageListener(listenerAdapter, channelTopic);
-//        return container;
-//    } dfgdfgdfgdfgdf
+
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -65,18 +56,7 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         return redisTemplate;
     }
-//    @Bean
-//    @Primary
-//    public RedisTemplate<String, Object> redisTemplate() {
-//        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-//        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
-////        redisTemplate.setValueSerializer(new StringRedisSerializer());
-//
-//        redisTemplate.setConnectionFactory(redisConnectionFactory());
-//        return redisTemplate;
-//
-//    }
+
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
                                                                        MessageListenerAdapter listenerAdapter,
