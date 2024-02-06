@@ -39,13 +39,17 @@ interface WebSocketMessage {
 const SenderMessageForm = () => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
   const userInfo: UserInfo | null = useRecoilValue(userInfoState);
+  const [coupleId, setCoupleId] = useState<string | null>('1');
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<Client | null>(null);
   const socketUrl = 'http://localhost:8080/ws-stomp';
 
   useEffect(() => {
+    console.log('확인되니?');
     if (userInfo === null) return;
-    if (userInfo.coupleId === null) return;
+
+    // setCoupleId(userInfo.coupleId);
+    if (coupleId === null) return;
 
     const sock = new SockJS(socketUrl);
     const client = new Client({
@@ -53,7 +57,7 @@ const SenderMessageForm = () => {
       webSocketFactory: () => sock,
       onConnect: () => {
         setStompClient(client);
-        client.subscribe(`/sub/chat/room/${userInfo?.coupleId}`, (message: IMessage) => {
+        client.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
           console.log('메세지를 받았어요', message.body);
           const newMessage: WebSocketMessage = JSON.parse(message.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -73,17 +77,19 @@ const SenderMessageForm = () => {
   };
 
   const handleSendMessage = () => {
+    console.log('전송할 메세지', message);
     if (userInfo === null) return;
     if (userInfo.name === null) return;
-    if (userInfo.coupleId === null) return;
+    if (coupleId === null) return;
 
     console.log('sendMessageForm 메세지 전송할게요', message);
     const newMessage: WebSocketMessage = {
       type: 'TALK',
-      roomId: userInfo.coupleId,
+      roomId: coupleId,
       sender: userInfo?.name,
       msg: message,
     };
+    console.log('!!! ', newMessage);
     setChatMessages([...chatMessages, newMessage]);
     if (stompClient) {
       stompClient.publish({ destination: '/pub/chat/message', body: JSON.stringify(newMessage) });
@@ -91,15 +97,18 @@ const SenderMessageForm = () => {
   };
 
   const handleEnterPress = (msg: string) => {
+    console.log('enter 전송할 메세지', msg);
     if (userInfo === null) return;
+    console.log('enter 전송할 메세지22', msg);
     if (userInfo.name === null) return;
-    if (userInfo.coupleId === null) return;
-
+    console.log('enter 전송할 메세지3', msg);
+    if (coupleId === null) return;
+    console.log('enter 전송할 메세지4', msg);
     setMessage(msg);
     console.log('message!!', message);
     const newMessage: WebSocketMessage = {
       type: 'TALK',
-      roomId: userInfo.coupleId,
+      roomId: coupleId,
       sender: userInfo?.name,
       msg: message,
     };
