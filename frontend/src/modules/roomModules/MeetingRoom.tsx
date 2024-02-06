@@ -168,7 +168,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
             <InfoContainer>
               <HashtagContainer justifyContent='space-between'>
                 <div style={{ display: 'flex', gap: '4px' }}>
-                  <HashtagButton backgroundColor='#e1a4b4'>{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}</HashtagButton>
+                  <HashtagButton backgroundColor={JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myGender ? '#A5A4E1' : 'E1A4B4'}>
+                    {JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}
+                  </HashtagButton>
                 </div>
               </HashtagContainer>
               <HashtagWrapper>

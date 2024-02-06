@@ -97,7 +97,7 @@ const Room = () => {
       let cameraStream = {
         audioSource: undefined, // The source of audio. If undefined default microphone
         videoSource: undefined, // The source of video. If undefined default webcam
-        publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+        publishAudio: false, // Whether you want to start publishing with your audio unmuted or not
         publishVideo: true, // Whether you want to start publishing with your video enabled or not
         resolution: '640x480', // The resolution of your video
         frameRate: 30, // The frame rate of your video
@@ -110,7 +110,7 @@ const Room = () => {
       let publisherStream = {
         audioSource: undefined,
         videoSource: undefined as MediaStreamTrack | undefined,
-        publishAudio: true,
+        publishAudio: false,
         publishVideo: true,
         resolution: '640x480',
         frameRate: 30,
@@ -199,6 +199,31 @@ const Room = () => {
     setInitMyData({ mySessionId: '', myUserName: '', myGender: false, myArea: '', myBirth: '', myJob: '', myTag: [], myUserId: '' });
     setPublisher(undefined);
   };
+
+  // state에 따라 비디오 표시 여부를 제어하는 함수
+  const setMediaVisibility = (videoVisible: boolean, audioVisible: boolean) => {
+    if (publisher) {
+      publisher.publishVideo(videoVisible);
+      publisher.publishAudio(audioVisible);
+    }
+    subscribers.forEach((subscriber) => {
+      subscriber.subscribeToVideo(videoVisible);
+      subscriber.subscribeToAudio(audioVisible);
+    });
+  };
+
+  // state가 변경될 때마다 비디오/오디오 표시 여부 업데이트
+  useEffect(() => {
+    if (['loading', 'ready'].includes(state)) {
+      setMediaVisibility(true, false);
+    } else if (['step1234', 'step12345'].includes(state)) {
+      setMediaVisibility(true, true);
+    } else if (state.includes('vote')) {
+      setMediaVisibility(false, false);
+    } else {
+      setMediaVisibility(false, true);
+    }
+  }, [state]);
 
   // token 가져오기 (recoil에 저장된 token에서)
   const getToken = async () => {
