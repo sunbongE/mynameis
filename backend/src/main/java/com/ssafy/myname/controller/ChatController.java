@@ -27,6 +27,7 @@ public class ChatController {
     @MessageMapping("/message")
     public void message(ChatDto msg, Principal principal){
         String userId = principal.getName();
+        log.info("message 실행");
 
         msg.setSender(userId);
         if(ChatDto.MessageType.ENTER.equals(msg.getType())){
@@ -35,6 +36,7 @@ public class ChatController {
         }
         // Websocket에 발행된 메시지를 redis로 발행(publish)
         redisTemplate.convertAndSend(msg.getRoomId(), msg);
+        log.info("레디스로 발행함.");
     }
 
 }
