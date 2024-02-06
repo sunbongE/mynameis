@@ -161,7 +161,7 @@ const CoupleMeeting = () => {
       console.log('제가 들어왔어요', event);
       const subscriberOptions = {
         insertMode: 'APPEND',
-        mirror: false,
+        mirror: true,
         contentHint: 'grid',
       };
 
@@ -207,10 +207,12 @@ const CoupleMeeting = () => {
       const data = await getCoupleRoomToken({ coupleId: 1 });
       // console.log('data token 받았어요', data.token);
       console.log('data 받아', data);
-      setInitMyData({
-        mySessionId: data.videoId,
-        myUserName: '아현',
-      });
+      const tempName = data.name;
+      const tempId = data.videoId;
+      initMyData.mySessionId = data.videoId;
+      initMyData.myUserName = data.name;
+
+      console.log('initMyData', initMyData);
       return data.token;
     } catch (error) {
       console.log('token 에러', error);
@@ -221,17 +223,20 @@ const CoupleMeeting = () => {
     <StyledMeetingContainer>
       {session && (
         <VideoContainer>
-          {publisher !== undefined && (
-            <StreamContainer>
-              <VideoCard streamManager={publisher} userType={0} width='500px' height='400px' />
-            </StreamContainer>
-          )}
-          {subscribers.map((sub, i) => (
-            <StreamContainer key={i}>
-              <span>{sub.id}</span>
-              <VideoCard streamManager={sub} userType={1} width='400px' height='300px' />
-            </StreamContainer>
-          ))}
+          <StreamContainer>
+            {subscribers.map((sub, i) => (
+              <StreamContainer key={i}>
+                <VideoCard streamManager={sub} userType={1} width='400px' height='300px' />
+              </StreamContainer>
+            ))}
+          </StreamContainer>
+          <MyVideoContainer>
+            {publisher !== undefined && (
+              <StreamContainer>
+                <VideoCard streamManager={publisher} userType={0} width='500px' height='400px' />
+              </StreamContainer>
+            )}
+          </MyVideoContainer>
         </VideoContainer>
       )}
       <Button backgroundColor='#e1a4b4' width='168px' height='48px' borderRadius='10px' fontColor='white' onButtonClick={handleLeaveBtn}>
@@ -249,7 +254,18 @@ const StyledMeetingContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const VideoContainer = styled.div``;
-const StreamContainer = styled.div``;
+
+const VideoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+const MyVideoContainer = styled.div``;
+const StreamContainer = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+`;
 
 export default CoupleMeeting;

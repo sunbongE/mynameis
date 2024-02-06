@@ -98,7 +98,7 @@ const MainHero = () => {
   };
   return (
     <>
-      {userInfo && !userInfo.coupleId && (
+      {userInfo && (
         <StyledMainHeroContainer>
           {!userInfo.coupleId && <StyledHeroImage src={heroSolo} alt='hero Solo' />}
           {userInfo.coupleId && <StyledHeroImage src={heroCouple} alt='hero Solo' />}
@@ -108,9 +108,9 @@ const MainHero = () => {
             <StyledHeroSubtitle1>매 단계, 새로운 이야기.</StyledHeroSubtitle1>
             <StyledHeroSubtitle2>나만의 매력을 풀어가는 소개팅을 즐겨보세요.</StyledHeroSubtitle2>
 
-            {userInfo.coupleId && (
+            {!userInfo.coupleId && (
               <StyledHeroBtnContainer>
-                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white' >
+                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
                   채팅하기
                 </Button>
                 <Button backgroundColor='#fff' width='100px' height='40px' borderRadius='15px' fontColor='#E1A4B4' onButtonClick={handleVideoBtn}>
@@ -118,7 +118,7 @@ const MainHero = () => {
                 </Button>
               </StyledHeroBtnContainer>
             )}
-            {!userInfo.coupleId && (
+            {userInfo.coupleId && (
               <>
                 <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
                   시작하기
