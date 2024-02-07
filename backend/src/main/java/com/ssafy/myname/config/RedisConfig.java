@@ -35,7 +35,7 @@ public class RedisConfig {
      */
     @Bean
     public ChannelTopic channelTopic() {
-        return new ChannelTopic("chatroom");
+        return new ChannelTopic("/sub/chat");
     }
 
     /**
@@ -73,6 +73,6 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
       log.info("listenerAdapter 실행.");
-        return new MessageListenerAdapter(subscriber, "sendMessage");
+        return new MessageListenerAdapter(subscriber, "onMessage");
     }
 }

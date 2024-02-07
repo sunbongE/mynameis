@@ -15,9 +15,9 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedisSubscriber{		// 1.
+public class RedisSubscriber implements MessageListener{		// 1.
     private final ObjectMapper objectMapper;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final SimpMessageSendingOperations messagingTemplate;
 
     // Redis 에서 메시지가 발행(publish)되면, onMessage 가 해당 메시지를 읽어서 처리
@@ -39,12 +39,18 @@ public class RedisSubscriber{		// 1.
     /**
      * Redis에서 메시지가 발행(publish)되면 대기하고 있던 Redis Subscriber가 해당 메시지를 받아 처리한다.
      */
-    public void sendMessage(String publishMessage) {
+
+    @Override
+    public void onMessage(Message message, byte[] pattern) {
         try {
             // ChatMessage 객채로 맵핑
-            ChatDto chatMessage = objectMapper.readValue(publishMessage, ChatDto.class);
+            String pubMessage = redisTemplate.getStringSerializer().deserialize(message.getBody());
+            ChatDto chatMessage = objectMapper.readValue(pubMessage, ChatDto.class);
+            log.info("섭스크라이버 실행?");
+            log.info("아이디 : {}, 메시지 : {}", chatMessage.getRoomId(), chatMessage.getMsg());
+
             // 채팅방을 구독한 클라이언트에게 메시지 발송
-            messagingTemplate.convertAndSend("/sub/chat/room/" + chatMessage.getRoomId(), chatMessage);
+            messagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getRoomId(), chatMessage);
         } catch (Exception e) {
             log.error("Exception {}", e);
         }

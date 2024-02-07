@@ -48,15 +48,18 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     const sock = new SockJS(socketUrl);
     const stompClient = Stomp.over(sock);
     setStompClient(stompClient);
-
     stompClient.connect(
       { Authorization: `Bearer ${Cookies.get('accessToken')}`, 'Content-Type': 'application/json', reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
       () => {
-        stompClient.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
+        console.log('subscribe 전');
+        console.log(coupleId, '커플아이디');
+        stompClient.subscribe(`/sub/chat/1`, (message: any) => {
+          console.log('subscribe 후');
           const newMessage: WebSocketMessage = JSON.parse(message.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
 
           if (isFirstConnect) {
+            console.log('!!! 들어왔ㄴ어??? firstconnect');
             handleEnterChat();
             isFirstConnect = false;
           }

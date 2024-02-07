@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Dispatch } from 'react';
 import styled from 'styled-components';
 import ChatHeader from '../../components/header/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
@@ -7,6 +7,7 @@ import SenderMessageForm from '../../components/chat/SendMessageForm';
 interface ChatProps {
   initialPosition: { x: number; y: number };
   isOpenChat: boolean;
+  setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ChatContainer = styled.div<{ top: number; left: number }>`
