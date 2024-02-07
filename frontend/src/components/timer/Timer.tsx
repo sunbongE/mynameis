@@ -25,7 +25,6 @@ const StyledTimer = styled.div`
   line-height: normal;
 `;
 
-
 const Timer = (props: TimerProps) => {
   const [min, setMin] = useState<number>(Math.floor(props.time / 60));
   const [sec, setSec] = useState<number>(props.time % 60);
@@ -46,6 +45,8 @@ const Timer = (props: TimerProps) => {
     } else if (props.state === 'step1234') {
       props.setState('step12345');
     } else if (props.state === 'step12345') {
+      props.setState('step12345_vote');
+    } else if (props.state === 'step12345_vote') {
       props.setState('');
     }
   };
@@ -99,8 +100,5 @@ const Timer = (props: TimerProps) => {
 function padNumber(number: number, width: number) {
   return String(number).padStart(width, '0');
 }
-
-
-
 
 export default Timer;

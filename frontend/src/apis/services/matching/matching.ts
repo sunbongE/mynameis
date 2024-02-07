@@ -1,4 +1,4 @@
-import { loginInstance } from '../../utils/axiosInstance';
+import { instance, loginInstance } from '../../utils/axiosInstance';
 
 const matchingUrl = 'matching';
 
@@ -14,5 +14,20 @@ export const matchingCheck = async () => {
 
 export const matchingCancel = async () => {
   const response = await loginInstance.post(`${matchingUrl}/cancle`);
+  return response;
+};
+
+export const getBalanceGame = async () => {
+  const response = await instance.get(`${matchingUrl}/questions`);
+  return response;
+};
+
+export const matchingEnter = async (params: { roomId: string }) => {
+  const response = await loginInstance.post(`${matchingUrl}/enter`, params);
+  return response;
+};
+
+export const matchingExit = async (params: { roomId: string | undefined }) => {
+  const response = await loginInstance.post(`${matchingUrl}/exit`, params);
   return response;
 };

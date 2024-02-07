@@ -22,11 +22,12 @@ interface MeetingRoomProps {
   subscribers: Subscriber[];
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
+  leaveSession: () => Promise<void>;
 }
 
 const MeetingRoom = (props: MeetingRoomProps) => {
   const [notice, setNotice] = useState<string>('공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.');
-  const [time, setTime] = useState<number>(10); // 공지 부분 타이머 시간, 초단위
+  const [time, setTime] = useState<number>(2); // 공지 부분 타이머 시간, 초단위
   const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
@@ -42,6 +43,29 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     myUserId: matchingInfo.userId,
   });
 
+  const balanceGame = [
+    '아프지만 말하지 않는 연인 vs 아프지 않지만 항상 아프다고 말하는 연인',
+    '돈을 잃어도 화를 내는 연인 vs 돈을 아끼는 데 최고인 연인',
+    '싸움 뒤에 모든 것을 얘기하는 연인 vs 싸움 뒤에 전혀 영향받지 않는 듯한 연인',
+  ];
+
+  // let intervalId: NodeJS.Timeout | null = null;
+
+  // function updateBalanceGame() {
+  //   if (balanceGame.length >= 1) {
+  //     setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
+  //     balanceGame.shift();
+  //   } else {
+  //     clearInterval(intervalId!);
+  //   }
+  // }
+
+  // if (props.state === 'step12345') {
+  //   intervalId = setInterval(() => {
+  //     updateBalanceGame();
+  //   }, 10000);
+  // }
+
   useEffect(() => {
     if (props.state === 'step12') {
       setNotice('공개된 정보인 [키워드]를 통해 10분동안 자유롭게 대화를 나눠보세요.');
@@ -53,38 +77,29 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     } else if (props.state === 'step123') {
       setVoteModalOpen(false);
       setNotice('공개된 정보인 [직업]을 통해 1명당 5분씩 질의응답 시간을 가져 보세요.');
-      setTime(5);
+      setTime(3);
       setRepeatCount(4);
     } else if (props.state === 'step123_vote') {
-      setModalTime(10);
+      setModalTime(5);
       setVoteModalOpen(true);
     } else if (props.state === 'step1234') {
       setNotice('참여자 분들의 얼굴이 공개되었습니다! 1명당 5분씩 자유롭게 질문 시간을 가져보세요. 질문 시간 후에는 밸런스 게임이 시작됩니다.');
-      setTime(5);
+      setTime(10);
       setRepeatCount(4);
     } else if (props.state === 'step12345') {
-      setNotice('이번 주제는 “10년지기 이성친구 1명 vs 가끔 안부 묻는 이성친구 40명” 입니다. 10분 동안 대화를 나눠보세요!');
+      setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
       setTime(10);
       setRepeatCount(3);
     } else if (props.state === 'step12345_vote') {
       setModalTime(15);
       setVoteModalOpen(true);
     }
-  }, [props.state]);
-
-  useEffect(() => {}, [props.publisher]);
-
-  // const myInfo = { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' };
-
-  const userInfos = [
-    { userId: 'ssafy1', gender: false, nickName: '영자', area: '서울', birth: '19990520', tags: ['INFP', '산책', '패러글라이딩'], job: '개발자' },
-    { userId: 'ssafy2', gender: false, nickName: '영숙', area: '인천', birth: '19990520', tags: ['ESFJ', '영화보기', '게임'], job: '공무원' },
-    { userId: 'ssafy3', gender: true, nickName: '영철', area: '서울', birth: '19990520', tags: ['ENFP', '영화보기', '클라이밍'], job: '대학생' },
-    { userId: 'ssafy4', gender: true, nickName: '상철', area: '경기', birth: '19990520', tags: ['INFP', '수영', '넷플릭스보기'], job: '의사' },
-  ];
+  }, [props.state, repeatCount]);
 
   // 투표 관련 파트
-  const voteValues = userInfos.filter((user) => user.gender !== myInfo.myGender).map((user) => ({ id: user.userId, name: 'gender', value: user.nickName }));
+  const voteValues = props.subscribers
+    .filter((subscriber) => JSON.parse(JSON.parse(subscriber.stream.connection.data).clientData).myGender !== myInfo.myGender)
+    .map((user) => ({ id: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserId, name: 'gender', value: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserName }));
   const [selectedValue, setSelectedValue] = useState<string>('');
   const [voteModalOpen, setVoteModalOpen] = useState(false);
 
@@ -102,9 +117,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         <NoticeBox noticeText={notice} />
         <Timer repeatCount={repeatCount} time={time} state={props.state} setState={props.setState} />
       </NoticeContainer>
-      {/* ******************************************************** */}
-      {/* ********** 4단계가 지나면 openvidu 카메라 ON ************* */}
-      {/* ******************************************************** */}
       <VideoContainer>
         <VideoCard width={'40vw'} height={'37vh'} streamManager={props.publisher} userType={0}>
           <InfoContainer>
@@ -168,7 +180,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
             <InfoContainer>
               <HashtagContainer justifyContent='space-between'>
                 <div style={{ display: 'flex', gap: '4px' }}>
-                  <HashtagButton backgroundColor='#e1a4b4'>{JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}</HashtagButton>
+                  <HashtagButton backgroundColor={JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myGender ? '#A5A4E1' : 'E1A4B4'}>
+                    {JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}
+                  </HashtagButton>
                 </div>
               </HashtagContainer>
               <HashtagWrapper>
@@ -216,65 +230,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
             </InfoContainer>
           </VideoCard>
         ))}
-        {/* {userInfos.map((userInfo) => (
-          <VideoCard width={'40vw'} height={'37vh'} streamManager={undefined} userType={0}>
-            <InfoContainer>
-              <HashtagContainer justifyContent='space-between'>
-                <div style={{ display: 'flex', gap: '4px' }}>
-                  <HashtagButton backgroundColor={userInfo.gender ? '#A5A4E1' : '#E1A4B4'}>{userInfo.nickName}</HashtagButton>
-                  {props.state.includes('step123') && myInfo.myUserId === userInfo.userId && <VoteCountHeart color={userInfo.gender ? 'purple' : 'pink'} count={1} />}
-                </div>
-                {userInfo.userId !== myInfo.myUserId && (
-                  <ClickBox onClick={() => handleReport(userInfo.userId)}>
-                    <Icon src={Report} width='24px' height='24px' />
-                  </ClickBox>
-                )}
-              </HashtagContainer>
-              <HashtagWrapper>
-                {props.state.includes('step1') && (
-                  <HashtagContainer>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.area}
-                    </HashtagButton>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{calcAge(userInfo.birth)}세
-                    </HashtagButton>
-                  </HashtagContainer>
-                )}
-                {props.state === 'step12' || props.state === 'step12_vote' ? (
-                  <HashtagContainer>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.tags[0]}
-                    </HashtagButton>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.tags[1]}
-                    </HashtagButton>
-                    <HashtagButton fontSize='14px' padding='6px'>
-                      #{userInfo.tags[2]}
-                    </HashtagButton>
-                  </HashtagContainer>
-                ) : (
-                  props.state.includes('step123') && (
-                    <HashtagContainer>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.tags[0]}
-                      </HashtagButton>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.tags[1]}
-                      </HashtagButton>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.tags[2]}
-                      </HashtagButton>
-                      <HashtagButton fontSize='14px' padding='6px'>
-                        #{userInfo.job}
-                      </HashtagButton>
-                    </HashtagContainer>
-                  )
-                )}
-              </HashtagWrapper>
-            </InfoContainer>
-          </VideoCard>
-        ))} */}
       </VideoContainer>
       <VideoButtonContainer>
         <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
@@ -292,7 +247,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         />
       </MyModal>
       <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
-        <ExitModal exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+        <ExitModal handleLeave={props.leaveSession} exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </MyModal>
       <MyModal isOpen={reportModalOpen} setIsOpen={setReportModalOpen}>
         <ReportModal userId={reportUser} reportModalOpen={reportModalOpen} setReportModalOpen={setReportModalOpen} />
