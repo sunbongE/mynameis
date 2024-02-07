@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 interface ExitModalProps {
   exitModalOpen: boolean;
   setExitModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleLeave: () => Promise<void>;
 }
 
 const ExitModal = (props: ExitModalProps) => {
@@ -19,6 +20,7 @@ const ExitModal = (props: ExitModalProps) => {
         <ButtonContainer>
           <Button
             onButtonClick={() => {
+              props.handleLeave();
               navigate('/');
             }}
             backgroundColor='white'

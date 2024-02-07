@@ -13,6 +13,8 @@ import { CoupleMeetingUtilsProps } from '../../utils/CoupleMeetingUtilsProps';
 import { instance } from '../../apis/utils/axiosInstance';
 import MyModal from '../../components/modal/MyModal';
 import StartModal from './StartModal';
+import toast from 'react-simple-toasts';
+import { IsLoginAtom } from '../../recoil/atoms/userAuthAtom';
 const StyledMainHeroContainer = styled.div`
   width: 100%;
   height: calc(100vh - 64px);
@@ -78,6 +80,7 @@ const StyledHeroDownText = styled.p`
 const MainHero = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
 
   const [startModalOpen, setStartModalOpen] = useState<boolean>(false);
 
@@ -94,6 +97,16 @@ const MainHero = () => {
     // console.log('accessToken 형태', accessToken);
 
     navigate('/couple');
+  };
+
+  const handleStartBtn = () => {
+    // 로그인 상태가 아니면
+    if (!isLogin) {
+      toast('로그인 후 사용해주세요', { theme: 'dark' });
+    } else {
+      // 로그인 상태면
+      setStartModalOpen(true);
+    }
   };
   return (
     <StyledMainHeroContainer>
@@ -117,7 +130,7 @@ const MainHero = () => {
         )}
         {!userInfo.couple && (
           <>
-            <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
+            <Button onButtonClick={handleStartBtn} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
               시작하기
             </Button>
             <MyModal isOpen={startModalOpen} setIsOpen={setStartModalOpen}>

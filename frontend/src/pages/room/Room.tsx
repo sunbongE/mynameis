@@ -5,12 +5,18 @@ import MeetingReady from '../../modules/roomModules/MeetingReady';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
 import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent } from 'openvidu-browser';
-import { matchingCancel, matchingCheck } from '../../apis/services/matching/matching';
+import { matchingCancel, matchingCheck, matchingExit } from '../../apis/services/matching/matching';
 import { getSessionId } from '../../utils/numberUtil';
 import Cookies from 'js-cookie';
+import { useNavigate, useParams } from 'react-router-dom';
+import { check } from 'prettier';
+import toast from 'react-simple-toasts';
 
 const Room = () => {
-  const [state, setState] = useState('loading');
+  const navigate = useNavigate();
+  const param = useParams();
+
+  const [state, setState] = useState('step1234');
   const [matchingInfo, setMatchingInfo] = useRecoilState<MatchingInfo>(matchingInfoState);
 
   // 1. 필요한 상태 정의
@@ -42,7 +48,6 @@ const Room = () => {
 
   useEffect(() => {
     if (initMyData.mySessionId === '') {
-      console.log('initOV가 되니? 안되는 것 같은데..??????');
       initOV();
     }
   }, [initMyData.mySessionId]);
@@ -58,9 +63,7 @@ const Room = () => {
     // 2. session에서 나간 사용자 삭제
     session.on('streamDestroyed', (event: StreamEvent) => {
       if (event.stream.typeOfVideo === 'CUSTOM') {
-        console.log('event.stream.typeOfVideo가 뭔디', event.stream.typeOfVideo);
         deleteSubscriber(event.stream.streamManager);
-        console.log('사용자 삭제 ing ', subscribers);
       }
     });
 
@@ -72,7 +75,6 @@ const Room = () => {
 
   // 새로고침
   const beforeUnLoad = (event: BeforeUnloadEvent) => {
-    console.log('beforeUnLoad 새로고침이 일어났지');
     event.stopPropagation();
     event.returnValue = '';
     leaveSession();
@@ -122,7 +124,6 @@ const Room = () => {
 
       // 4.1 token 가져오기
       getToken().then(async (token: string) => {
-        console.log('가져온 token', token);
         session
           .connect(token, { clientData: JSON.stringify(initMyData) })
           .then(async () => {
@@ -143,8 +144,13 @@ const Room = () => {
               });
             });
           })
-          .catch((error: any) => {
+          .catch(async (error: any) => {
             console.log('세션 연결과정에서 에러 떴어요', error.code, error.message);
+            toast('세션 연결 과정에서 에러가 발생했습니다. 메인페이지로 이동합니다.', { theme: 'dark' });
+            const params = { roomId: param.roomId };
+            await matchingExit(params);
+            await matchingCancel();
+            navigate('/');
           });
       });
     };
@@ -169,7 +175,6 @@ const Room = () => {
       console.log(newSubscriber.stream.connection);
 
       setSubscribers(newSubscribers);
-      console.log('들어온 사용자 subscribers ', newSubscribers);
     });
   };
 
@@ -188,13 +193,14 @@ const Room = () => {
 
   // 세션 종료
   const leaveSession = async () => {
-    console.log('세션 남아있나요? 남아있으면 종료해주세요', session);
+    console.log('세션 종료해주세요', session);
     if (session) {
       session.disconnect();
     }
     Cookies.remove('OVJSESSIONID'); // 쿠키에서 OVJSESSIONID 삭제
-    const data = await matchingCancel(); // 매칭 취소 요청
-    console.log('저 매칭 취소했어요', data.data);
+    const params = { roomId: param.roomId };
+    const data = await matchingExit(params); // 매칭 나가기 요청
+    // console.log(data.data);
 
     // 상태값 초기화
     setOV(null);
@@ -203,6 +209,16 @@ const Room = () => {
     setInitMyData({ mySessionId: '', myUserName: '', myGender: false, myArea: '', myBirth: '', myJob: '', myTag: [], myUserId: '' });
     setPublisher(undefined);
   };
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      const data = await matchingCheck();
+      console.log(data.data);
+      console.log(data);
+    };
+
+    checkStatus();
+  }, [subscribers]);
 
   // state에 따라 비디오 표시 여부를 제어하는 함수
   const setMediaVisibility = (videoVisible: boolean, audioVisible: boolean) => {
@@ -229,29 +245,11 @@ const Room = () => {
     }
   }, [state]);
 
-  // useEffect(() => {
-  //   if (!session) return;
-
-  //   session.on('publisherStartSpeaking', (event) => {
-  //     console.log('User ' + event.connection.connectionId + ' start speaking');
-  //   });
-
-  //   session.on('publisherStopSpeaking', (event) => {
-  //     console.log('User ' + event.connection.connectionId + ' stop speaking');
-  //   });
-  // });
-
-  // token 가져오기 (recoil에 저장된 token에서)
   const getToken = async () => {
     try {
       const data = await matchingCheck();
       const sessionId = getSessionId(data.data.token);
-      const updateInitMyData = {
-        ...initMyData,
-        mySessionId: String(sessionId),
-        myUserName: matchingInfo.randomName,
-      };
-      setInitMyData(updateInitMyData);
+
       return data.data.token;
     } catch (error) {
       console.log('token 에러', error);
@@ -260,10 +258,10 @@ const Room = () => {
 
   return (
     <>
-      {state === 'loading' && <MeetingWaiting streamManager={publisher} userType={0} state={state} setState={setState} />}
-      {state.includes('step') && <MeetingRoom publisher={publisher} subscribers={subscribers} state={state} setState={setState} />}
-      {state.includes('ready') && <MeetingReady streamManager={publisher} userType={0} state={state} setState={setState} />}
-      {state === '' && <div>끝났대...</div>}
+      {state === 'loading' && <MeetingWaiting leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}
+      {state.includes('step') && <MeetingRoom leaveSession={leaveSession} publisher={publisher} subscribers={subscribers} state={state} setState={setState} />}
+      {state.includes('ready') && <MeetingReady leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}
+      {state === '' && <div>끝났대... 결과모달 보여줘야대...</div>}
     </>
   );
 };

@@ -21,3 +21,13 @@ export const getBalanceGame = async () => {
   const response = await instance.get(`${matchingUrl}/questions`);
   return response;
 };
+
+export const matchingEnter = async (params: { roomId: string }) => {
+  const response = await loginInstance.post(`${matchingUrl}/enter`, params);
+  return response;
+};
+
+export const matchingExit = async (params: { roomId: string | undefined }) => {
+  const response = await loginInstance.post(`${matchingUrl}/exit`, params);
+  return response;
+};

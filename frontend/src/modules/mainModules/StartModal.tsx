@@ -5,7 +5,7 @@ import { Close } from '../../config/IconName';
 import { SimpleRadioButton } from '../../components/button/RadioButton';
 import Button from '../../components/button/Button';
 import CustomDropdown from '../../components/dropdown/Dropdown';
-import { matchingCancel, matchingCheck, matchingStart } from '../../apis/services/matching/matching';
+import { matchingCancel, matchingCheck, matchingEnter, matchingStart } from '../../apis/services/matching/matching';
 import Toast from '../../components/toast/Toast';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
@@ -89,7 +89,6 @@ const StartModal = (props: StartModalProps) => {
   };
 
   const [loadingModalOpen, setLoadingModalOpen] = useState<boolean>(false);
-  const [isMatchingPossible, setIsMatchingPossible] = useState(false);
 
   const setMatchingInfo = useSetRecoilState(matchingInfoState);
 
@@ -105,10 +104,13 @@ const StartModal = (props: StartModalProps) => {
     const checkStatus = async () => {
       const data = await handleCheck();
       console.log('결과', data);
+      console.log('roomId', data?.data.roomId);
 
       if (data && data.status === 200) {
         toast('매칭이 생성되었습니다. 5초 후에 이동합니다', { theme: 'dark' });
-        setIsMatchingPossible(true);
+        const params = { roomId: data.data.roomId };
+        const matchingData = await matchingEnter(params); // 매칭 참가 알림
+        console.log(matchingData.data);
         const userInfo = JSON.parse(data.data.userInfo);
         setMatchingInfo({ ...userInfo, userInfo: userInfo, userId: data.data.userId, randomName: data.data.randomName, token: data.data.token });
         setTimeout(() => {
@@ -123,7 +125,7 @@ const StartModal = (props: StartModalProps) => {
       checkStatus();
 
       // 10초마다 handleCheck을 실행하는 간격을 설정합니다.
-      intervalId = setInterval(checkStatus, 10000);
+      intervalId = setInterval(checkStatus, 1000);
     }
 
     // 컴포넌트가 언마운트되거나 isStart가 false가 되면 interval을 정리합니다.
