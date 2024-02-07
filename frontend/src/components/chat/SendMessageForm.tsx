@@ -93,50 +93,45 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
   const handleMessageChange = (msg: string) => {
     setMessage(msg);
   };
-
   const handleSendMessage = () => {
     console.log('handleSendMessage 메세지를 보냈습니다.');
     if (!stompClient || !stompClient.connected) {
       console.error('handleSendMessage : STOMP client is not connected.');
       return;
     }
-
+  
     if (!userInfo || !userInfo.name || !coupleId) return;
-
+  
     const newMessage: WebSocketMessage = {
       type: 'TALK',
       roomId: coupleId,
       sender: userInfo.name,
       msg: message,
     };
-
-    setChatMessages([...chatMessages, newMessage]);
+  
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     setMessage('');
   };
-
   const handleEnterPress = (msg: string) => {
     console.log('handleEnterPress 엔터키를 눌러 메세지를 보냈습니다.');
     if (!stompClient || !stompClient.connected) {
       console.error('handleEnterPress : STOMP client is not connected.');
       return;
     }
-
+  
     if (!userInfo || !userInfo.name || !coupleId) return;
-
-    setMessage(msg);
-
+  
     const newMessage: WebSocketMessage = {
       type: 'TALK',
       roomId: coupleId,
       sender: userInfo.name,
-      msg: message,
+      msg: msg, 
     };
-
-    setChatMessages([...chatMessages, newMessage]);
+  
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    setMessage(''); 
   };
-
+  
   return (
     <StyledMsgFormContainer>
       <SimpleInput2 placeholder='메세지를 입력하세요' value={message} height='40px' fontSize='12px' onInputChange={handleMessageChange} onEnterKeyUp={handleEnterPress} />
