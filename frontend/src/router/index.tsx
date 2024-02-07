@@ -10,6 +10,8 @@ import Room from '../pages/room/Room';
 import ChatPage from '../pages/chatPage/ChatPage';
 import CoupleMeeting from '../pages/meetingPage/CoupleMeeting';
 import CoinList from '../components/coinListItem/CoinList';
+// import PayResult from '../components/coinListItem/PayResult';
+// import PayReady from '../components/coinListItem/PayReady';
 
 const Router = () => {
   return (
@@ -23,6 +25,8 @@ const Router = () => {
         <Route path='/couple' element={<CoupleMeeting />} />
         {/* <Route path='/history' element={<History />} />; */}
         <Route path='/room/:roomId' element={<Room />} />;
+        {/* <Route path='/payresult' element={<PayResult/>} />; */}
+        {/* <Route path='/payready' element={<PayReady/>} />; */}
       </Routes>
     </BrowserRouter>
   );

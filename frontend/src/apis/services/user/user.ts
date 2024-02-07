@@ -38,12 +38,12 @@ export const userPasswordReset = async (params: {password: string}, query: strin
   return response.data;
 };
 
-export const userCoinPaymentRequest = async (params: { partner_user_id:string | undefined, partner_order_id:number, item_name:string, total_amount:number }) => {
+export const userPayReady = async (params: { partner_user_id:string | undefined, partner_order_id:number, item_name:string, total_amount:number }) => {
   const response = await instance.post(`${authUrl}/pay`, params);
   return response.data
 }
 
-export const userCoinPaymentConfirm = async (params: { partner_user_id:string | undefined, partner_order_id:number, item_name:string, total_amount:number }) => {
+export const userPayResult = async (params: { partner_user_id:string | undefined, partner_order_id:number, item_name:string, total_amount:number }) => {
   const response = await instance.post(`${authUrl}/pay`, params);
   return response.data
 }
