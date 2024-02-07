@@ -17,11 +17,10 @@ public class StompHandler implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        log.info("mes :{}",message);
+        log.info("** preSend 실행~~~~");
         StompHeaderAccessor accessor= StompHeaderAccessor.wrap(message);
         if(StompCommand.CONNECT == accessor.getCommand()){
-            log.info("token :{}",accessor.getFirstNativeHeader("Authorization"));
-            jwtProvider.validate(accessor.getFirstNativeHeader("Authorization"));
+            jwtProvider.validate(accessor.getFirstNativeHeader("Authorization").substring(7));
         }
         return message;
     }
