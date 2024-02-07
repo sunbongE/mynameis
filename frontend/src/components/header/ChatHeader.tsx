@@ -2,6 +2,11 @@ import styled from 'styled-components';
 import Icon from '../icon/Icon';
 import { Out, Blink, Video } from '../../config/IconName';
 
+interface ChatHeaderProps {
+  isClickedOutBtn: boolean;
+  setIsClickedOutBtn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const StyledHeaderContainer = styled.div`
   width: 320px;
   height: 50px;
@@ -33,7 +38,12 @@ const StyledReceiver = styled.p`
   font-size: 15px;
   letter-spacing: 0.5px;
 `;
-const ChatHeader = () => {
+
+const StyledOutContainer = styled.div``;
+const ChatHeader = ({ setIsClickedOutBtn, isClickedOutBtn }: ChatHeaderProps) => {
+  const handleClickOutBtn = () => {
+    setIsClickedOutBtn(!isClickedOutBtn);
+  };
   return (
     <StyledHeaderContainer>
       <StyledHeaderLeft>
@@ -45,7 +55,9 @@ const ChatHeader = () => {
 
       <StyledHeaderRight>
         <Icon src={Video} width='20px' />
-        <Icon src={Out} width='20px' />
+        <StyledOutContainer onClick={handleClickOutBtn}>
+          <Icon src={Out} width='20px' />
+        </StyledOutContainer>
       </StyledHeaderRight>
     </StyledHeaderContainer>
   );
