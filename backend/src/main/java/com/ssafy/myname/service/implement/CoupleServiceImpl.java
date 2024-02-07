@@ -133,13 +133,12 @@ public class CoupleServiceImpl implements CoupleService {
     @Override
     public ResponseEntity<?> coupleVideo(String userId , String coupleId) throws OpenViduJavaClientException, OpenViduHttpException {
         // 방 만들고 방아이디는 커플 아이디.
-        String newCoupleId = coupleId;
-        String token = CoupleVideoProvider.coupleVideo(newCoupleId);
+        String token = CoupleVideoProvider.coupleVideo(coupleId);
         User user = userRepository.findByUserId(userId);
 
         // 방 입장토큰을 준다.
         Map<String,String> body = new HashMap<>();
-        body.put("videoId",newCoupleId);
+        body.put("videoId",coupleId);
         body.put("token",token);
         body.put("name",user.getName());
 
