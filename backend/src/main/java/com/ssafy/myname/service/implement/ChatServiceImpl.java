@@ -44,13 +44,14 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public <T> void sendMessage(ChatDto dto) {
-        if (ChatDto.MessageType.ENTER.equals(dto.getType())) {
-            dto.setMsg(dto.getSender() + "님이 방에 입장했습니다.");
-            dto.setSender("[알림]");
-        } else if (ChatDto.MessageType.QUIT.equals(dto.getType())) {
-            dto.setMsg(dto.getSender() + "님이 방에서 나갔습니다.");
-            dto.setSender("[알림]");
-        }
+        log.info("type : {}",dto.getType());
+//        if (ChatDto.MessageType.ENTER.equals(dto.getType())) {
+//            dto.setMsg(dto.getSender() + "님이 방에 입장했습니다.");
+//            dto.setSender("[알림]");
+//        } else if (ChatDto.MessageType.QUIT.equals(dto.getType())) {
+//            dto.setMsg(dto.getSender() + "님이 방에서 나갔습니다.");
+//            dto.setSender("[알림]");
+//        }
         redisTemplate.convertAndSend(channelTopic.getTopic(), dto);
     }
 

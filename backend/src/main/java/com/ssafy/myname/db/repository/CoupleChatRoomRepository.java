@@ -1,5 +1,6 @@
 package com.ssafy.myname.db.repository;
 
+import com.ssafy.myname.dto.request.chat.ChatDto;
 import com.ssafy.myname.dto.request.chat.ChatRoomDto;
 
 import com.ssafy.myname.service.RedisSubscriber;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -32,6 +34,17 @@ public class CoupleChatRoomRepository {
     private HashOperations<String, String, String> hashOpsEnterInfo;
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> valueOps;
+
+    @Resource(name = "redisTemplate")
+    private ListOperations<String, ChatDto> listOps;
+
+    public void saveChatDto(ChatDto dto){
+        listOps.rightPush(dto.getRoomId(),dto);
+    }
+
+    public List<ChatDto> findByRoomId(String roomId){
+        return listOps.range(roomId,0,50);
+    }
 
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
     public ChatRoomDto createChatRoom(String name) {

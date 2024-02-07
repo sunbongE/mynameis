@@ -24,18 +24,6 @@
 //
 //
 //
-//    @GetMapping("/createTopic")
-//    public ChatRoomDto createChatRoom() {
-//        logger.info("** 방만들기 실행.");
-//        try {
-//            ChatRoomDto chatRoom = coupleChatRoomRepository.createChatRoom("1");
-//            return coupleChatRoomRepository.findRoomById("1");
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 //
 //
 //}

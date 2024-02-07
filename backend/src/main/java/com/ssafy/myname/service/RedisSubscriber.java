@@ -30,7 +30,6 @@ public class RedisSubscriber implements MessageListener{		// 1.
             // ChatMessage 객채로 맵핑
             String pubMessage = redisTemplate.getStringSerializer().deserialize(message.getBody());
             ChatDto chatMessage = objectMapper.readValue(pubMessage, ChatDto.class);
-            log.info("섭스크라이버 실행?");
             log.info("아이디 : {}, 메시지 : {}", chatMessage.getRoomId(), chatMessage.getMsg());
 
             // 채팅방을 구독한 클라이언트에게 메시지 발송
