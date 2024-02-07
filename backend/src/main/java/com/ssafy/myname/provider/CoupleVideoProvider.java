@@ -36,6 +36,8 @@ public class CoupleVideoProvider {
         ConnectionProperties properties = ConnectionProperties.fromJson(new HashMap<>()).build();
         Connection connection = activeRoom.createConnection(properties);
         String token = connection.getToken();
+
+        if(token==null) coupleVideo(coupleId);
         return token;
     }
 
