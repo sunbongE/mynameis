@@ -6,6 +6,7 @@ import com.ssafy.myname.dto.request.chat.ChatRoomDto;
 //import com.ssafy.myname.service.ChatService;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.RedisPublisher;
+import com.ssafy.myname.service.RedisSubscriber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,22 +26,23 @@ public class ChatController {
     private final JwtProvider jwtProvider;
     private final RedisPublisher redisPublisher;
     private final CoupleChatRoomRepository chatRoomRepository;
-    private final RedisTemplate redisTemplate;
-
+    private final RedisTemplate<String,Object> redisTemplate;
     @MessageMapping("/chat/message")
-    public void message(ChatDto msg, @Header("Authorization") String token){
+    public void remessage(ChatDto msg, @Header("Authorization") String token){
         log.info("message 실행");
         String userId = jwtProvider.validate(token.substring(7));
 
         msg.setSender(userId);
-//        log.info("입장했다.");
         if(ChatDto.MessageType.ENTER.equals(msg.getType())){
             log.info("입장했다.");
             msg.setSender("[알림]");
             msg.setMsg(userId + "님이 입장하셨습니다.");
         }
         // Websocket에 발행된 메시지를 redis로 발행(publish)
-        redisTemplate.convertAndSend(msg.getRoomId(), msg);
+        log.info("ㅁㅔㅅㅔㅈㅔ : {}",msg.getMsg());
+        log.info("룸아이디 : {}",msg.getRoomId());
+        redisTemplate.convertAndSend("/sub/chat", msg);
+
         log.info("레디스로 발행함.");
     }
 
