@@ -18,9 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 @Slf4j
-@Repository
+@Service
 @RequiredArgsConstructor
 public class CoupleChatRoomRepository {
+    // Redis
     private static final String CHAT_ROOMS = "CHAT_ROOM";
     private final RedisTemplate<String, Object> redisTemplate;
     private HashOperations<String, String, ChatRoomDto> opsHashChatRoom;
@@ -28,19 +29,21 @@ public class CoupleChatRoomRepository {
     private void init() {
         opsHashChatRoom = redisTemplate.opsForHash();
     }
-//    // 모든 채팅방 조회
-//    public List<ChatRoomDto> findAllRoom() {
-//        return opsHashChatRoom.values(CHAT_ROOMS);
-//    }
+    // 모든 채팅방 조회
+    public List<ChatRoomDto> findAllRoom() {
+        return opsHashChatRoom.values(CHAT_ROOMS);
+    }
     // 특정 채팅방 조회
     public ChatRoomDto findRoomById(String id) {
         return opsHashChatRoom.get(CHAT_ROOMS, id);
     }
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
-    public ChatRoomDto createChatRoom(String name) {
-        ChatRoomDto chatRoom = ChatRoomDto.create(name);
+    public ChatRoomDto createChatRoom(String coupleId) {
+        log.info("채팅방 생성.");
+        ChatRoomDto chatRoom = ChatRoomDto.create(coupleId);
         opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }
+
 
 }

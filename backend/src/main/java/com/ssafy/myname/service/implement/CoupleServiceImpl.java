@@ -4,6 +4,7 @@ import com.ssafy.myname.db.entity.Alarm;
 import com.ssafy.myname.db.entity.Couple;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.AlarmRepository;
+import com.ssafy.myname.db.repository.CoupleChatRoomRepository;
 import com.ssafy.myname.db.repository.CoupleRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.provider.CoupleVideoProvider;
@@ -29,6 +30,7 @@ public class CoupleServiceImpl implements CoupleService {
     private final CoupleRepository coupleRepository;
     private final UserRepository userRepository;
     private final AlarmRepository alarmRepository;
+    private final CoupleChatRoomRepository coupleChatRoomRepository;
     private final EntityManager em;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -59,8 +61,9 @@ public class CoupleServiceImpl implements CoupleService {
                 userRepository.save(women);
 
                 body.put("msg","커플이 되었습니다.");
-
+                String roomId = String.valueOf(couple.getCoupleId());
                 // 커플 채팅방 테이블 생성.
+                coupleChatRoomRepository.createChatRoom(roomId);
 
                 return ResponseEntity.status(HttpStatus.OK).body(body);
             }
