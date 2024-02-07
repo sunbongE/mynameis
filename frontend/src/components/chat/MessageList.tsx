@@ -6,7 +6,6 @@ import ReceiverMessage from './ReceiverMessage';
 import SenderMessage from './SenderMessage';
 import MessageDate from './MessageDate';
 import { useEffect } from 'react';
-import { convertToObject } from 'typescript';
 
 const StyledMsgListContainer = styled.div`
   background: #fff;
@@ -20,15 +19,23 @@ const MessageList = () => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
 
   useEffect(() => {
-    setChatMessages([...chatMessages]);
-  }, [setChatMessages]);
+    console.log(chatMessages.length);
+  }, [chatMessages]); // Removed setChatMessages from dependency array as it causes infinite loop
 
   return (
     <StyledMsgListContainer>
-      <MessageDate date='2024.01.31' />
-      {chatMessages.map((message, index) => (message.role === 'receiver' ? <ReceiverMessage key={index} msg={message.msg} time={message.time} /> : <SenderMessage key={index} msg={message.msg} time={message.time} />))}
+      {chatMessages.length > 0 && (
+        <>
+          <MessageDate date='2024.01.31' />
+          {chatMessages.map((message, index) => (message.sender === 'receiver' ? <ReceiverMessage key={index} msg={message.msg} time={'10:52'} /> : <SenderMessage key={index} msg={message.msg} time={'10:52'} />))}
+        </>
+      )}
     </StyledMsgListContainer>
   );
 };
 
 export default MessageList;
+
+// {
+//   chatMessages.map((message, index) => (message.role === 'receiver' ? <ReceiverMessage key={index} msg={message.msg} time={message.time} /> : <SenderMessage key={index} msg={message.msg} time={message.time} />));
+// }

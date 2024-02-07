@@ -23,6 +23,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 @Configurable //  아래 어노테이션 빈을 등록하도록하는것.
 @Configuration // 이 클래스가 빈을 가지고잇다
@@ -44,12 +46,12 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/css/", "/js/", "/images/**","/test/**").permitAll()
+//                        .requestMatchers().permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat").permitAll()
                         .requestMatchers("/", "/auth/**","/couple/create","/matching/questions").permitAll()
 
-                        .requestMatchers("/ws/chat","/chat/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/refresh/**","/users/**","/matching/**","/couple/**").hasRole("USER")
+                        .requestMatchers("/refresh/**","/users/**","/matching/**","/couple/**","/chat/**").hasRole("USER")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 )
@@ -63,10 +65,15 @@ public class WebSecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedOrigin("ws://localhost:8080");
+//        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+//        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.setAllowedHeaders((Collections.singletonList("*")));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(3600L);
+//        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration);
 

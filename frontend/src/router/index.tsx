@@ -20,7 +20,6 @@ const Router = () => {
         <Route path='/signup' element={<SignUp />} />;
         <Route path='/passwordreset' element={<PasswordReset />} />;
         <Route path='/emailauth' element={<EmailAuth />} />;
-        <Route path='/chat' element={<ChatPage />} />;
         <Route path='/couple' element={<CoupleMeeting />} />
         {/* <Route path='/history' element={<History />} />; */}
         <Route path='/room/:roomId' element={<Room />} />;

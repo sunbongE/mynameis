@@ -13,6 +13,11 @@ import { CoupleMeetingUtilsProps } from '../../utils/CoupleMeetingUtilsProps';
 import { instance } from '../../apis/utils/axiosInstance';
 import MyModal from '../../components/modal/MyModal';
 import StartModal from './StartModal';
+
+interface MainHeroProps {
+  isOpenChat: boolean;
+  setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
+}
 const StyledMainHeroContainer = styled.div`
   width: 100%;
   height: calc(100vh - 64px);
@@ -75,30 +80,25 @@ const StyledHeroDownText = styled.p`
   text-align: center;
 `;
 
-const MainHero = () => {
+const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
   const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
-
+  // const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const [startModalOpen, setStartModalOpen] = useState<boolean>(false);
 
-  // console.log('userInfo', userInfo.couple);
   const handleVideoBtn = () => {
-    console.log('화상 채팅 버튼 클릭');
-
-    // const accessToken = sessionStorage.getItem('accessToken');
-    // console.log('accessToken 가져왔어', accessToken);
-    // instance.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('accessToken')}`;
-    // instance.defaults.headers.common['Content-Type'] = 'application/json';
-
-    // console.log('instance 형태', instance);
-    // console.log('accessToken 형태', accessToken);
-
+    console.log('화상 버튼 클릭');
     navigate('/couple');
+  };
+
+  const handleChatBtn = () => {
+    console.log('커플 채팅 버튼 클릭');
+    setIsOpenChat(!isOpenChat);
   };
   return (
     <>
-      {userInfo && !userInfo.coupleId && (
+      {userInfo && (
         <StyledMainHeroContainer>
           {!userInfo.coupleId && <StyledHeroImage src={heroSolo} alt='hero Solo' />}
           {userInfo.coupleId && <StyledHeroImage src={heroCouple} alt='hero Solo' />}
@@ -108,9 +108,9 @@ const MainHero = () => {
             <StyledHeroSubtitle1>매 단계, 새로운 이야기.</StyledHeroSubtitle1>
             <StyledHeroSubtitle2>나만의 매력을 풀어가는 소개팅을 즐겨보세요.</StyledHeroSubtitle2>
 
-            {userInfo.coupleId && (
+            {!userInfo.coupleId && (
               <StyledHeroBtnContainer>
-                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white' >
+                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white' onButtonClick={handleChatBtn}>
                   채팅하기
                 </Button>
                 <Button backgroundColor='#fff' width='100px' height='40px' borderRadius='15px' fontColor='#E1A4B4' onButtonClick={handleVideoBtn}>
@@ -118,7 +118,7 @@ const MainHero = () => {
                 </Button>
               </StyledHeroBtnContainer>
             )}
-            {!userInfo.coupleId && (
+            {userInfo.coupleId && (
               <>
                 <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
                   시작하기

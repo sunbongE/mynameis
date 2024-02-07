@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
         logger.info("tags : {}", tags);
         dto.addTags(tags);
 
-
         return dto ;
     }
 
@@ -61,7 +60,6 @@ public class UserServiceImpl implements UserService {
             tagRepository.save(new Tags(user, tagname));
         }
         return ResponseDto.ok();
-
     }
 
     @Override
@@ -89,21 +87,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.setCoin(user.getCoin() + coins);
         userRepository.save(user);
-    }
-
-    @Override
-    public ResponseEntity<?> emailModify(String userId, String password) {
-        try {
-            User user = userRepository.findByUserId(userId);
-            String newPassword = passwordEncoder.encode(password);
-            user.setPassword(newPassword);
-            userRepository.save(user);
-
-            return ResponseDto.ok();
-        }catch (Exception e){
-            logger.info(e.getMessage());
-            return ResponseDto.databaseError();
-        }
     }
 
     @Override
