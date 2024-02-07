@@ -11,7 +11,7 @@ import lombok.Setter;
 @Data
 public class ChatDto {
     public enum MessageType{
-        ENTER, TALK, JOIN
+        ENTER, TALK, QUIT
     }
     private MessageType type;   // 메시지 타입
     private String  roomId;        // 방번호
