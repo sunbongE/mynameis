@@ -62,6 +62,12 @@ const StyledCheckText = styled.p<{ isMatch: boolean }>`
   line-height: normal;
 `;
 
+const StyledConfirmed = styled.div`
+  height: 15px;
+  display: flex;
+  margin-right: 10px;
+`;
+
 const SimpleInput = (props: InputProps) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -79,15 +85,40 @@ const SimpleInput = (props: InputProps) => {
       // 여기에서는 콜백 함수로 받아온 onEnterKeyUp 함수 호출
       if (props.onEnterKeyUp) {
         props.onEnterKeyUp(inputValue);
+        setInputValue(''); // 입력값 초기화
       }
       setInputValue(''); // 입력값 초기화
     }
   };
 
   return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} onKeyUp={handleEnterKeyPress}></StyledInput>;
-
 };
 
+const SimpleInput2 = (props: InputProps) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSimpleInputChange = (e: any) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    if (props.onInputChange) {
+      props.onInputChange(newValue);
+    }
+    // setInputValue('');
+  };
+
+  const handleEnterKeyPress = (e: any) => {
+    if (e.key === 'Enter' && inputValue.trim() !== '') {
+      // 엔터 키를 눌렀고, 입력값이 비어있지 않다면 Chip 생성
+      // 여기에서는 콜백 함수로 받아온 onEnterKeyUp 함수 호출
+      if (props.onEnterKeyUp) {
+        props.onEnterKeyUp(inputValue);
+      }
+      setInputValue(''); // 입력값 초기화
+    }
+  };
+
+  return <StyledInput placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handleSimpleInputChange} onKeyUp={handleEnterKeyPress}></StyledInput>;
+};
 const ConfirmationCodeInput = (props: InputProps) => {
   const [isReturnMatch, setIsReturnMatch] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -107,7 +138,8 @@ const ConfirmationCodeInput = (props: InputProps) => {
       if (props.onEnterKeyUp) {
         props.onEnterKeyUp(inputValue);
       }
-      setInputValue(''); // 입력값 초기화
+      console.log(inputValue);
+      setInputValue(inputValue); // 입력값 초기화
     }
   };
 
@@ -136,13 +168,13 @@ const ConfirmationCodeInput = (props: InputProps) => {
         <StyledCheckedContainer>
           {isReturnMatch && (
             <>
-              <Icon src={Check_green} width='12px' />
+              <Icon src={Check_green} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>인증번호가 일치해요</StyledCheckText>
             </>
           )}
           {!isReturnMatch && (
             <>
-              <Icon src={Check_red} width='12px' />
+              <Icon src={Check_red} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>인증번호가 일치하지 않아요</StyledCheckText>
             </>
           )}
@@ -164,6 +196,18 @@ const PasswordInput = (props: InputProps) => {
     }
   };
 
+  const handleEnterKeyPress = (e: any) => {
+    if (e.key === 'Enter' && inputValue.trim() !== '') {
+      // 엔터 키를 눌렀고, 입력값이 비어있지 않다면 Chip 생성
+      // 여기에서는 콜백 함수로 받아온 onEnterKeyUp 함수 호출
+      if (props.onEnterKeyUp) {
+        props.onEnterKeyUp(inputValue);
+      }
+      console.log(inputValue);
+      setInputValue(inputValue); // 입력값 초기화
+    }
+  };
+
   useEffect(() => {
     setIsReturnMatch(props.value === props.originValue);
   }, [props.value, props.originValue]);
@@ -172,19 +216,28 @@ const PasswordInput = (props: InputProps) => {
 
   return (
     <StyledInputContainer {...props}>
-      <StyledInput type='password' placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handlePasswordInputChange}></StyledInput>
+      <StyledInput
+        type='password'
+        placeholder={props.placeholder}
+        width={props.width}
+        height={props.height}
+        id={props.id}
+        value={inputValue}
+        onChange={handlePasswordInputChange}
+        onKeyUp={handleEnterKeyPress}
+      ></StyledInput>
 
       {props.isReturn && (
         <StyledCheckedContainer>
           {isReturnMatch && (
             <>
-              <Icon src={Check_green} width='12px' />
+              <Icon src={Check_green} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치해요</StyledCheckText>
             </>
           )}
           {!isReturnMatch && (
             <>
-              <Icon src={Check_red} width='12px' />
+              <Icon src={Check_red} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치하지 않아요</StyledCheckText>
             </>
           )}
@@ -194,4 +247,4 @@ const PasswordInput = (props: InputProps) => {
   );
 };
 
-export { SimpleInput, ConfirmationCodeInput, PasswordInput };
+export { SimpleInput, SimpleInput2, ConfirmationCodeInput, PasswordInput };

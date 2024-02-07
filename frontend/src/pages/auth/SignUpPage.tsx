@@ -225,8 +225,8 @@ function SignUp() {
       const response = await userSignUp({ gender: booleanGender, tags: registrationData.tag, ...restData });
       console.log(registrationData);
       console.log('회원가입 성공:', response);
-      alert('회원가입 되었습니다. 메인페이지로 이동합니다.');
-      navigate('/'); // 메인 페이지 이동
+      alert('회원가입 되었습니다. 로그인 페이지로 이동합니다.');
+      navigate('/login'); // 로그인 페이지 이동
     } catch (error) {
       console.log(registrationData);
       console.log('회원가입 실패:', error);
@@ -242,7 +242,7 @@ function SignUp() {
       alert('휴대폰 번호를 전송했습니다.');
     } catch (error) {
       console.log('휴대폰 인증 전송 안됨', error, submitPhoneNumber);
-      alert('휴대폰 인증 전송이 안됐습니다.');
+      alert('휴대폰 인증 전송 실패');
     }
   };
 
@@ -250,13 +250,14 @@ function SignUp() {
     try {
       const response = await userPhoneAuthentication({ phoneId: submitPhoneNumber, certificationNumber: phoneAuthNumber });
       setIsPhoneAuth(true);
-      if (isPhoneAuth) {
-        setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
-      }
+      setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
+  
+      console.log('핸드폰 등록 : ',registrationData.phone)
       console.log('휴대폰 인증 성공', response, submitPhoneNumber);
       alert('휴대폰 인증에 성공했습니다.');
     } catch (error) {
       console.log('휴대폰 인증 실패', error, submitPhoneNumber);
+      console.log('핸드폰 등록 : ',registrationData.phone)
       alert('휴대폰 인증에 실패했습니다.');
     }
   };
@@ -308,7 +309,7 @@ function SignUp() {
               다시 요청
             </Button>
           </div>
-          <ConfirmationCodeInput placeholder='인증번호' value={''} onInputChange={handlePhoneAuthChange} onEnterKeyUp={handleAfterPhoneAuth} />
+          <ConfirmationCodeInput placeholder='인증번호를 입력하고 엔터를 눌러주세요' value={phoneAuthNumber} onInputChange={handlePhoneAuthChange} onEnterKeyUp={handleAfterPhoneAuth} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <StyleLabel htmlFor='area'>지역</StyleLabel>

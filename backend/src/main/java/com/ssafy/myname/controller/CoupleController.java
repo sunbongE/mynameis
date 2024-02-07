@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -128,11 +128,12 @@ public class CoupleController {
     }
 
     @GetMapping("/video")
-    public ResponseEntity<?> coupleVideo(@RequestParam("coupleId") String coupleId) {
+    public ResponseEntity<?> coupleVideo(Principal principal ,@RequestParam("coupleId") String coupleId) {
         logger.info("** coupleVideo 호출");
         logger.info("dto :{}", coupleId);
         try {
-            ResponseEntity<?> response = coupleService.coupleVideo(coupleId);
+            String userId = principal.getName();
+            ResponseEntity<?> response = coupleService.coupleVideo(userId,coupleId);
 
             return response;
 

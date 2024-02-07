@@ -28,8 +28,6 @@ public class UserServiceImpl implements UserService {
     private final Logger logger =  LoggerFactory.getLogger(this.getClass());
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
-    private final EmailProvider emailProvider;
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public GetUserInfoResDto getUserInfo(Principal principal) {
         logger.info("** getUserInfo ServiceImpl 실행 ");
@@ -48,7 +46,6 @@ public class UserServiceImpl implements UserService {
         logger.info("tags : {}", tags);
         dto.addTags(tags);
 
-
         return dto ;
     }
 
@@ -63,7 +60,6 @@ public class UserServiceImpl implements UserService {
             tagRepository.save(new Tags(user, tagname));
         }
         return ResponseDto.ok();
-
     }
 
     @Override
@@ -87,34 +83,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void emailUrl(String userId) {
-        try{
-            User user = userRepository.findByUserId(userId);
-            String email = user.getEmail();
-            boolean isSuccess = emailProvider.sendMail(email);
-            if(!isSuccess) {
-                logger.info("** 없는 이메일 ");
-            }
-
-        }catch (Exception e){
-            logger.info(e.getMessage());
-
-        }
-        logger.info("** 이메일 전송");
+    public void addCoins(int coins, String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setCoin(user.getCoin() + coins);
+        userRepository.save(user);
     }
 
     @Override
-    public ResponseEntity<?> emailModify(String userId, String password) {
-        try {
-            User user = userRepository.findByUserId(userId);
-            String newPassword = passwordEncoder.encode(password);
-            user.setPassword(newPassword);
-            userRepository.save(user);
-
-            return ResponseDto.ok();
-        }catch (Exception e){
-            logger.info(e.getMessage());
-            return ResponseDto.databaseError();
-        }
+    public void increaseReportPoint(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디의 사용자를 찾을 수 없습니다."));
+        user.setReportPoint(user.getReportPoint() + 1);
+        userRepository.save(user);
     }
 }

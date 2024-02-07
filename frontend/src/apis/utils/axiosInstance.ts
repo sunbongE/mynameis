@@ -64,3 +64,5 @@ instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 loginInstance.interceptors.request.use(setLoginCommonHeaders, handleRequestError);
 loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
+
+export default instance;

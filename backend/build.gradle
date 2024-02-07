@@ -16,14 +16,18 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 }
-//tasks.withType(JavaCompile).configureEach {
-//	options.compilerArgs.add("-parameters")
-//}
+
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+//=========================== chat practice =======================
+	implementation 'org.webjars.bower:axios:0.17.1'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3-1'
+//==================================================
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -54,6 +58,7 @@ dependencies {
 	// email
 	implementation 'jakarta.mail:jakarta.mail-api:1.6.7'
 	implementation 'net.nurigo:sdk:4.2.7'
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {

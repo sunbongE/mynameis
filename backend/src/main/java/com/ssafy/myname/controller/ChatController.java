@@ -1,42 +1,47 @@
 package com.ssafy.myname.controller;
 
+import com.ssafy.myname.db.repository.CoupleChatRoomRepository;
 import com.ssafy.myname.dto.request.chat.ChatDto;
-import com.ssafy.myname.service.ChatRoomService;
-import com.ssafy.myname.service.ChatService;
-//import com.ssafy.myname.service.RedisPublisher;
+import com.ssafy.myname.dto.request.chat.ChatRoomDto;
+//import com.ssafy.myname.service.ChatService;
+import com.ssafy.myname.provider.JwtProvider;
+import com.ssafy.myname.service.RedisPublisher;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.message.service.MessageService;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
-@Controller
+@Slf4j
+@RestController
 @RequiredArgsConstructor
 public class ChatController {
-//    private final RedisPublisher redisPublisher;
-    private final ChatRoomService chatRoomService;
-    private final ChatService chatService;
 
-    // 대화 & 대화 저장
-    @MessageMapping("/message")
-    public void message(ChatDto chatDto) {
-        // 클라이언트의 topic  입장, 대화를 위해 리스너와 연동
-        chatRoomService.enterMessageRoom(chatDto.getRoomId());
+    private final JwtProvider jwtProvider;
+    private final RedisPublisher redisPublisher;
+    private final CoupleChatRoomRepository chatRoomRepository;
+    private final RedisTemplate redisTemplate;
 
-        // Websocket 에 발행된 메시지를 redis 로 발행. 해당 쪽지방을 구독한 클라이언트에게 메시지가 실시간 전송됨 (1:N, 1:1 에서 사용 가능)
-//        redisPublisher.publish(chatRoomService.getTopic(chatDto.getRoomId()), chatDto);
+    @MessageMapping("/chat/message")
+    public void message(ChatDto msg, @Header("Authorization") String token){
+        log.info("message 실행");
+        String userId = jwtProvider.validate(token.substring(7));
 
-        // DB & Redis 에 대화 저장
-        chatService.saveMessage(chatDto);
+        msg.setSender(userId);
+//        log.info("입장했다.");
+        if(ChatDto.MessageType.ENTER.equals(msg.getType())){
+            log.info("입장했다.");
+            msg.setSender("[알림]");
+            msg.setMsg(userId + "님이 입장하셨습니다.");
+        }
+        // Websocket에 발행된 메시지를 redis로 발행(publish)
+        redisTemplate.convertAndSend(msg.getRoomId(), msg);
+        log.info("레디스로 발행함.");
     }
 
-    // 대화 내역 조회
-    @GetMapping("/api/room/{roomId}/message")
-    public ResponseEntity<List<ChatDto>> loadMessage(@PathVariable String roomId) {
-        return ResponseEntity.ok(chatService.loadMessage(roomId));
-    }
 }

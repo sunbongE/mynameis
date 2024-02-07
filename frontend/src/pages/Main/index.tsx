@@ -6,13 +6,21 @@ import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
 import Footer from '../../components/footer/Footer';
 import Cookies from 'js-cookie';
-import { useRecoilState } from 'recoil';
-import { IsLoginAtom } from '../../recoil/atoms/userAuthAtom';
-
+import { useRecoilState, useRecoilValue, RecoilValue, useRecoilCallback } from 'recoil';
+import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
+import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
+import { userInfoState } from '../../recoil/atoms/userState';
 import ActionButton from '../../components/actionButton/ActionButton';
+import ChatPage from '../chatPage/ChatPage';
+
+interface Position {
+  x: number;
+  y: number;
+}
 const MainContainer = styled.div`
   width: 100%;
   background-color: #f2eeea;
+  /* position: relative; */
 `;
 
 const ImgContainer = styled.div`
@@ -21,27 +29,25 @@ const ImgContainer = styled.div`
   border: 1px solid black;
 `;
 
-const ChatContainer = styled.div`
-  background-color: #000;
-`;
-
 const Main = () => {
   const navigate = useNavigate();
-
-  const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const isLogin = useRecoilValue(isLoginSelector);
+  const setLoginState = useRecoilCallback(({ set }) => (newValue: boolean) => {
+    set(isLoginSelector, newValue);
+  });
 
   const handleLogin = () => {
     console.log('로그인');
-    setIsLogin(true);
     navigate('/login');
   };
 
   const handleLogout = () => {
     console.log('로그아웃');
     setMyPageOpen(false);
-    setIsLogin(false);
-    Cookies.remove('accessToken');
+    setLoginState(false);
     alert('로그아웃 되었습니다.');
+    window.location.reload();
   };
 
   const handleSignUp = () => {
@@ -63,31 +69,30 @@ const Main = () => {
 
   const tempArray = ['일', '이', '삼', '사', '오'];
 
-  const [scrolling, setScrolling] = useState(false);
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     setScrolling(window.scrollY > 0 ? true : false);
-  //   };
-  //   window.addEventListener('scroll', handleScroll);
+  const [scrolling, setScrolling] = useState<boolean>(false);
 
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, []);
+  const initialPosition: Position = {
+    x: window.innerWidth - 420 - 100,
+    y: window.innerHeight - 520 + 20,
+  };
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    console.log('스크롤 값', scrollPosition);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrollPosition]);
+  const [isOpenChat, setIsOpenChat] = useState(false);
   return (
     <MainContainer>
-      <Header
-        isLogin={isLogin}
-        setIsLogin={setIsLogin}
-        onClickLogin={handleLogin}
-        onClickLogout={handleLogout}
-        onClickSignUp={handleSignUp}
-        onClickMyPage={handleMyPage}
-        isMyPageOpen={myPageOpen}
-        showHeader={scrolling}
-      />
-      <MainSection />
+      <Header isLogin={isLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} showHeader={scrolling} />
+      <MainSection isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />
       {/* <Button
         backgroundColor={'#e1a4b4'}
         width={'200px'}
@@ -101,6 +106,7 @@ const Main = () => {
       </Button> */}
       <Footer />
       <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
+      {isOpenChat && <ChatPage initialPosition={{ x: initialPosition.x, y: initialPosition.y }} isOpenChat={isOpenChat} />}
     </MainContainer>
   );
 };

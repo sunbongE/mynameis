@@ -1,7 +1,9 @@
 package com.ssafy.myname.config;
 
 import com.ssafy.myname.service.RedisKeyExpirationListener;
+//import com.ssafy.myname.service.RedisSubscriber;
 import com.ssafy.myname.service.RedisSubscriber;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +20,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
+@Slf4j
 @Configuration
 @EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 public class RedisConfig {
@@ -39,50 +41,38 @@ public class RedisConfig {
     /**
      * redis에 발행(publish)된 메시지 처리를 위한 리스너 설정
      */
-    @Bean
-    @Primary
-    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory,
-                                                              MessageListenerAdapter listenerAdapter,
-                                                              ChannelTopic channelTopic) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, channelTopic);
-        return container;
-    }
 
-    /**
-     * 실제 메시지를 처리하는 subscriber 설정 추가
-     */
-    @Bean
-    public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "sendMessage");
-    }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(host, port);
     }
 
-    @Bean
     @Primary
-    public RedisTemplate<String, Object> redisTemplate() {
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));      // Value Serializer
-//        redisTemplate.setValueSerializer(new StringRedisSerializer());
-
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         return redisTemplate;
-
     }
+
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
-                                                                       RedisKeyExpirationListener keyExpirationListener) {
+                                                                       MessageListenerAdapter listenerAdapter,
+                                                                       ChannelTopic channelTopic) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(new MessageListenerAdapter(keyExpirationListener), new PatternTopic("__keyevent@0__:expired"));
+        container.addMessageListener(listenerAdapter, channelTopic);
         return container;
     }
-
+    /**
+     * 실제 메시지를 처리하는 subscriber 설정 추가
+     */
+    @Bean
+    public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
+      log.info("listenerAdapter 실행.");
+        return new MessageListenerAdapter(subscriber, "sendMessage");
+    }
 }

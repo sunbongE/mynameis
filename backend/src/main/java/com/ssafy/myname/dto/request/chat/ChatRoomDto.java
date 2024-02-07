@@ -13,8 +13,9 @@ public class ChatRoomDto implements Serializable {
 
     private String roomId;
 
-    public ChatRoomDto(String coupleId) {
-        this.roomId = coupleId;
-
+    public static ChatRoomDto create(String coupleId) {
+        ChatRoomDto chatRoom = new ChatRoomDto();
+        chatRoom.roomId =coupleId;
+        return chatRoom;
     }
 }
