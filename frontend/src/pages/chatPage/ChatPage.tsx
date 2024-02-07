@@ -20,6 +20,11 @@ const ChatPage = ({ initialPosition, isOpenChat }: ChatProps) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>();
+  const [isClickedOutBtn, setIsClickedOutBtn] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log('isClickedOutBtn', isClickedOutBtn);
+  }, [isClickedOutBtn]);
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     setDragStart({ x: event.clientX - position.x, y: event.clientY - position.y });
@@ -43,7 +48,7 @@ const ChatPage = ({ initialPosition, isOpenChat }: ChatProps) => {
 
   return (
     <ChatContainer top={position.y} left={position.x} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-      <ChatHeader />
+      <ChatHeader isClickedOutBtn={isClickedOutBtn} setIsClickedOutBtn={setIsClickedOutBtn} />
       <MessageList />
       <SenderMessageForm isOpenChat={isOpenChat} />
     </ChatContainer>

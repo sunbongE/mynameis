@@ -41,7 +41,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const socketUrl = 'http://localhost:8080/ws-stomp';
-
+  let isFirstConnect = true; // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
   useEffect(() => {
     if (userInfo === null || coupleId === null) return;
 
@@ -55,20 +55,23 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
         stompClient.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
           const newMessage: WebSocketMessage = JSON.parse(message.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-          handleEnterChat();
+
+          if (isFirstConnect) {
+            handleEnterChat();
+            isFirstConnect = false;
+          }
         });
       },
       (error: any) => {
-        console.log('error:', error);
+        console.log('stompClient connect error:', error);
       }
     );
-
-    console.log('방 입장');
   }, [userInfo, coupleId]);
 
   const handleEnterChat = () => {
+    console.log('handleEnterChat 채팅방에 들어왔습니다.');
     if (!stompClient || !stompClient.connected) {
-      console.error('STOMP client is not connected.');
+      console.error('handleEnterChat : STOMP client is not connected.');
       return;
     }
 
@@ -89,8 +92,9 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
   };
 
   const handleSendMessage = () => {
+    console.log('handleSendMessage 메세지를 보냈습니다.');
     if (!stompClient || !stompClient.connected) {
-      console.error('STOMP client is not connected.');
+      console.error('handleSendMessage : STOMP client is not connected.');
       return;
     }
 
@@ -104,13 +108,14 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     };
 
     setChatMessages([...chatMessages, newMessage]);
-
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    setMessage('');
   };
 
   const handleEnterPress = (msg: string) => {
+    console.log('handleEnterPress 엔터키를 눌러 메세지를 보냈습니다.');
     if (!stompClient || !stompClient.connected) {
-      console.error('STOMP client is not connected.');
+      console.error('handleEnterPress : STOMP client is not connected.');
       return;
     }
 
@@ -126,7 +131,6 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     };
 
     setChatMessages([...chatMessages, newMessage]);
-
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
   };
 
