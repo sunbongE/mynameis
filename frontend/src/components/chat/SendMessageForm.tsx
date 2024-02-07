@@ -4,7 +4,7 @@ import { SimpleInput2 } from '../input/Input';
 import Button from '../button/Button';
 import Icon from '../icon/Icon';
 import { SendMsg } from '../../config/IconName';
-import { Client, CompatClient, IMessage, Stomp } from '@stomp/stompjs';
+import StompJS, { CompatClient, IMessage, Stomp, Message as MessageType } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ChatMessage } from '../../recoil/atoms/textState';
@@ -28,7 +28,7 @@ interface SendMsgFormProps {
 }
 
 interface WebSocketMessage {
-  type: string;
+  type: string; // 타입 형식 수정
   roomId: string;
   sender: string;
   msg: string;
@@ -55,10 +55,11 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     if (coupleId === null) return;
 
     const sock = new SockJS(socketUrl);
-    client.current = Stomp.over(() => sock);
-    console.log(client);
+    client.current = Stomp.over(sock); // // SockJS 클라이언트 객체 socket를 STOMP 프로토콜로 오버랩하여 client.current에 할당
+    if (client.current === undefined) return;
+    console.log('토큰이 있긴하니..?', `Bearer ${Cookies.get('accessToken')}`);
     client.current.connect(
-      { 'token ': `Bearer ${Cookies.get('accessToken')}`, reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
+      { 'Authorization ': `Bearer ${Cookies.get('accessToken')}`, 'Content-Type': 'application/json', reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
       () => {
         client.current?.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
           console.log('메세지를 받았어요', message.body);
@@ -67,10 +68,22 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
         });
       },
       (error: any) => {
-        console.log('error: ', error);
+        console.log('error: !!!', error);
       },
-      {}
+      { 'Authorization ': `Bearer ${Cookies.get('accessToken')}`, 'Content-Type': 'application/json' }
     );
+
+    if (client.current) {
+      console.log('client.current 초기 설정', client.current);
+    } else {
+      console.log('client.current 초기 설정 연결 안됨.');
+    }
+
+    if (client.current.connected) {
+      console.log('client.current 초기 설정2', client.current);
+    } else {
+      console.log('client.current 초기 설정2 연결 안됨.');
+    }
 
     if (isOpenChat) {
       handleEnterMessage();
@@ -78,13 +91,21 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     }
   }, [message, isOpenChat]);
 
+  useEffect(() => {});
+
   const handleMessageChange = (msg: string) => {
     setMessage(msg);
   };
 
   const handleEnterMessage = () => {
     console.log('들어오긴했어');
+    console.log(client, '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    if (client) {
+      console.log('연결연결');
+    }
+    // if (!client.current) {
     if (!client.current || !client.current.connected) {
+      console.log(client.current, '클라이언트 확인');
       console.error('STOMP client is not connected. 여기야');
       return;
     }
@@ -103,7 +124,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
 
     console.log('stompClient!!', client.current);
     if (client.current) {
-      client.current.send('/pub/chat/message', { 'token ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+      client.current.send('/pub/chat/message', { 'Authorization ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     }
   };
 
@@ -137,7 +158,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
       console.error('STOMP client is not connected.');
       return;
     }
-
+    ('');
     if (userInfo === null) return;
 
     if (userInfo.name === null) return;
