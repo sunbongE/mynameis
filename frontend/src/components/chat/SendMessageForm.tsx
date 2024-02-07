@@ -59,7 +59,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     if (client.current === undefined) return;
     console.log('토큰이 있긴하니..?', `Bearer ${Cookies.get('accessToken')}`);
     client.current.connect(
-      { 'Authorization ': `Bearer ${Cookies.get('accessToken')}`, 'Content-Type': 'application/json', reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
+      { Authorization: Cookies.get('accessToken'), 'Content-Type': 'application/json', reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
       () => {
         client.current?.subscribe(`/sub/chat/room/${coupleId}`, (message: IMessage) => {
           console.log('메세지를 받았어요', message.body);
@@ -70,7 +70,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
       (error: any) => {
         console.log('error: !!!', error);
       },
-      { 'Authorization ': `Bearer ${Cookies.get('accessToken')}`, 'Content-Type': 'application/json' }
+      { Authorization: Cookies.get('accessToken'), 'Content-Type': 'application/json' }
     );
 
     if (client.current) {
@@ -124,7 +124,7 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
 
     console.log('stompClient!!', client.current);
     if (client.current) {
-      client.current.send('/pub/chat/message', { 'Authorization ': `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+      client.current.send('/pub/chat/message', { Authorization: Cookies.get('accessToken') }, JSON.stringify(newMessage));
     }
   };
 
