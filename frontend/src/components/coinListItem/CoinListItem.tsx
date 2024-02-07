@@ -55,7 +55,7 @@ const StyledCoinText = styled.div`
 
 function CoinListItem(props: CoinProps) {
     return (
-        <StyledCoinListItem isSelected={props.isSelected} onClick={props.onClick}>
+        <StyledCoinListItem isSelected={props.isSelected} onClick={() => props.onClick()}>
             <div style={{ display: 'flex', alignItems:"center", marginLeft:"8px" }}>
                 <Icon src={Coin} />
                 <StyledCoinText>{props.coinText}</StyledCoinText>

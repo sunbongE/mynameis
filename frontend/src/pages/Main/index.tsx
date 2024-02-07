@@ -14,6 +14,7 @@ import { userInfoState } from '../../recoil/atoms/userState';
 import ActionButton from '../../components/actionButton/ActionButton';
 import CoinList from '../../components/coinListItem/CoinList';
 import MyModal from '../../components/modal/MyModal';
+
 import ChatPage from '../chatPage/ChatPage';
 
 interface Position {
