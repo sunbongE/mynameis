@@ -14,6 +14,11 @@ interface CoinProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface CustomWindow extends Window {
+  returnValue: string; // or the type you expect
+}
+
+
 const CoinListContainer = styled.div`
   width: 404px;
   height: 514.4px;
@@ -113,20 +118,41 @@ function CoinList(props: CoinProps) {
 
         alert('결제를 위해 새 창이 열립니다. 팝업 차단 기능을 확인해주세요.');
         const tid = response.tid;
-        const pcUrl = response.next_redirect_pc_url;
-        const newWindow = window.open(pcUrl, '_blank');
-        // window.location.href = pcUrl;
         localStorage.setItem("tid", tid);
 
-        console.log(window.location.search, '==================')
-        
-        if (newWindow) {
-          newWindow.onload = () => {
-            console.log('새 창의 위치 : ', newWindow.location.search);
-          };
-        }
+        const pcUrl = response.next_redirect_pc_url;
+        const popup = window.open(pcUrl, '_blank', 'width=600,height=800') as CustomWindow;
+        // if (popup) {
+          // 팝업 창이 닫힐 때 수행할 작업
+          popup.onbeforeunload = () => {
+            console.log('팝업 창이 닫힘');
+            // 팝업에서 반환된 값을 부모 창에서 사용
+            const queryParams = new URLSearchParams(popup.location.search);
+            const returnedValue = queryParams.get('returnValue');
+            console.log('URL에서 반환된 값:', returnedValue);
 
-        console.log(window.location.search, '==================')
+            // 부모 창에서 반환된 값에 따라 필요한 작업 수행
+            if (returnedValue === 'success') {
+              navigate('/success'); // 성공 페이지로 이동
+            } else {
+              navigate('/failure'); // 실패 페이지로 이동
+            }
+          // };
+        }
+        
+
+        // const newWindow = window.open(pcUrl, '_blank', 'width=600,height=800');
+        // window.location.href = pcUrl;
+
+        // console.log(window.location.search, '==================')
+        
+        // if (newWindow) {
+        //   newWindow.onload = () => {
+        //     console.log('새 창의 위치 : ', newWindow.location.search);
+        //   };
+        // }
+
+        // console.log(window.location.search, '==================')
         // setCoinPaymentData({
         //   tid:tid,
         //   pg_token: '',
@@ -134,7 +160,7 @@ function CoinList(props: CoinProps) {
 
 
 
-        navigate('/')
+        // navigate('/')
 
         
         // 코인 가격
