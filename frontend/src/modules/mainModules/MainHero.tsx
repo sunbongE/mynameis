@@ -13,11 +13,14 @@ import { CoupleMeetingUtilsProps } from '../../utils/CoupleMeetingUtilsProps';
 import { instance } from '../../apis/utils/axiosInstance';
 import MyModal from '../../components/modal/MyModal';
 import StartModal from './StartModal';
+import toast from 'react-simple-toasts';
+// import { IsLoginAtom } from '../../recoil/atoms/userAuthAtom';
 
 interface MainHeroProps {
   isOpenChat: boolean;
   setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 const StyledMainHeroContainer = styled.div`
   width: 100%;
   height: calc(100vh - 64px);
@@ -84,6 +87,7 @@ const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
   const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
   // const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
   const navigate = useNavigate();
+  // const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
 
   const [startModalOpen, setStartModalOpen] = useState<boolean>(false);
 
@@ -92,10 +96,20 @@ const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
     navigate('/couple');
   };
 
+  const handleStartBtn = () => {
+    // 로그인 상태가 아니면
+    if (userInfo) {
+      toast('로그인 후 사용해주세요', { theme: 'dark' });
+    } else {
+      // 로그인 상태면
+      setStartModalOpen(true);
+    }
+  };
   const handleChatBtn = () => {
     console.log('커플 채팅 버튼 클릭');
     setIsOpenChat(!isOpenChat);
   };
+
   return (
     <>
       {userInfo && (
@@ -120,7 +134,7 @@ const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
             )}
             {userInfo.coupleId && (
               <>
-                <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
+                <Button onButtonClick={handleStartBtn} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
                   시작하기
                 </Button>
                 <MyModal isOpen={startModalOpen} setIsOpen={setStartModalOpen}>

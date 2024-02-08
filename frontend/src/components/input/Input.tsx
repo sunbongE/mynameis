@@ -66,7 +66,6 @@ const StyledConfirmed = styled.div`
   height: 15px;
   display: flex;
   margin-right: 10px;
-
 `;
 
 const SimpleInput = (props: InputProps) => {
@@ -175,7 +174,7 @@ const ConfirmationCodeInput = (props: InputProps) => {
           )}
           {!isReturnMatch && (
             <>
-              <Icon src={Check_red} width='12px' height='12px' marginRight='5px'/>
+              <Icon src={Check_red} width='12px' height='12px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>인증번호가 일치하지 않아요</StyledCheckText>
             </>
           )}
@@ -204,10 +203,10 @@ const PasswordInput = (props: InputProps) => {
       if (props.onEnterKeyUp) {
         props.onEnterKeyUp(inputValue);
       }
-      console.log(inputValue)
+      console.log(inputValue);
       setInputValue(inputValue); // 입력값 초기화
     }
-  }
+  };
 
   useEffect(() => {
     setIsReturnMatch(props.value === props.originValue);
@@ -217,7 +216,16 @@ const PasswordInput = (props: InputProps) => {
 
   return (
     <StyledInputContainer {...props}>
-      <StyledInput type='password' placeholder={props.placeholder} width={props.width} height={props.height} id={props.id} value={inputValue} onChange={handlePasswordInputChange} onKeyUp={handleEnterKeyPress}></StyledInput>
+      <StyledInput
+        type='password'
+        placeholder={props.placeholder}
+        width={props.width}
+        height={props.height}
+        id={props.id}
+        value={inputValue}
+        onChange={handlePasswordInputChange}
+        onKeyUp={handleEnterKeyPress}
+      ></StyledInput>
 
       {props.isReturn && (
         <StyledCheckedContainer>

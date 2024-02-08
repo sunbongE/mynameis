@@ -81,12 +81,13 @@ const Main = () => {
   const tempArray = ['일', '이', '삼', '사', '오'];
 
   const [scrolling, setScrolling] = useState<boolean>(false);
+  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
+  const [isOpenChat, setIsOpenChat] = useState(false);
 
   const initialPosition: Position = {
     x: window.innerWidth - 420 - 100,
     y: window.innerHeight - 520 + 20,
   };
-  const [scrollPosition, setScrollPosition] = useState(window.scrollY);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,7 +100,8 @@ const Main = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [scrollPosition]);
-  const [isOpenChat, setIsOpenChat] = useState(false);
+
+  useEffect(() => {});
   return (
     <MainContainer>
       <Header
@@ -128,7 +130,7 @@ const Main = () => {
       </Button> */}
       <Footer />
       <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
-      {isOpenChat && <ChatPage initialPosition={{ x: initialPosition.x, y: initialPosition.y }} isOpenChat={isOpenChat} />}
+      {isOpenChat && <ChatPage initialPosition={{ x: initialPosition.x, y: initialPosition.y }} isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />}
     </MainContainer>
   );
 };

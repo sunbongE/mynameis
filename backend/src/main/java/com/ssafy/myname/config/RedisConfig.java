@@ -3,6 +3,7 @@ package com.ssafy.myname.config;
 import com.ssafy.myname.service.RedisKeyExpirationListener;
 //import com.ssafy.myname.service.RedisSubscriber;
 import com.ssafy.myname.service.RedisSubscriber;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
+@Slf4j
 @Configuration
 @EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 public class RedisConfig {
@@ -34,7 +35,7 @@ public class RedisConfig {
      */
     @Bean
     public ChannelTopic channelTopic() {
-        return new ChannelTopic("chatroom");
+        return new ChannelTopic("/sub/chat");
     }
 
     /**
@@ -51,9 +52,11 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+        redisTemplate.setConnectionFactory(connectionFactory);
         return redisTemplate;
     }
 
@@ -71,6 +74,7 @@ public class RedisConfig {
      */
     @Bean
     public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "sendMessage");
+      log.info("listenerAdapter 실행.");
+        return new MessageListenerAdapter(subscriber, "onMessage");
     }
 }

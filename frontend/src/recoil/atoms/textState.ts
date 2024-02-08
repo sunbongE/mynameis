@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-
+import { IMessage } from '@stomp/stompjs';
 export interface ChatMessage {
   type: string;
   roomId: string;
