@@ -3,23 +3,22 @@ package com.ssafy.myname.db.repository;
 import com.ssafy.myname.dto.request.chat.ChatDto;
 import com.ssafy.myname.dto.request.chat.ChatRoomDto;
 
-import com.ssafy.myname.service.RedisSubscriber;
-import jakarta.annotation.PostConstruct;
 
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.data.redis.connection.Message;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 @Slf4j
 @Service
@@ -38,12 +37,29 @@ public class CoupleChatRoomRepository {
     @Resource(name = "redisTemplate")
     private ListOperations<String, ChatDto> listOps;
 
-    public void saveChatDto(ChatDto dto){
-        listOps.rightPush(dto.getRoomId(),dto);
+    private final RedisTemplate<String,ChatDto> redisTemplateMessage;
+
+
+    public void saveMessage(ChatDto dto){
+        // 현재 날짜와 시간을 가져옴
+        LocalDateTime now = LocalDateTime.now();
+
+        // 포맷 지정
+        DateTimeFormatter dateF = DateTimeFormatter.ofPattern("yyyy년 M월 d일");
+        DateTimeFormatter timeF = DateTimeFormatter.ofPattern("HH:mm");
+
+        // 날짜와 시간을 문자열로 변환
+        String nowDate = now.format(dateF);
+        String nowTime = now.format(timeF);
+        dto.setTime(nowTime);
+        dto.setDate(nowDate);
+        listOps.leftPush(dto.getRoomId(),dto);
     }
 
-    public List<ChatDto> findByRoomId(String roomId){
-        return listOps.range(roomId,0,50);
+    public List<ChatDto> loadMessage(String roomId){
+        redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatDto.class));
+
+        return redisTemplateMessage.opsForList().range(roomId,0,49);
     }
 
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.

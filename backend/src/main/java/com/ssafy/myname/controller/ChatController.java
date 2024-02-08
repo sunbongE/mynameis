@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatController {
 
+    private final CoupleChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
     private final JwtProvider jwtProvider;
     private final RedisTemplate<String,Object> redisTemplate;
@@ -33,7 +34,9 @@ public class ChatController {
         String userId = jwtProvider.validate(token.substring(7));
 
         msg.setSender(userId);
-
+        // 방번호로 채팅을 저장한다.
+        chatService.saveMessage(msg);
+        log.info("msg: {} ",msg);
         chatService.sendMessage(msg);
         log.info("레디스로 발행함.");
     }
