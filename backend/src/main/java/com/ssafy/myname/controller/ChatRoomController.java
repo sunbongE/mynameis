@@ -34,12 +34,12 @@ public class ChatRoomController {
     // 특정 채팅방 조회
     @GetMapping("/room")
     @ResponseBody
-    public ResponseEntity<?> roomInfo(Principal principal) {
+    public ResponseEntity<?> roomInfo(Principal principal, @RequestParam(name = "index") int index) {
         try{
 
         User user = userRepository.findByUserId(principal.getName());
         String coupleId = String.valueOf(user.getCouple().getCoupleId());
-        List<ChatDto> chatDtos = chatService.loadMessage(coupleId);
+        List<ChatDto> chatDtos = chatService.loadMessage(coupleId,index);
         if(chatDtos.size()==0){
             return ResponseEntity.status(HttpStatus.OK).body(Collections.EMPTY_LIST);
         }

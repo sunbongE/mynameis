@@ -56,10 +56,11 @@ public class CoupleChatRoomRepository {
         listOps.leftPush(dto.getRoomId(),dto);
     }
 
-    public List<ChatDto> loadMessage(String roomId){
+    public List<ChatDto> loadMessage(String roomId, int index){
         redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatDto.class));
-
-        return redisTemplateMessage.opsForList().range(roomId,0,49);
+        int start = index*50;
+        int end = index*50+49;
+        return redisTemplateMessage.opsForList().range(roomId,start,end);
     }
 
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
