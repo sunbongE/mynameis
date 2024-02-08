@@ -231,13 +231,13 @@ const PasswordInput = (props: InputProps) => {
         <StyledCheckedContainer>
           {isReturnMatch && (
             <>
-              <Icon src={Check_green} width='12px' height='12px' marginRight='5px' />
+              <Icon src={Check_green} width='8px' height='8px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치해요</StyledCheckText>
             </>
           )}
           {!isReturnMatch && (
             <>
-              <Icon src={Check_red} width='12px' height='12px' marginRight='5px' />
+              <Icon src={Check_red} width='8px' height='8px' marginRight='5px' />
               <StyledCheckText isMatch={isReturnMatch}>비밀번호가 일치하지 않아요</StyledCheckText>
             </>
           )}

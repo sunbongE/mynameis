@@ -39,10 +39,19 @@ const StyledReceiver = styled.p`
   letter-spacing: 0.5px;
 `;
 
-const StyledOutContainer = styled.div``;
+const StyledIconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ChatHeader = ({ setIsClickedOutBtn, isClickedOutBtn }: ChatHeaderProps) => {
   const handleClickOutBtn = () => {
     setIsClickedOutBtn(!isClickedOutBtn);
+  };
+
+  const handleClickVideoBtn = () => {
+    console.log('화상 버튼 클릭');
   };
   return (
     <StyledHeaderContainer>
@@ -54,10 +63,12 @@ const ChatHeader = ({ setIsClickedOutBtn, isClickedOutBtn }: ChatHeaderProps) =>
       </StyledHeaderLeft>
 
       <StyledHeaderRight>
-        <Icon src={Video} width='20px' />
-        <StyledOutContainer onClick={handleClickOutBtn}>
+        <StyledIconContainer onClick={handleClickVideoBtn}>
+          <Icon src={Video} width='20px' />
+        </StyledIconContainer>
+        <StyledIconContainer onClick={handleClickOutBtn}>
           <Icon src={Out} width='20px' />
-        </StyledOutContainer>
+        </StyledIconContainer>
       </StyledHeaderRight>
     </StyledHeaderContainer>
   );

@@ -17,7 +17,7 @@ const ChatContainer = styled.div<{ top: number; left: number }>`
   left: ${(props) => props.left}px;
 `;
 
-const ChatPage = ({ initialPosition, isOpenChat }: ChatProps) => {
+const ChatPage = ({ initialPosition, isOpenChat, setIsOpenChat }: ChatProps) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>();
@@ -51,7 +51,7 @@ const ChatPage = ({ initialPosition, isOpenChat }: ChatProps) => {
     <ChatContainer top={position.y} left={position.x} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       <ChatHeader isClickedOutBtn={isClickedOutBtn} setIsClickedOutBtn={setIsClickedOutBtn} />
       <MessageList />
-      <SenderMessageForm isOpenChat={isOpenChat} />
+      <SenderMessageForm isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} isClickedOut={isClickedOutBtn} />
     </ChatContainer>
   );
 };
