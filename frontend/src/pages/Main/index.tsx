@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
 import styled from 'styled-components';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,9 @@ import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
 import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
 import { userInfoState } from '../../recoil/atoms/userState';
 import ActionButton from '../../components/actionButton/ActionButton';
+import CoinList from '../../components/coinListItem/CoinList';
+import MyModal from '../../components/modal/MyModal';
+
 import ChatPage from '../chatPage/ChatPage';
 
 interface Position {
@@ -60,12 +64,19 @@ const Main = () => {
   const handleMyPage = () => {
     setMyPageOpen(!myPageOpen);
   };
+
+  const [coinOpen, setCoinOpen] = useState<boolean>(false);
+  const handleCoinPage = () => {
+    setCoinOpen(!coinOpen)
+  }
+
   const [faqOpen, setFaqOpen] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleModalOpen = () => {
     setIsOpen(true);
   };
+
 
   const tempArray = ['일', '이', '삼', '사', '오'];
 
@@ -93,7 +104,18 @@ const Main = () => {
   useEffect(() => {});
   return (
     <MainContainer>
-      <Header isLogin={isLogin} onClickLogin={handleLogin} onClickLogout={handleLogout} onClickSignUp={handleSignUp} onClickMyPage={handleMyPage} isMyPageOpen={myPageOpen} showHeader={scrolling} />
+      <Header
+        isLogin={isLogin}
+        onClickLogin={handleLogin}
+        onClickLogout={handleLogout}
+        onClickSignUp={handleSignUp}
+        onClickMyPage={handleMyPage}
+        isMyPageOpen={myPageOpen}
+        onCoinClick={handleCoinPage}
+        isCoinPageOpen={coinOpen}
+        showHeader={scrolling}
+      />
+      <MyModal isOpen={coinOpen} setIsOpen={setCoinOpen} children={<CoinList isOpen={coinOpen} setIsOpen={setCoinOpen}/>} /> 
       <MainSection isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />
       {/* <Button
         backgroundColor={'#e1a4b4'}

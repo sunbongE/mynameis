@@ -9,6 +9,7 @@ import EmailAuth from '../pages/auth/EmailAuth';
 import Room from '../pages/room/Room';
 import ChatPage from '../pages/chatPage/ChatPage';
 import CoupleMeeting from '../pages/meetingPage/CoupleMeeting';
+import CoinList from '../components/coinListItem/CoinList';
 
 const Router = () => {
   return (
