@@ -9,14 +9,10 @@ export const loginInstance = axios.create({
   baseURL: 'http://localhost:8080',
   // baseURL: 'http://i10c207.p.ssafy.io:8081/',
   // withCredentials: true,
-  headers: {
-    Authorization: `Bearer ${Cookies.get('accessToken')}`,
-  },
 });
 
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
-  // config.headers['Authorization'] = `Bearer ${accessToken}`;
 
   return config;
 };
@@ -59,7 +55,7 @@ const handleRequestError = (error: AxiosError) => {
   return Promise.reject(error);
 };
 
-// instance.interceptors.request.use(setCommonHeaders, handleRequestError);
+instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 loginInstance.interceptors.request.use(setLoginCommonHeaders, handleRequestError);

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/userState';
 import { ChatMessage } from '../../recoil/atoms/textState';
 import { chatMessagesState } from '../../recoil/atoms/textState';
 import ReceiverMessage from './ReceiverMessage';
@@ -17,6 +18,7 @@ const StyledMsgListContainer = styled.div`
 
 const MessageList = () => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
+  const userInfo = useRecoilValue(userInfoState);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,8 +35,9 @@ const MessageList = () => {
     <StyledMsgListContainer ref={messagesEndRef}>
       {chatMessages.length > 0 && (
         <>
-          <MessageDate date='2024.01.31' />
-          {chatMessages.map((message, index) => (message.sender === 'receiver' ? <ReceiverMessage key={index} msg={message.msg} time={'10:52'} /> : <SenderMessage key={index} msg={message.msg} time={'10:52'} />))}
+          {/* <MessageDate date='2024.01.31' /> */}
+          {userInfo &&
+            chatMessages.map((message, index) => (message.sender === userInfo.userId ? <SenderMessage key={index} msg={message.msg} time={'10:52'} /> : <ReceiverMessage key={index} msg={message.msg} time={'10:52'} />))}
         </>
       )}
     </StyledMsgListContainer>
