@@ -8,14 +8,12 @@ import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
-import org.springframework.data.redis.connection.Message;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -53,7 +51,7 @@ public class CoupleChatRoomRepository {
         String nowTime = now.format(timeF);
         dto.setTime(nowTime);
         dto.setDate(nowDate);
-        listOps.leftPush(dto.getRoomId(),dto);
+        listOps.rightPush(dto.getRoomId(),dto);
     }
 
     public List<ChatDto> loadMessage(String roomId, int index){
