@@ -42,8 +42,8 @@ public class ChatServiceImpl implements ChatService {
 
 
     @Override
-    public List<ChatDto> loadMessage(String roomId, int index) {
-        return chatRoomRepository.loadMessage(roomId, index);
+    public List<ChatDto> loadMessage(String roomId, int cnt) {
+        return chatRoomRepository.loadMessage(roomId, cnt);
     }
 
 

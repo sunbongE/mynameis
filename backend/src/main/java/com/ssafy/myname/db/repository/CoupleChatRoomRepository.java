@@ -54,10 +54,17 @@ public class CoupleChatRoomRepository {
         listOps.rightPush(dto.getRoomId(),dto);
     }
 
-    public List<ChatDto> loadMessage(String roomId, int index){
+    public List<ChatDto> loadMessage(String roomId, int cnt){
         redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatDto.class));
-        int start = index*50;
-        int end = index*50+49;
+        Long totalMessageSize = redisTemplateMessage.opsForList().size(roomId)-1;
+
+        if(totalMessageSize==null) return Collections.EMPTY_LIST;
+
+        long start = totalMessageSize - cnt - 50;
+        if(start<0){
+            start = 0;
+        }
+        long end = totalMessageSize - cnt;
         return redisTemplateMessage.opsForList().range(roomId,start,end);
     }
 
