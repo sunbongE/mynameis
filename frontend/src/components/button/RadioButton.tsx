@@ -67,16 +67,16 @@ export const CustomRadioButton = (props: RadioButtonProps) => {
         <RadioInputBox
           key={value.value}
           onClick={() => {
-            props.setSelected(value.value);
+            props.setSelected(value.id);
             if (props.onSelected) {
-              props.onSelected(value.value);
+              props.onSelected(value.id);
             }
           }}
           version={props.version}
           width={props.width}
           onSelected={value.value}
         >
-          <RadioInput version={props.version} type='radio' id={value.value} name={value.name} value={value.value} checked={props.selected === value.value} onChange={() => props.setSelected(value.value)} />
+          <RadioInput version={props.version} type='radio' id={value.value} name={value.name} value={value.value} checked={props.selected === value.id} onChange={() => props.setSelected(value.id)} />
           <RadioInputLabel version={props.version} htmlFor={value.name} width={props.width}>
             {value.value}
           </RadioInputLabel>

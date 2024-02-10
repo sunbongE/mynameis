@@ -74,9 +74,10 @@ function SignUp() {
   });
 
   const [selectedGender, setSelectedGender] = useState('');
+  console.log(selectedGender);
   const genderValues = [
-    { id: 0, name: 'gender', value: '남성' },
-    { id: 1, name: 'gender', value: '여성' },
+    { id: true, name: 'gender', value: '남성' },
+    { id: false, name: 'gender', value: '여성' },
   ];
 
   const administrativeDistrict = [
@@ -219,7 +220,7 @@ function SignUp() {
 
   const handleSignUp = async () => {
     try {
-      const booleanGender = selectedGender === '남성' ? true : false;
+      const booleanGender = selectedGender === 'true' ? true : false;
       const { gender, tag, ...restData } = registrationData;
 
       const response = await userSignUp({ gender: booleanGender, tags: registrationData.tag, ...restData });
@@ -251,13 +252,13 @@ function SignUp() {
       const response = await userPhoneAuthentication({ phoneId: submitPhoneNumber, certificationNumber: phoneAuthNumber });
       setIsPhoneAuth(true);
       setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
-  
-      console.log('핸드폰 등록 : ',registrationData.phone)
+
+      console.log('핸드폰 등록 : ', registrationData.phone);
       console.log('휴대폰 인증 성공', response, submitPhoneNumber);
       alert('휴대폰 인증에 성공했습니다.');
     } catch (error) {
       console.log('휴대폰 인증 실패', error, submitPhoneNumber);
-      console.log('핸드폰 등록 : ',registrationData.phone)
+      console.log('핸드폰 등록 : ', registrationData.phone);
       alert('휴대폰 인증에 실패했습니다.');
     }
   };
