@@ -11,7 +11,7 @@ import { ChatMessage } from '../../recoil/atoms/textState';
 import { chatMessagesState } from '../../recoil/atoms/textState';
 import { userInfoState, UserInfo } from '../../recoil/atoms/userState';
 import Cookies from 'js-cookie';
-
+import { getMessages } from '../../apis/services/chatting/chatting';
 const StyledMsgFormContainer = styled.div`
   width: 320px;
   padding: 5px;
@@ -25,6 +25,8 @@ const StyledMsgFormContainer = styled.div`
 
 interface SendMsgFormProps {
   isOpenChat: boolean;
+  isClickedOut: boolean;
+  setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface WebSocketMessage {
@@ -34,14 +36,17 @@ interface WebSocketMessage {
   msg: string;
 }
 
-const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
+const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgFormProps) => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
   const userInfo: UserInfo | null = useRecoilValue(userInfoState);
   const [coupleId, setCoupleId] = useState<string | null>('1');
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
+  const [isOut, setIsOut] = useState<boolean>(false);
+
   const socketUrl = 'http://localhost:8080/ws-stomp';
   let isFirstConnect = true; // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
+  let index = 0;
   useEffect(() => {
     if (userInfo === null || coupleId === null) return;
 
@@ -69,8 +74,26 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
         console.log('stompClient connect error:', error);
       }
     );
+    return () => {
+      disconnect();
+    };
   }, [userInfo, coupleId]);
 
+  useEffect(() => {
+    if (!stompClient) return;
+    if (isOut !== isClickedOut) {
+      console.log('방을 나가겠습니다');
+      disconnect();
+      setIsOut(isClickedOut);
+    }
+  }, [isClickedOut]);
+
+  const disconnect = () => {
+    if (!stompClient) return;
+    stompClient.disconnect();
+    setIsOpenChat(false);
+  };
+  // 채팅방 접속
   const handleEnterChat = () => {
     console.log('handleEnterChat 채팅방에 들어왔습니다.');
     if (!stompClient || !stompClient.connected) {
@@ -88,50 +111,58 @@ const SenderMessageForm = ({ isOpenChat }: SendMsgFormProps) => {
     };
 
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+
+    // 채팅 메세지 가져오기 (수정 필)
+    // const messages = getMessages(index++);
+    // console.log('messages 받아왔어요', messages);
   };
 
   const handleMessageChange = (msg: string) => {
     setMessage(msg);
   };
+
+  // 메세지 전송 버튼 눌렀을 때
   const handleSendMessage = () => {
     console.log('handleSendMessage 메세지를 보냈습니다.');
     if (!stompClient || !stompClient.connected) {
       console.error('handleSendMessage : STOMP client is not connected.');
       return;
     }
-  
+
     if (!userInfo || !userInfo.name || !coupleId) return;
-  
+
     const newMessage: WebSocketMessage = {
       type: 'TALK',
       roomId: coupleId,
       sender: userInfo.name,
       msg: message,
     };
-  
+
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     setMessage('');
   };
+
+  // enter key 눌렀을 때
   const handleEnterPress = (msg: string) => {
     console.log('handleEnterPress 엔터키를 눌러 메세지를 보냈습니다.');
     if (!stompClient || !stompClient.connected) {
       console.error('handleEnterPress : STOMP client is not connected.');
       return;
     }
-  
+
     if (!userInfo || !userInfo.name || !coupleId) return;
-  
+
     const newMessage: WebSocketMessage = {
       type: 'TALK',
       roomId: coupleId,
       sender: userInfo.name,
-      msg: msg, 
+      msg: msg,
     };
-  
+
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
-    setMessage(''); 
+    setMessage('');
   };
-  
+
   return (
     <StyledMsgFormContainer>
       <SimpleInput2 placeholder='메세지를 입력하세요' value={message} height='40px' fontSize='12px' onInputChange={handleMessageChange} onEnterKeyUp={handleEnterPress} />

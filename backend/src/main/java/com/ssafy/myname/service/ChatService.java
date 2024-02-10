@@ -8,9 +8,8 @@ import java.util.List;
 
 public interface ChatService {
 
-
     void saveMessage(ChatDto messageDto);
-    List<ChatDto> loadMessage(String roomId);
+    List<ChatDto> loadMessage(String roomId, int cnt);
     <T> void sendMessage(ChatDto dto);
 
     String getRoom(String destination);

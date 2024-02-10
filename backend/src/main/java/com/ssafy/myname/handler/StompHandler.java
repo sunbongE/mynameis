@@ -30,6 +30,7 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor= StompHeaderAccessor.wrap(message);
         if(StompCommand.CONNECT == accessor.getCommand()){
             String token = accessor.getFirstNativeHeader("Authorization").substring(7);
+
             log.info("CONNECT {}",token);
             jwtProvider.validate(token);
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {

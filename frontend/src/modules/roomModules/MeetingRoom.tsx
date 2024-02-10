@@ -23,6 +23,9 @@ interface MeetingRoomProps {
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
   leaveSession: () => Promise<void>;
+  voteValues: Array<Object>;
+  selectedValue: string;
+  setSelectedValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const MeetingRoom = (props: MeetingRoomProps) => {
@@ -96,11 +99,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     }
   }, [props.state, repeatCount]);
 
-  // 투표 관련 파트
-  const voteValues = props.subscribers
-    .filter((subscriber) => JSON.parse(JSON.parse(subscriber.stream.connection.data).clientData).myGender !== myInfo.myGender)
-    .map((user) => ({ id: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserId, name: 'gender', value: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserName }));
-  const [selectedValue, setSelectedValue] = useState<string>('');
   const [voteModalOpen, setVoteModalOpen] = useState(false);
 
   // 신고 관련 파트
@@ -241,9 +239,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
           state={props.state}
           setState={props.setState}
           time={modalTime}
-          voteValues={voteValues}
-          selectedValue={selectedValue}
-          setSelectedValue={setSelectedValue}
+          voteValues={props.voteValues}
+          selectedValue={props.selectedValue}
+          setSelectedValue={props.setSelectedValue}
         />
       </MyModal>
       <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>

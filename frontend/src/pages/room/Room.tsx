@@ -16,7 +16,7 @@ const Room = () => {
   const navigate = useNavigate();
   const param = useParams();
 
-  const [state, setState] = useState('step1234');
+  const [state, setState] = useState('loading');
   const [matchingInfo, setMatchingInfo] = useRecoilState<MatchingInfo>(matchingInfoState);
 
   // 1. 필요한 상태 정의
@@ -256,10 +256,29 @@ const Room = () => {
     }
   };
 
+  // 투표 관련 파트
+  const voteValues = subscribers
+    .filter((subscriber) => JSON.parse(JSON.parse(subscriber.stream.connection.data).clientData).myGender !== initMyData.myGender)
+    .map((user) => ({ id: user, name: 'gender', value: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserName }));
+
+  const [selectedValue, setSelectedValue] = useState<string>('');
+  console.log('선택된 값', selectedValue);
+
   return (
     <>
       {state === 'loading' && <MeetingWaiting leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}
-      {state.includes('step') && <MeetingRoom leaveSession={leaveSession} publisher={publisher} subscribers={subscribers} state={state} setState={setState} />}
+      {state.includes('step') && (
+        <MeetingRoom
+          voteValues={voteValues}
+          selectedValue={selectedValue}
+          setSelectedValue={setSelectedValue}
+          leaveSession={leaveSession}
+          publisher={publisher}
+          subscribers={subscribers}
+          state={state}
+          setState={setState}
+        />
+      )}
       {state.includes('ready') && <MeetingReady leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}
       {state === '' && <div>끝났대... 결과모달 보여줘야대...</div>}
     </>
