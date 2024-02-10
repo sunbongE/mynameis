@@ -19,7 +19,7 @@ interface LoadingProps {
 }
 
 const MeetingWaiting = (props: LoadingProps) => {
-  const [seconds, setSeconds] = useState<number>(100000);
+  const [seconds, setSeconds] = useState<number>(5);
   const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
   const [matchingInfo, setMatchingInfo] = useRecoilState<MatchingInfo>(matchingInfoState);
 
@@ -28,7 +28,7 @@ const MeetingWaiting = (props: LoadingProps) => {
       setSeconds((prevSeconds) => {
         if (prevSeconds <= 0) {
           clearInterval(timerId);
-          props.setState('step1');
+          props.setState('step12');
         }
         return prevSeconds - 1;
       });

@@ -24,8 +24,10 @@ interface MeetingRoomProps {
   setState: React.Dispatch<React.SetStateAction<string>>;
   leaveSession: () => Promise<void>;
   voteValues: Array<Object>;
-  selectedValue: string;
-  setSelectedValue: React.Dispatch<React.SetStateAction<string>>;
+  selectedValue: any;
+  setSelectedValue: React.Dispatch<React.SetStateAction<any>>;
+  setIsSelected: React.Dispatch<React.SetStateAction<boolean>>;
+  receivedCount: number;
 }
 
 const MeetingRoom = (props: MeetingRoomProps) => {
@@ -81,20 +83,20 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setVoteModalOpen(false);
       setNotice('공개된 정보인 [직업]을 통해 1명당 5분씩 질의응답 시간을 가져 보세요.');
       setTime(3);
-      setRepeatCount(4);
+      setRepeatCount(1);
     } else if (props.state === 'step123_vote') {
-      setModalTime(5);
+      setModalTime(10);
       setVoteModalOpen(true);
     } else if (props.state === 'step1234') {
       setNotice('참여자 분들의 얼굴이 공개되었습니다! 1명당 5분씩 자유롭게 질문 시간을 가져보세요. 질문 시간 후에는 밸런스 게임이 시작됩니다.');
-      setTime(10);
+      setTime(2);
       setRepeatCount(4);
     } else if (props.state === 'step12345') {
       setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
-      setTime(10);
-      setRepeatCount(3);
+      setTime(2);
+      setRepeatCount(1);
     } else if (props.state === 'step12345_vote') {
-      setModalTime(15);
+      setModalTime(10);
       setVoteModalOpen(true);
     }
   }, [props.state, repeatCount]);
@@ -121,7 +123,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
             <HashtagContainer justifyContent='space-between'>
               <div style={{ display: 'flex', gap: '4px' }}>
                 <HashtagButton backgroundColor={myInfo.myGender ? '#A5A4E1' : '#E1A4B4'}>{myInfo.myUserName}</HashtagButton>
-                {props.state.includes('step123') && <VoteCountHeart color={myInfo.myGender ? 'purple' : 'pink'} count={1} />}
+                {props.state.includes('step123') && <VoteCountHeart color={myInfo.myGender ? 'purple' : 'pink'} count={props.receivedCount} />}
               </div>
               {myInfo.myUserId !== myInfo.myUserId && (
                 <ClickBox onClick={() => handleReport(myInfo.myUserId)}>
@@ -242,6 +244,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
           voteValues={props.voteValues}
           selectedValue={props.selectedValue}
           setSelectedValue={props.setSelectedValue}
+          setIsSelected={props.setIsSelected}
         />
       </MyModal>
       <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>

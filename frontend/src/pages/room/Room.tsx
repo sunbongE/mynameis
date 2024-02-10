@@ -4,7 +4,7 @@ import MeetingRoom from '../../modules/roomModules/MeetingRoom';
 import MeetingReady from '../../modules/roomModules/MeetingReady';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
-import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent } from 'openvidu-browser';
+import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, SignalEvent } from 'openvidu-browser';
 import { matchingCancel, matchingCheck, matchingExit } from '../../apis/services/matching/matching';
 import { getSessionId } from '../../utils/numberUtil';
 import Cookies from 'js-cookie';
@@ -131,21 +131,16 @@ const Room = () => {
             OV.getUserMedia(cameraStream).then((mediaStream) => {
               const videoTrack = mediaStream.getVideoTracks()[0];
               publisherStream.videoSource = videoTrack;
-              console.log('publisherStream', publisherStream);
               const newPublisher = OV.initPublisher(JSON.stringify(initMyData), publisherStream);
-              console.log('newPublisher가 뭐야', newPublisher);
 
               newPublisher.once('accessAllowed', async () => {
                 await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
 
-                setPublisher(newPublisher); //
-
-                console.log(publisher?.stream.connection.data);
+                setPublisher(newPublisher);
               });
             });
           })
           .catch(async (error: any) => {
-            console.log('세션 연결과정에서 에러 떴어요', error.code, error.message);
             toast('세션 연결 과정에서 에러가 발생했습니다. 메인페이지로 이동합니다.', { theme: 'dark' });
             const params = { roomId: param.roomId };
             await matchingExit(params);
@@ -160,7 +155,6 @@ const Room = () => {
     // 다른 사용자 파악
     // 1. session에 참가한 사용자 추가
     session.on('streamCreated', (event: StreamEvent) => {
-      console.log('제가 들어왔어요', event);
       const subscriberOptions = {
         insertMode: 'APPEND',
         mirror: false,
@@ -171,8 +165,6 @@ const Room = () => {
 
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
       const newSubscribers = [...subscribers, newSubscriber];
-      console.log(newSubscriber);
-      console.log(newSubscriber.stream.connection);
 
       setSubscribers(newSubscribers);
     });
@@ -193,14 +185,11 @@ const Room = () => {
 
   // 세션 종료
   const leaveSession = async () => {
-    console.log('세션 종료해주세요', session);
     if (session) {
       session.disconnect();
     }
-    Cookies.remove('OVJSESSIONID'); // 쿠키에서 OVJSESSIONID 삭제
     const params = { roomId: param.roomId };
     const data = await matchingExit(params); // 매칭 나가기 요청
-    // console.log(data.data);
 
     // 상태값 초기화
     setOV(null);
@@ -209,16 +198,6 @@ const Room = () => {
     setInitMyData({ mySessionId: '', myUserName: '', myGender: false, myArea: '', myBirth: '', myJob: '', myTag: [], myUserId: '' });
     setPublisher(undefined);
   };
-
-  useEffect(() => {
-    const checkStatus = async () => {
-      const data = await matchingCheck();
-      console.log(data.data);
-      console.log(data);
-    };
-
-    checkStatus();
-  }, [subscribers]);
 
   // state에 따라 비디오 표시 여부를 제어하는 함수
   const setMediaVisibility = (videoVisible: boolean, audioVisible: boolean) => {
@@ -237,11 +216,11 @@ const Room = () => {
     if (['loading', 'ready'].includes(state)) {
       setMediaVisibility(true, false);
     } else if (['step1234', 'step12345'].includes(state)) {
-      setMediaVisibility(true, true);
+      setMediaVisibility(true, false);
     } else if (state.includes('vote')) {
       setMediaVisibility(false, false);
     } else {
-      setMediaVisibility(false, true);
+      setMediaVisibility(false, false);
     }
   }, [state]);
 
@@ -256,13 +235,85 @@ const Room = () => {
     }
   };
 
-  // 투표 관련 파트
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  ///////////////// *****투표 관련 파트*******////////////////////
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
   const voteValues = subscribers
     .filter((subscriber) => JSON.parse(JSON.parse(subscriber.stream.connection.data).clientData).myGender !== initMyData.myGender)
     .map((user) => ({ id: user, name: 'gender', value: JSON.parse(JSON.parse(user.stream.connection.data).clientData).myUserName }));
 
-  const [selectedValue, setSelectedValue] = useState<string>('');
-  console.log('선택된 값', selectedValue);
+  const [selectedValue, setSelectedValue] = useState<Subscriber | undefined>(undefined); // 내가 투표한 사람
+  const [isSelected, setIsSelected] = useState<boolean>(false); // 투표 완료했는지 여부
+  const [receivedMessage, setReceivedMessage] = useState<Array<string | undefined>>([]); // 받은 메세지
+  const [receivedCount, setReceivedCount] = useState<number>(0);
+
+  //////////////
+  // 투표 수신 부분
+  const receiveChatMessage = () => {
+    if (!session) return;
+
+    // 메시지 받은거 저장
+    session.on(`signal:${state}`, (event) => {
+      console.log('누구한테 받았나요?', event.from);
+      console.log('뭐라고 받았나요?', event.data);
+      setReceivedMessage([...receivedMessage, event.data]);
+    });
+  };
+
+  /////////////
+  // 투표 발신 부분
+  const sendChatMessage = (subscriber: Subscriber) => {
+    if (!session) return;
+    session
+      .signal({
+        data: `${initMyData.myUserName}이 당신을 투표했습니다.`,
+        to: [subscriber.stream.connection],
+        type: `${state}`,
+      })
+      .then(() => {
+        console.log('메세지 전송 완료');
+        setSelectedValue(undefined);
+        setIsSelected(false);
+      })
+      .catch(() => {
+        console.error('메세지 전송 실패');
+      });
+  };
+
+  useEffect(() => {
+    if (!session) return;
+
+    // 투표가 완료 됐으면 투표를 전송하자
+    if (state.includes('vote') && selectedValue && isSelected) {
+      sendChatMessage(selectedValue); // 투표 전송
+    }
+
+    receiveChatMessage();
+  }, [session, state, selectedValue, isSelected]);
+
+  useEffect(() => {
+    setReceivedCount(receivedMessage.length); // 투표 개수 저장
+
+    // 시간차 떄문에 1초 정도 뒤에 받아볼게요
+    const timeoutId = setTimeout(() => {
+      setReceivedCount(receivedMessage.length); // 투표 개수 저장(혹시 몰라)
+
+      if (receivedMessage && state === 'step123') {
+        // 3단계에서는 익명으로 투표 결과 전달
+        receivedMessage.map((message) => toast('누군가 당신을 투표했습니다.', { theme: 'dark' }));
+        setReceivedMessage([]); // 기존에 받았던 메세지 초기화
+      } else if (receivedMessage && state === 'step1234') {
+        receivedMessage.map((message) => toast(message, { theme: 'dark' }));
+        setReceivedMessage([]); // 기존에 받았던 메세지 초기화
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [state]);
 
   return (
     <>
@@ -277,6 +328,8 @@ const Room = () => {
           subscribers={subscribers}
           state={state}
           setState={setState}
+          setIsSelected={setIsSelected}
+          receivedCount={receivedCount}
         />
       )}
       {state.includes('ready') && <MeetingReady leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}
