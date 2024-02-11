@@ -28,7 +28,7 @@ const MeetingWaiting = (props: LoadingProps) => {
       setSeconds((prevSeconds) => {
         if (prevSeconds <= 0) {
           clearInterval(timerId);
-          props.setState('step12');
+          props.setState('step1');
         }
         return prevSeconds - 1;
       });

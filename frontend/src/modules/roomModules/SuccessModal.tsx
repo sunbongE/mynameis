@@ -1,10 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../../components/button/Button';
+import { useNavigate } from 'react-router-dom';
+import { acceptCouple } from '../../apis/services/matching/matching';
+import { useRecoilState } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/userState';
+import { getUserInfo } from '../../apis/services/user/user';
 
 interface SuccessModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  leaveSession: () => Promise<void>;
+  coupleId: number;
 }
 
 interface BoxStyleProps {
@@ -46,6 +53,37 @@ const ButtonContainer = styled.div`
 `;
 
 const SuccessModal = (props: SuccessModalProps) => {
+  const navigate = useNavigate();
+
+  const [user, setUser] = useRecoilState(userInfoState);
+
+  const handleApprove = async () => {
+    // 커플 수락 요청 보내기
+    const params = { coupleId: props.coupleId, answer: true };
+    await acceptCouple(params);
+    // 세션 떠나기
+    props.leaveSession();
+
+    // 유저 정보 다시 세팅
+    const userInfo = await getUserInfo();
+    if (userInfo) {
+      setUser(userInfo);
+      navigate('/'); // 일단 메인으로 이동
+    }
+  };
+
+  const handlRefuse = async () => {
+    // 커플 거절 요쳥 보내기
+    const params = { coupleId: props.coupleId, answer: false };
+    await acceptCouple(params);
+
+    // 세션 떠나기
+    props.leaveSession();
+
+    // 메인으로 가
+    navigate('/');
+  };
+
   return (
     <StyledBox padding='20px'>
       <StyledText fontSize='28px'>매칭이 성사되었습니다</StyledText>
@@ -63,30 +101,10 @@ const SuccessModal = (props: SuccessModalProps) => {
         <StyledText underline={true}>수락시 1:1 화상채팅으로 이동합니다.</StyledText>
       </StyledBox>
       <ButtonContainer>
-        <Button
-          onButtonClick={() => {
-            console.log('거절합니다거절거절요 님시러욘');
-            props.setIsOpen(false);
-          }}
-          backgroundColor={'white'}
-          width={'160px'}
-          height={'60px'}
-          borderRadius={'8px'}
-          borderColor='#e1a4b4'
-        >
+        <Button onButtonClick={handlRefuse} backgroundColor={'white'} width={'160px'} height={'60px'} borderRadius={'8px'} borderColor='#e1a4b4'>
           거절하기
         </Button>
-        <Button
-          onButtonClick={() => {
-            console.log('수락수락님개좋아여');
-            props.setIsOpen(false);
-          }}
-          backgroundColor={'#E1A4B4'}
-          width={'160px'}
-          height={'60px'}
-          borderRadius={'8px'}
-          fontColor='white'
-        >
+        <Button onButtonClick={handleApprove} backgroundColor={'#E1A4B4'} width={'160px'} height={'60px'} borderRadius={'8px'} fontColor='white'>
           수락하기
         </Button>
       </ButtonContainer>

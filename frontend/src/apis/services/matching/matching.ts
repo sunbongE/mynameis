@@ -31,3 +31,15 @@ export const matchingExit = async (params: { roomId: string | undefined }) => {
   const response = await loginInstance.post(`${matchingUrl}/exit`, params);
   return response;
 };
+
+const coupleUrl = 'couple';
+
+export const createCouple = async () => {
+  const response = await loginInstance.post(`${coupleUrl}/create`);
+  return response;
+};
+
+export const acceptCouple = async (params: { coupleId: number; answer: boolean }) => {
+  const response = await loginInstance.post(`${coupleUrl}/accept`, params);
+  return response;
+};

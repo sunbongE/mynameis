@@ -28,6 +28,7 @@ interface MeetingRoomProps {
   setSelectedValue: React.Dispatch<React.SetStateAction<any>>;
   setIsSelected: React.Dispatch<React.SetStateAction<boolean>>;
   receivedCount: number;
+  roomId: string | undefined;
 }
 
 const MeetingRoom = (props: MeetingRoomProps) => {
@@ -184,6 +185,9 @@ const MeetingRoom = (props: MeetingRoomProps) => {
                     {JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}
                   </HashtagButton>
                 </div>
+                <ClickBox onClick={() => handleReport(JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserId)}>
+                  <Icon src={Report} width='24px' height='24px' />
+                </ClickBox>
               </HashtagContainer>
               <HashtagWrapper>
                 {props.state.includes('step1') && (
@@ -251,7 +255,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         <ExitModal handleLeave={props.leaveSession} exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </MyModal>
       <MyModal isOpen={reportModalOpen} setIsOpen={setReportModalOpen}>
-        <ReportModal userId={reportUser} reportModalOpen={reportModalOpen} setReportModalOpen={setReportModalOpen} />
+        <ReportModal roomId={props.roomId} userId={reportUser} reportModalOpen={reportModalOpen} setReportModalOpen={setReportModalOpen} />
       </MyModal>
     </MeetingRoomContainer>
   );

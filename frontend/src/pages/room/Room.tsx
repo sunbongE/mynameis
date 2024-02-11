@@ -4,13 +4,16 @@ import MeetingRoom from '../../modules/roomModules/MeetingRoom';
 import MeetingReady from '../../modules/roomModules/MeetingReady';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
-import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, SignalEvent } from 'openvidu-browser';
-import { matchingCancel, matchingCheck, matchingExit } from '../../apis/services/matching/matching';
+import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, SignalEvent, Connection } from 'openvidu-browser';
+import { createCouple, matchingCancel, matchingCheck, matchingExit } from '../../apis/services/matching/matching';
 import { getSessionId } from '../../utils/numberUtil';
 import Cookies from 'js-cookie';
 import { useNavigate, useParams } from 'react-router-dom';
 import { check } from 'prettier';
 import toast from 'react-simple-toasts';
+import MyModal from '../../components/modal/MyModal';
+import SuccessModal from '../../modules/roomModules/SuccessModal';
+import FailModal from '../../modules/roomModules/FailModal';
 
 const Room = () => {
   const navigate = useNavigate();
@@ -189,7 +192,8 @@ const Room = () => {
       session.disconnect();
     }
     const params = { roomId: param.roomId };
-    const data = await matchingExit(params); // 매칭 나가기 요청
+    await matchingExit(params); // 매칭 나가기 요청
+    await matchingCancel();
 
     // 상태값 초기화
     setOV(null);
@@ -250,6 +254,8 @@ const Room = () => {
   const [isSelected, setIsSelected] = useState<boolean>(false); // 투표 완료했는지 여부
   const [receivedMessage, setReceivedMessage] = useState<Array<string | undefined>>([]); // 받은 메세지
   const [receivedCount, setReceivedCount] = useState<number>(0);
+  const [receivedUser, setReceivedUser] = useState<Array<Connection | undefined>>([]); // 마지막 투표 때 투표 받은 사람
+  const [coupleId, setCoupleId] = useState<number>(0);
 
   //////////////
   // 투표 수신 부분
@@ -258,9 +264,10 @@ const Room = () => {
 
     // 메시지 받은거 저장
     session.on(`signal:${state}`, (event) => {
-      console.log('누구한테 받았나요?', event.from);
-      console.log('뭐라고 받았나요?', event.data);
       setReceivedMessage([...receivedMessage, event.data]);
+      if (state === 'step12345_vote') {
+        setReceivedUser([...receivedUser, event.from]);
+      }
     });
   };
 
@@ -270,14 +277,16 @@ const Room = () => {
     if (!session) return;
     session
       .signal({
-        data: `${initMyData.myUserName}이 당신을 투표했습니다.`,
+        data: `${initMyData.myUserName}님이 당신을 투표했습니다.`,
         to: [subscriber.stream.connection],
         type: `${state}`,
       })
       .then(() => {
         console.log('메세지 전송 완료');
-        setSelectedValue(undefined);
-        setIsSelected(false);
+        if (state !== 'step12345_vote') {
+          setSelectedValue(undefined);
+          setIsSelected(false);
+        }
       })
       .catch(() => {
         console.error('메세지 전송 실패');
@@ -296,12 +305,12 @@ const Room = () => {
   }, [session, state, selectedValue, isSelected]);
 
   useEffect(() => {
-    setReceivedCount(receivedMessage.length); // 투표 개수 저장
+    if (state === 'step123' || state === 'step1234') {
+      setReceivedCount(receivedMessage.length); // 투표 개수 저장
+    }
 
-    // 시간차 떄문에 1초 정도 뒤에 받아볼게요
+    // 시간차 떄문에 0.5초 정도 뒤에 받아볼게요
     const timeoutId = setTimeout(() => {
-      setReceivedCount(receivedMessage.length); // 투표 개수 저장(혹시 몰라)
-
       if (receivedMessage && state === 'step123') {
         // 3단계에서는 익명으로 투표 결과 전달
         receivedMessage.map((message) => toast('누군가 당신을 투표했습니다.', { theme: 'dark' }));
@@ -310,10 +319,82 @@ const Room = () => {
         receivedMessage.map((message) => toast(message, { theme: 'dark' }));
         setReceivedMessage([]); // 기존에 받았던 메세지 초기화
       }
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [state]);
+
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  //////////////******최종 결과 관련 파트*******////////////////////
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  const [successModalOpen, setSuccessModalOpen] = useState<boolean>(false);
+  const [failModalOpen, setFailModalOpen] = useState<boolean>(false);
+
+  const sendCoupleId = (coupleId: number, subscriber: Subscriber) => {
+    if (!session) return;
+
+    session
+      .signal({
+        data: `${coupleId}`,
+        to: [subscriber.stream.connection],
+        type: 'couple',
+      })
+      .then(() => {
+        setCoupleId(coupleId);
+      });
+  };
+
+  const receiveCoupleId = () => {
+    if (!session) return;
+
+    session.on('signal:couple', (event) => {
+      if (event.data) {
+        const coupleId = parseInt(event.data);
+        setCoupleId(coupleId);
+      }
+    });
+  };
+
+  const checkResult = async () => {
+    if (!receivedUser) {
+      // 투표 받은 사람이 없으면 바로 실패 모달
+      setFailModalOpen(true);
+    }
+    if (!receivedUser.includes(selectedValue?.stream.connection)) {
+      // 투표가 엇갈렸을 때 실패 모달
+      setFailModalOpen(true);
+    }
+    // 투표 받은 사람(=ReceivedUser)과 선택한 사람(=selectedValue.stream.connection)이 같으면 성사!
+    if (receivedUser.includes(selectedValue?.stream.connection)) {
+      console.log('커플이 성사되었습니다!');
+      if (initMyData.myGender === true && coupleId === 0 && selectedValue) {
+        const data = await createCouple(); // 커플 아이디 요청
+        sendCoupleId(data.data.coupleId, selectedValue); // 커플 아이디를 상대방한테 보내
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (state === '') {
+      const timeoutId = setTimeout(() => {
+        checkResult();
+      }, 500);
+
+      return () => clearTimeout(timeoutId);
+    }
+
+    receiveCoupleId();
+  }, [session, state, receivedUser]);
+
+  useEffect(() => {
+    if (coupleId != 0) {
+      setSuccessModalOpen(true);
+    }
+  }, [coupleId]);
 
   return (
     <>
@@ -330,10 +411,20 @@ const Room = () => {
           setState={setState}
           setIsSelected={setIsSelected}
           receivedCount={receivedCount}
+          roomId={param.roomId}
         />
       )}
       {state.includes('ready') && <MeetingReady leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}
-      {state === '' && <div>끝났대... 결과모달 보여줘야대...</div>}
+      {state === '' && (
+        <div>
+          <MyModal isOpen={successModalOpen} setIsOpen={setSuccessModalOpen}>
+            <SuccessModal coupleId={coupleId} leaveSession={leaveSession} isOpen={successModalOpen} setIsOpen={setSuccessModalOpen} />
+          </MyModal>
+          <MyModal isOpen={failModalOpen} setIsOpen={setFailModalOpen}>
+            <FailModal leaveSession={leaveSession} isOpen={failModalOpen} setIsOpen={setFailModalOpen} />
+          </MyModal>
+        </div>
+      )}
     </>
   );
 };
