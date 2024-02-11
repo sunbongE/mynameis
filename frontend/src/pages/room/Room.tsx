@@ -14,6 +14,8 @@ import toast from 'react-simple-toasts';
 import MyModal from '../../components/modal/MyModal';
 import SuccessModal from '../../modules/roomModules/SuccessModal';
 import FailModal from '../../modules/roomModules/FailModal';
+import { getUserInfo } from '../../apis/services/user/user';
+import { userInfoState } from '../../recoil/atoms/userState';
 
 const Room = () => {
   const navigate = useNavigate();
@@ -324,6 +326,29 @@ const Room = () => {
     return () => clearTimeout(timeoutId);
   }, [state]);
 
+  const [myInfo, setMyInfo] = useRecoilState(userInfoState);
+
+  useEffect(() => {
+    if (state === 'finish') {
+      const setUserInfo = async () => {
+        const userInfo = await getUserInfo();
+        if (userInfo) {
+          setMyInfo(userInfo);
+          if (myInfo?.coupleId) {
+            toast('축하드립니다! 최종 커플이 성사되었습니다!', { theme: 'dark' });
+            toast('커플만이 사용할 수 있는 기능들을 즐겨보세요!', { theme: 'dark' });
+          } else {
+            toast('아쉽지만 최종 커플이 되지 못하였습니다.', { theme: 'dark' });
+            toast('새로운 매칭을 시도해보세요.', { theme: 'dark' });
+          }
+          navigate('/');
+        }
+      };
+
+      setUserInfo();
+    }
+  }, [state]);
+
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
@@ -418,7 +443,7 @@ const Room = () => {
       {state === '' && (
         <div>
           <MyModal isOpen={successModalOpen} setIsOpen={setSuccessModalOpen}>
-            <SuccessModal coupleId={coupleId} leaveSession={leaveSession} isOpen={successModalOpen} setIsOpen={setSuccessModalOpen} />
+            <SuccessModal state={state} setState={setState} coupleId={coupleId} leaveSession={leaveSession} isOpen={successModalOpen} setIsOpen={setSuccessModalOpen} />
           </MyModal>
           <MyModal isOpen={failModalOpen} setIsOpen={setFailModalOpen}>
             <FailModal leaveSession={leaveSession} isOpen={failModalOpen} setIsOpen={setFailModalOpen} />

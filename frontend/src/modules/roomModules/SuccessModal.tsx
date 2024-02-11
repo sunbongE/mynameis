@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
@@ -6,12 +6,16 @@ import { acceptCouple } from '../../apis/services/matching/matching';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { getUserInfo } from '../../apis/services/user/user';
+import toast from 'react-simple-toasts';
+import Timer from '../../components/timer/Timer';
 
 interface SuccessModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   leaveSession: () => Promise<void>;
   coupleId: number;
+  state: string;
+  setState: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface BoxStyleProps {
@@ -52,6 +56,13 @@ const ButtonContainer = styled.div`
   column-gap: 10px;
 `;
 
+const VoteTimerContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
 const SuccessModal = (props: SuccessModalProps) => {
   const navigate = useNavigate();
 
@@ -61,31 +72,23 @@ const SuccessModal = (props: SuccessModalProps) => {
     // 커플 수락 요청 보내기
     const params = { coupleId: props.coupleId, answer: true };
     await acceptCouple(params);
-    // 세션 떠나기
-    props.leaveSession();
-
-    // 유저 정보 다시 세팅
-    const userInfo = await getUserInfo();
-    if (userInfo) {
-      setUser(userInfo);
-      navigate('/'); // 일단 메인으로 이동
-    }
   };
 
   const handlRefuse = async () => {
     // 커플 거절 요쳥 보내기
     const params = { coupleId: props.coupleId, answer: false };
     await acceptCouple(params);
-
-    // 세션 떠나기
-    props.leaveSession();
-
-    // 메인으로 가
-    navigate('/');
   };
+
+  useEffect(() => {
+    toast('커플이 성사되었습니다! 5초 이내에 수락 혹은 거절버튼을 눌러 최종 선택을  해주세요!', { theme: 'dark' });
+  }, []);
 
   return (
     <StyledBox padding='20px'>
+      <VoteTimerContainer>
+        <Timer time={5} state={props.state} setState={props.setState} repeatCount={0} />
+      </VoteTimerContainer>
       <StyledText fontSize='28px'>매칭이 성사되었습니다</StyledText>
       <StyledBox marginTop='15px'>
         <StyledText>🎉 축하합니다!</StyledText>
