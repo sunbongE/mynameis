@@ -1,5 +1,5 @@
 import instance from '../../utils/axiosInstance';
-import { loginInstance } from '../../utils/axiosInstance';
+import { loginInstance, fileInstance } from '../../utils/axiosInstance';
 import Cookies from 'js-cookie';
 
 const authUrl = 'auth';
@@ -75,14 +75,8 @@ export const userJoin = async (params: { name: string; coin: number; gender: boo
 /**
  * 신고
  */
-export const reportUser = async (params: {
-  file: Blob; // multipart/form-data
-  roomId: number;
-  reporterId: string; // 신고자 userId
-  reportedId: string; // 피신고자 userId
-  reportType: string; // 신고 타입
-}) => {
-  const response = await instance.post(`${authUrl}/upload`, params);
+export const reportUser = async (fData: FormData) => {
+  const response = await fileInstance.post(`${authUrl}/upload`, fData);
   return response.data;
 };
 

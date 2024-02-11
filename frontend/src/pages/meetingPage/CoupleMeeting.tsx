@@ -11,22 +11,11 @@ import VideoButton from '../../components/videoButton/VideoButton';
 import MyModal from '../../components/modal/MyModal';
 import { ExitCoupleModal } from '../../modules/roomModules/ExitModal';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
-
+import { blobToFile, sendRecordingFile } from '../../utils/reportUtils';
 export interface MyData {
   mySessionId: String;
   myUserName: String;
 }
-const sendRecordingFile = async (recordingFile: Blob) => {
-  const params = {
-    file: recordingFile,
-    roomId: 1,
-    reporterId: '',
-    reportedId: '',
-    reportType: '욕설',
-  };
-  const data = await reportUser(params);
-  console.log('녹화 파일 전송 결과', data);
-};
 
 const CoupleMeeting = () => {
   // 1. 필요한 상태 정의
@@ -107,7 +96,7 @@ const CoupleMeeting = () => {
     };
   });
 
-  const recordArray: any = []; // 녹화 Blob 데이터
+  const recordArray: Blob[] = [];
 
   // 방 생성 로직 (publish 과정)
   const joinSession = () => {
@@ -152,7 +141,7 @@ const CoupleMeeting = () => {
           .connect(token, { clientData: initMyData.myUserName })
           .then(async () => {
             // 4.2 user media 객체 생성
-            OV.getUserMedia(cameraStream).then((mediaStream) => {
+            OV.getUserMedia(cameraStream).then((mediaStream: any) => {
               const videoTrack = mediaStream.getVideoTracks()[0];
               publisherStream.videoSource = videoTrack;
               console.log('publisherStream', publisherStream);
@@ -163,31 +152,41 @@ const CoupleMeeting = () => {
                 setPublisher(newPublisher); //
               });
 
+              // 신고 녹화 시작
               const options = {
                 audioBitsPerSecond: 128000,
                 videoBitsPerSecond: 2500000,
-                mimeType: 'video/mp4',
               };
 
-              const mediaRecorder = new MediaRecorder(mediaStream, options);
+              const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
+
+              // 데이터를 수집하여 사용 가능할 때
               mediaRecorder.ondataavailable = (event) => {
+                console.log('event.data', event.data);
                 recordArray.push(event.data);
               };
 
+              // 녹화 종료했을 때
               mediaRecorder.onstop = (event) => {
+                console.log('녹화를 종료합니다.', event);
                 const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
-                sendRecordingFile(recordBlob);
+                const file = blobToFile(recordBlob, 'recordingFile.mp4'); // blob 데이터 파일로 변환
+
+                sendRecordingFile(file);
               };
 
               console.log('녹화를 시작할게요');
               mediaRecorder.start(); // 녹화시작
 
+              // 여기서는 일단 5분 녹화
               setTimeout(
                 () => {
                   mediaRecorder.stop(); // 녹화 종료
                 },
                 5 * 60 * 1000
-              );
+              ); // 5분
+
+              // 신고 끝
             });
           })
           .catch((error: any) => {

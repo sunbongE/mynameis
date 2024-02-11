@@ -59,7 +59,9 @@ const ExitCoupleModal = (props: ExitModalProps) => {
     <ModalContainer>
       <VoteContainer>
         <ModalTitle>대화를 종료하시겠습니까?</ModalTitle>
-        <ModalContent>이 방을 나가면 현재 대화가 종료되며, 나중에 다시 참여하실 수 있습니다. 감사합니다!</ModalContent>
+        <ModalCoupleContent>
+          <p>이 방을 나가면 현재 대화가 종료되며, 나중에 다시 참여하실 수 있습니다.</p>
+        </ModalCoupleContent>
         <ButtonContainer>
           <Button
             onButtonClick={() => {
@@ -112,6 +114,15 @@ const ModalContent = styled.div`
   font-family: 'Pretendard Medium';
   font-size: 16px;
   margin-bottom: 20px;
+`;
+const ModalCoupleContent = styled.div`
+  font-family: 'Pretendard Medium';
+  font-size: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const VoteContainer = styled.div`
