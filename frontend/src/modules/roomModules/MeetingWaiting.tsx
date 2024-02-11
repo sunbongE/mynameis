@@ -5,7 +5,7 @@ import { Star } from '../../config/IconName';
 import VideoCard from '../../components/videoCard/VideoCard';
 import VideoButton from '../../components/videoButton/VideoButton';
 import MyModal from '../../components/modal/MyModal';
-import ExitModal from './ExitModal';
+import { ExitModal } from './ExitModal';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
 import { StreamManager } from 'openvidu-browser';

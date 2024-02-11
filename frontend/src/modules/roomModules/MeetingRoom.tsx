@@ -10,7 +10,7 @@ import { Report } from '../../config/IconName';
 import { calcAge } from '../../utils/numberUtil';
 import MyModal from '../../components/modal/MyModal';
 import VoteModal from './VoteModal';
-import ExitModal from './ExitModal';
+import { ExitModal } from './ExitModal';
 import VoteCountHeart from '../../components/voteCountHeart/VoteCountHeart';
 import ReportModal from './ReportModal';
 import { StreamManager, Subscriber } from 'openvidu-browser';
