@@ -19,7 +19,7 @@ interface LoadingProps {
 }
 
 const MeetingWaiting = (props: LoadingProps) => {
-  const [seconds, setSeconds] = useState<number>(100000);
+  const [seconds, setSeconds] = useState<number>(5);
   const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
   const [matchingInfo, setMatchingInfo] = useRecoilState<MatchingInfo>(matchingInfoState);
 

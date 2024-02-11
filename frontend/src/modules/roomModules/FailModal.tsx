@@ -1,10 +1,12 @@
 import React from 'react';
 import Button from '../../components/button/Button';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 interface FailModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  leaveSession: () => Promise<void>;
 }
 
 const ModalContainer = styled.div`
@@ -33,6 +35,13 @@ const ModalContent = styled.div`
 `;
 
 const FailModal = (props: FailModalProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    props.leaveSession();
+    navigate('/');
+  };
+
   return (
     <ModalContainer>
       <ModalTitle>매칭이 종료되었습니다</ModalTitle>
@@ -42,7 +51,7 @@ const FailModal = (props: FailModalProps) => {
         여전히 많은 사용자들이 당신을 기다리고 있어요. <br />
         다음 기회에서 더 좋은 인연이 있을 거예요!
       </ModalContent>
-      <Button onButtonClick={() => props.setIsOpen(!props.isOpen)} backgroundColor='#e1a4b4' width='168px' height='48px' borderRadius='10px' fontColor='white'>
+      <Button onButtonClick={handleClick} backgroundColor='#e1a4b4' width='168px' height='48px' borderRadius='10px' fontColor='white'>
         메인으로 가기
       </Button>
     </ModalContainer>

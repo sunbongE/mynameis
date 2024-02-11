@@ -103,14 +103,11 @@ const StartModal = (props: StartModalProps) => {
 
     const checkStatus = async () => {
       const data = await handleCheck();
-      console.log('결과', data);
-      console.log('roomId', data?.data.roomId);
 
       if (data && data.status === 200) {
         toast('매칭이 생성되었습니다. 5초 후에 이동합니다', { theme: 'dark' });
         const params = { roomId: data.data.roomId };
         const matchingData = await matchingEnter(params); // 매칭 참가 알림
-        console.log(matchingData.data);
         const userInfo = JSON.parse(data.data.userInfo);
         setMatchingInfo({ ...userInfo, userInfo: userInfo, userId: data.data.userId, randomName: data.data.randomName, token: data.data.token });
         setTimeout(() => {

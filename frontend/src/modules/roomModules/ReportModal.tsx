@@ -4,11 +4,14 @@ import Icon from '../../components/icon/Icon';
 import { ReportRed } from '../../config/IconName';
 import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
 import Button from '../../components/button/Button';
+import { useRecoilState } from 'recoil';
+import { matchingInfoState } from '../../recoil/atoms/matchingState';
 
 interface ReportModalProps {
   reportModalOpen: boolean;
   setReportModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string;
+  roomId: string | undefined;
 }
 
 const ReportModal = (props: ReportModalProps) => {
@@ -23,9 +26,13 @@ const ReportModal = (props: ReportModalProps) => {
 
   const [reportTitle, setReportTitle] = useState<string>('');
 
+  const [myInfo, setMyInfo] = useRecoilState(matchingInfoState);
+
   const handleReport = () => {
-    // const token = localStorage.getItem('accessToken'); // 사용자 토큰 가져오기
     console.log(`${props.userId}에 대해 ${reportTitle}으로 신고할거임`);
+    const params = { file: '', roomId: props.roomId, reporterId: myInfo.userId, reportedId: props.userId, reportType: reportTitle };
+    // 신고 보내는 api
+    // const data = reportUpload(params);
     props.setReportModalOpen(false);
   };
 
