@@ -5,11 +5,22 @@ import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, S
 import { getCoupleRoomToken } from '../../apis/services/user/room';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
-
+import { reportUser } from '../../apis/services/user/user';
 export interface MyData {
   mySessionId: String;
   myUserName: String;
 }
+const sendRecordingFile = async (recordingFile: Blob) => {
+  const params = {
+    file: recordingFile,
+    roomId: 1,
+    reporterId: '',
+    reportedId: '',
+    reportType: '욕설',
+  };
+  const data = await reportUser(params);
+  console.log('녹화 파일 전송 결과', data);
+};
 
 const CoupleMeeting = () => {
   // 1. 필요한 상태 정의
@@ -94,6 +105,8 @@ const CoupleMeeting = () => {
     };
   });
 
+  const recordArray: any = []; // 녹화 Blob 데이터
+
   // 방 생성 로직 (publish 과정)
   const joinSession = () => {
     if (!OV) return;
@@ -114,6 +127,7 @@ const CoupleMeeting = () => {
         insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
         mirror: false,
         contentHint: 'grid',
+        audio: true,
       };
 
       // 사용자가 방송하는(퍼블리싱하는) 스트림에 대한 설정
@@ -145,6 +159,32 @@ const CoupleMeeting = () => {
                 await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
                 setPublisher(newPublisher); //
               });
+
+              const options = {
+                audioBitsPerSecond: 128000,
+                videoBitsPerSecond: 2500000,
+                mimeType: 'video/mp4',
+              };
+
+              const mediaRecorder = new MediaRecorder(mediaStream, options);
+              mediaRecorder.ondataavailable = (event) => {
+                recordArray.push(event.data);
+              };
+
+              mediaRecorder.onstop = (event) => {
+                const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
+                sendRecordingFile(recordBlob);
+              };
+
+              console.log('녹화를 시작할게요');
+              mediaRecorder.start(); // 녹화시작
+
+              setTimeout(
+                () => {
+                  mediaRecorder.stop(); // 녹화 종료
+                },
+                5 * 60 * 1000
+              );
             });
           })
           .catch((error: any) => {
