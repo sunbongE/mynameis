@@ -12,18 +12,24 @@ import MyModal from '../../components/modal/MyModal';
 import { ExitCoupleModal } from '../../modules/roomModules/ExitModal';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import { blobToFile, sendRecordingFile } from '../../utils/reportUtils';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/userState';
+import { getBalanceGame } from '../../apis/services/matching/matching';
+import toast from 'react-simple-toasts';
+
 export interface MyData {
   mySessionId: String;
   myUserName: String;
 }
 
 const CoupleMeeting = () => {
+  const myInfo = useRecoilValue(userInfoState);
   // 1. 필요한 상태 정의
   const [OV, setOV] = useState<OpenVidu | null>(null);
   const [session, setSession] = useState<OVSession | undefined>(undefined);
-  const [initMyData, setInitMyData] = useState<MyData>({
+  const [initMyData, setInitMyData] = useState({
     mySessionId: '',
-    myUserName: '',
+    myUserName: myInfo?.name,
   });
   const [mainStreamManager, setMainStreamManager] = useState<StreamManager | undefined>(undefined); // 방장?!
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined); // 방 생성한 사람
@@ -248,33 +254,69 @@ const CoupleMeeting = () => {
   // token 가져오기 > 백에서 가져올거임
   const getToken = async () => {
     try {
-      const data = await getCoupleRoomToken({ coupleId: 1 });
-      // console.log('data token 받았어요', data.token);
-      // console.log('data 받아', data);
-      // console.log('data ---- getToken', data.videoId, data.name);
+      if (myInfo && myInfo.coupleId) {
+        const data = await getCoupleRoomToken({ coupleId: parseInt(myInfo.coupleId) });
 
-      // const updateData: MyData = {
-      //   mySessionId: data.videoId,
-      //   myUserName: data.name,
-      // };
-      // console.log('getToken ---  updateData', updateData);
+        // console.log('data token 받았어요', data.token);
+        // console.log('data 받아', data);
+        // console.log('data ---- getToken', data.videoId, data.name);
 
-      // setInitMyData(updateData);
+        // const updateData: MyData = {
+        //   mySessionId: data.videoId,
+        //   myUserName: data.name,
+        // };
+        // console.log('getToken ---  updateData', updateData);
 
-      // console.log('getToken', initMyData);
-      // return data.token;
+        // setInitMyData(updateData);
 
-      return data.token;
+        // console.log('getToken', initMyData);
+        // return data.token;
+
+        return data.token;
+      }
     } catch (error) {
       console.log('token 에러', error);
     }
   };
 
+  const handleGameBtn = async () => {
+    if (!subscribers[0]) {
+      toast('상대방이 들어오면 다시 시도해주세요.', { theme: 'dark' });
+    } else {
+      // 커플 질문리스트 가져오기
+      const data = await getBalanceGame();
+
+      // 상대방한테 질문리스트 보내기
+      if (!session) return;
+
+      session
+        .signal({
+          data: `${data.data.questions.slice(1, -1).split(',')[0]}`,
+          to: [subscribers[0].stream.connection],
+          type: 'game',
+        })
+        .then(() => {
+          setNotice(data.data.questions.slice(1, -1).split(',')[0]);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (!session) return;
+
+    session.on(`signal:game`, (event) => {
+      if (event.data) {
+        console.log(event.data);
+        setNotice(event.data);
+      }
+    });
+  }, [session]);
+
   return (
     <CoupleMeetingRoomContainer>
       <NoticeContainer>
         <NoticeBox noticeText={notice} />
-        <Button backgroundColor='#e1a4b4' width='145px' height='43px' borderRadius='30px' fontColor='white' onButtonClick={handleLeaveBtn}>
+        <Button backgroundColor='#e1a4b4' width='145px' height='43px' borderRadius='30px' fontColor='white' onButtonClick={handleGameBtn}>
           커플 게임
         </Button>
       </NoticeContainer>
@@ -287,7 +329,7 @@ const CoupleMeeting = () => {
                   <VideoCard streamManager={publisher} userType={0} width={'65vw'} height={'75vh'}>
                     {/* <HashtagButton backgroundColor='#E1A4B4'>{JSON.parse(JSON.parse(subscriber.stream.connection.data).clientData).myGender}</HashtagButton> */}
                     <UserInfoContainer>
-                      <HashtagButton backgroundColor='#E1A4B4' padding='10px 30px' fontSize='18px'>
+                      <HashtagButton backgroundColor={myInfo?.gender ? '#A5A4E1' : '#E1A4B4'} padding='10px 30px' fontSize='18px'>
                         {initMyData.myUserName}
                       </HashtagButton>
                     </UserInfoContainer>
