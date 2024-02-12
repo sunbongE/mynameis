@@ -5,7 +5,7 @@ def component = [
         back: true
 ]
 pipeline {
-    agent any
+    agent {'backend'}
     environment {
         REPO = "s10-webmobile1-sub2/S10P12C207"
     }
@@ -18,7 +18,14 @@ pipeline {
 //                        userRemoteConfigs: [[credentialsId: 'Github-Access-Token', url: 'https://github.com/KPPSC/myname-setting']]
 //                )
 //            }
-//        }
+
+
+stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
 //        stage('Move .env File') {
 //            steps {
 //                sh "ls backend/secure-settings"
