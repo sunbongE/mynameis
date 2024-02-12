@@ -11,7 +11,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "81:81"
     networks:
       - jenkins-network 
     depends_on:
@@ -38,7 +38,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8081:8080"
+      - "8081:8081"
     networks:
       - jenkins-network
 # 환경변수 지정
