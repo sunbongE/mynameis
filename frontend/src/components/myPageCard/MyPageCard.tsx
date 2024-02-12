@@ -10,8 +10,8 @@ import { userInfoState } from '../../recoil/atoms/userState';
 import { column } from 'stylis';
 
 interface MyPageCardProps {
-  isCoinOpenPage:boolean
-  onCoinClick:() => void;
+  isCoinOpenPage: boolean;
+  onCoinClick: () => void;
 }
 
 interface TextStyleProps {
@@ -130,7 +130,7 @@ const MyPageCard = (props: MyPageCardProps) => {
 
   return (
     <>
-      {userInfo && !userInfo.coupleId && userInfo.tag && (
+      {userInfo && userInfo.tag && (
         <>
           <TriangleContainer>
             <Icon src={Triangle} width='28px' />
@@ -183,12 +183,12 @@ const MyPageCard = (props: MyPageCardProps) => {
                 </UserDetailHeader>
                 <UserDetailBody>
                   <UserDetailBodyItem width='100%'>
-                    <div style={{ width:'100%', display: 'flex', flexDirection:'column', gap: '10px'}}>
-                    {userInfo.tag.map((tag, index) => (
-                      <StyledText key={index} fontSize='12px'>
-                        # {tag}
-                      </StyledText>
-                    ))}
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {userInfo.tag.map((tag, index) => (
+                        <StyledText key={index} fontSize='12px'>
+                          # {tag}
+                        </StyledText>
+                      ))}
                     </div>
                   </UserDetailBodyItem>
                   {/* <StyledText fontSize='12px'># {userInfo.tag[0]}</StyledText>
@@ -215,17 +215,7 @@ const MyPageCard = (props: MyPageCardProps) => {
                   </StyledText>
                 </TextContainer>
                 <CoinButtonContainer>
-                  <Button
-                    backgroundColor={'white'}
-                    width={'64px'}
-                    height={'30px'}
-                    borderRadius={'12px'}
-                    fontColor='#FF9393'
-                    fontSize='12px'
-                    onButtonClick={
-                      props.onCoinClick
-                    }
-                  >
+                  <Button backgroundColor={'white'} width={'64px'} height={'30px'} borderRadius={'12px'} fontColor='#FF9393' fontSize='12px' onButtonClick={props.onCoinClick}>
                     충전
                   </Button>
                 </CoinButtonContainer>
