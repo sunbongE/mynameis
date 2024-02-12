@@ -151,42 +151,6 @@ const CoupleMeeting = () => {
                 await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
                 setPublisher(newPublisher); //
               });
-
-              // 신고 녹화 시작
-              const options = {
-                audioBitsPerSecond: 128000,
-                videoBitsPerSecond: 2500000,
-              };
-
-              const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
-
-              // 데이터를 수집하여 사용 가능할 때
-              mediaRecorder.ondataavailable = (event) => {
-                console.log('event.data', event.data);
-                recordArray.push(event.data);
-              };
-
-              // 녹화 종료했을 때
-              mediaRecorder.onstop = (event) => {
-                console.log('녹화를 종료합니다.', event);
-                const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
-                const file = blobToFile(recordBlob, 'recordingFile.mp4'); // blob 데이터 파일로 변환
-
-                sendRecordingFile(file);
-              };
-
-              console.log('녹화를 시작할게요');
-              mediaRecorder.start(); // 녹화시작
-
-              // 여기서는 일단 5분 녹화
-              setTimeout(
-                () => {
-                  mediaRecorder.stop(); // 녹화 종료
-                },
-                5 * 60 * 1000
-              ); // 5분
-
-              // 신고 끝
             });
           })
           .catch((error: any) => {
