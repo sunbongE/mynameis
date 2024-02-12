@@ -43,8 +43,8 @@ export const userCoinPaymentRequest = async (params: { partner_user_id:string | 
   return response.data
 }
 
-export const userCoinPaymentConfirm = async (params: { partner_user_id:string | undefined, partner_order_id:number, item_name:string, total_amount:number }) => {
-  const response = await instance.post(`${authUrl}/pay`, params);
+export const userCoinPaymentConfirm = async (params: { tid:string | null, partner_user_id:string | undefined, partner_order_id:number, pg_token:string }) => {
+  const response = await instance.post(`${authUrl}/approve`, params);
   return response.data
 }
 

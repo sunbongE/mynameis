@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Close, Coin } from '../../config/IconName';
 import CoinListItem from './CoinListItem';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import Icon from '../icon/Icon';
 import Button from '../button/Button';
 import { userCoinPaymentRequest } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
+import { paymentState } from '../../recoil/atoms/paymentState';
 
 interface CoinProps {
   isOpen: boolean;
@@ -109,6 +110,12 @@ function CoinList(props: CoinProps) {
     pg_token:''
   })
 
+  const setPayState = useSetRecoilState(paymentState)
+  const payState = useRecoilValue(paymentState)
+  // useEffect(() => {
+  //   console.log('Recoil 페이 정보가 업데이트됨:', payState);
+  // }, [payState]);
+
 
   const kakaoPayment = async () => {
     try {
@@ -118,27 +125,43 @@ function CoinList(props: CoinProps) {
 
         alert('결제를 위해 새 창이 열립니다. 팝업 차단 기능을 확인해주세요.');
         const tid = response.tid;
-        localStorage.setItem("tid", tid);
-
+        window.localStorage.setItem("tid", response.tid);
         const pcUrl = response.next_redirect_pc_url;
-        const popup = window.open(pcUrl, '_blank', 'width=600,height=800') as CustomWindow;
-        // if (popup) {
-          // 팝업 창이 닫힐 때 수행할 작업
-          popup.onbeforeunload = () => {
-            console.log('팝업 창이 닫힘');
-            // 팝업에서 반환된 값을 부모 창에서 사용
-            const queryParams = new URLSearchParams(popup.location.search);
-            const returnedValue = queryParams.get('returnValue');
-            console.log('URL에서 반환된 값:', returnedValue);
+        
+        setPayState((prevPayState) => ({
+          ...prevPayState,
+          tid: response.tid,
+          payUrl: response.next_redirect_pc_url,
+          partner_order_id: coinPaymentData.partner_order_id
+        }));
+        
+        console.log('리코일 페이정보 : ',payState)
+        
 
-            // 부모 창에서 반환된 값에 따라 필요한 작업 수행
-            if (returnedValue === 'success') {
-              navigate('/success'); // 성공 페이지로 이동
-            } else {
-              navigate('/failure'); // 실패 페이지로 이동
-            }
-          // };
-        }
+        const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800') as CustomWindow;
+        
+        
+        
+        
+        
+        navigate('pay/success'); // 성공 페이지로 이동
+        // // if (popup) {
+        //   // 팝업 창이 닫힐 때 수행할 작업
+        //   popup.onbeforeunload = () => {
+        //     console.log('팝업 창이 닫힘');
+        //     // 팝업에서 반환된 값을 부모 창에서 사용
+        //     const queryParams = new URLSearchParams(popup.location.search);
+        //     const returnedValue = queryParams.get('returnValue');
+        //     console.log('URL에서 반환된 값:', returnedValue);
+
+        //     // 부모 창에서 반환된 값에 따라 필요한 작업 수행
+        //     if (returnedValue === 'success') {
+        //       navigate('pay/success'); // 성공 페이지로 이동
+        //     } else {
+        //       navigate('/failure'); // 실패 페이지로 이동
+        //     }
+        //   // };
+        // }
         
 
         // const newWindow = window.open(pcUrl, '_blank', 'width=600,height=800');
