@@ -11,19 +11,22 @@ import VideoButton from '../../components/videoButton/VideoButton';
 import MyModal from '../../components/modal/MyModal';
 import { ExitCoupleModal } from '../../modules/roomModules/ExitModal';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
-import { blobToFile, sendRecordingFile } from '../../utils/reportUtils';
+import { UserInfo, userInfoState } from '../../recoil/atoms/userState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { getBalanceGame } from '../../apis/services/matching/matching';
 export interface MyData {
   mySessionId: String;
   myUserName: String;
 }
 
 const CoupleMeeting = () => {
+  const userInfo = useRecoilValue(userInfoState);
   // 1. 필요한 상태 정의
   const [OV, setOV] = useState<OpenVidu | null>(null);
   const [session, setSession] = useState<OVSession | undefined>(undefined);
   const [initMyData, setInitMyData] = useState<MyData>({
     mySessionId: '',
-    myUserName: '',
+    myUserName: userInfo ? userInfo.name : '',
   });
   const [mainStreamManager, setMainStreamManager] = useState<StreamManager | undefined>(undefined); // 방장?!
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined); // 방 생성한 사람
@@ -96,8 +99,6 @@ const CoupleMeeting = () => {
     };
   });
 
-  const recordArray: Blob[] = [];
-
   // 방 생성 로직 (publish 과정)
   const joinSession = () => {
     if (!OV) return;
@@ -136,58 +137,24 @@ const CoupleMeeting = () => {
       // 4.1 token 가져오기
       getToken().then(async (token: string) => {
         console.log('가져온 token', token);
-
+        console.log('내 정보', initMyData);
         session
-          .connect(token, { clientData: initMyData.myUserName })
+          .connect(token, { clientData: JSON.stringify(initMyData) })
           .then(async () => {
             // 4.2 user media 객체 생성
             OV.getUserMedia(cameraStream).then((mediaStream: any) => {
               const videoTrack = mediaStream.getVideoTracks()[0];
               publisherStream.videoSource = videoTrack;
               console.log('publisherStream', publisherStream);
-              const newPublisher = OV.initPublisher(initMyData.myUserName as string, publisherStream);
+              const newPublisher = OV.initPublisher(JSON.stringify(initMyData), publisherStream);
 
               newPublisher.once('accessAllowed', async () => {
                 await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
                 setPublisher(newPublisher); //
               });
-
-              // 신고 녹화 시작
-              const options = {
-                audioBitsPerSecond: 128000,
-                videoBitsPerSecond: 2500000,
-              };
-
-              const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
-
-              // 데이터를 수집하여 사용 가능할 때
-              mediaRecorder.ondataavailable = (event) => {
-                console.log('event.data', event.data);
-                recordArray.push(event.data);
-              };
-
-              // 녹화 종료했을 때
-              mediaRecorder.onstop = (event) => {
-                console.log('녹화를 종료합니다.', event);
-                const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
-                const file = blobToFile(recordBlob, 'recordingFile.mp4'); // blob 데이터 파일로 변환
-
-                sendRecordingFile(file);
-              };
-
-              console.log('녹화를 시작할게요');
-              mediaRecorder.start(); // 녹화시작
-
-              // 여기서는 일단 5분 녹화
-              setTimeout(
-                () => {
-                  mediaRecorder.stop(); // 녹화 종료
-                },
-                5 * 60 * 1000
-              ); // 5분
-
-              // 신고 끝
             });
+
+            // 질문 데이터 받아오기
           })
           .catch((error: any) => {
             console.log('세션 연결과정에서 에러 떴어요', error.code, error.message);
@@ -249,9 +216,9 @@ const CoupleMeeting = () => {
   const getToken = async () => {
     try {
       const data = await getCoupleRoomToken({ coupleId: 1 });
-      // console.log('data token 받았어요', data.token);
-      // console.log('data 받아', data);
-      // console.log('data ---- getToken', data.videoId, data.name);
+      console.log('data token 받았어요', data.token);
+      console.log('data 받아', data);
+      console.log('data ---- getToken', data.videoId, data.name);
 
       // const updateData: MyData = {
       //   mySessionId: data.videoId,
@@ -301,7 +268,7 @@ const CoupleMeeting = () => {
                   <VideoCard streamManager={sub} userType={1} width='360px' height='270px'>
                     <UserInfoContainer>
                       <HashtagButton backgroundColor='#E1A4B4' padding='10px 30px' fontSize='18px'>
-                        {JSON.parse(sub.stream.connection.data).clientData}
+                        {JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}
                       </HashtagButton>
                     </UserInfoContainer>
                   </VideoCard>
