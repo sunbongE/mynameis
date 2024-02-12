@@ -24,6 +24,10 @@ const StyledMainStartText = styled.p`
   color: #fff;
   font-size: 26px;
   margin: 3px 0;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const MainStart = () => {

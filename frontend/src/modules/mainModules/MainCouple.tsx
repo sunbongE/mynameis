@@ -24,11 +24,19 @@ const StyledSubTitle = styled.p`
   color: #333333;
   letter-spacing: 4px;
   margin-bottom: 7px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledTitle = styled.p`
   font-family: 'Pretendard Bold';
   font-size: 36px;
   color: #333333;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledContentsContainer = styled.div`
@@ -43,6 +51,10 @@ const StyledContents = styled.p`
   font-size: 18px;
   color: #888;
   line-height: 27px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledWarnContainer = styled.div`
@@ -50,6 +62,11 @@ const StyledWarnContainer = styled.div`
   align-items: center;
   margin-top: 40px;
   margin-bottom: 5px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
+  
 `;
 
 const StyledWarnText = styled.p`
@@ -60,11 +77,19 @@ const StyledWarnText = styled.p`
 `;
 const StyledSvg = styled.img`
   width: 40vw;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledCoupleTitleContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledCoupleTitle = styled.p`

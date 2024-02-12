@@ -49,9 +49,9 @@ public class KakaoPayService {
         params.put("quantity", 1);
         params.put("total_amount", paymentRequest.getTotal_amount());
         params.put("tax_free_amount", 0);
-        params.put("approval_url", "http://lvh.me:8080/success");
-        params.put("cancel_url", "http://lvh.me:8080/cancel");
-        params.put("fail_url", "http://lvh.me:8080/fail");
+        params.put("approval_url", "http://localhost:8080/success");
+        params.put("cancel_url", "http://localhost:8080/cancel");
+        params.put("fail_url", "http://localhost:8080/fail");
 
         HttpEntity<String> body = new HttpEntity<>(params.toString(), headers);
         ResponseEntity<String> response = restTemplate.postForEntity(new URI(requestUrl), body, String.class);

@@ -8,7 +8,8 @@ import { addCommaInNumber } from '../../utils/numberUtil';
 import MyPageCard from '../myPageCard/MyPageCard';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
-import CoinList from '../coinListItem/CoinList';
+import { useNavigate } from 'react-router-dom';
+
 
 interface HeaderProps {
   isLogin: boolean;
@@ -62,7 +63,8 @@ const StyledButtonContainer = styled.div`
 `;
 const Header = (props: HeaderProps) => {
   // const isLogin = useRecoilValue(isLoginSelector);
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const navigate = useNavigate();
 
   return (
     <>

@@ -16,6 +16,10 @@ const StyledMainStepContainer = styled.div`
 
 const StyledSvg = styled.img`
   width: 40vw;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledTextContainer = styled.div`
   width: 37vw;
@@ -26,16 +30,28 @@ const StyledSubTitle = styled.p`
   color: #333333;
   letter-spacing: 4px;
   margin-bottom: 7px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledTitle = styled.p`
   font-family: 'Pretendard Bold';
   font-size: 36px;
   color: #333333;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledStep = styled.div`
   margin-top: 30px;
   padding-bottom: 10px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledStepTextContainer = styled.div`
   display: flex;

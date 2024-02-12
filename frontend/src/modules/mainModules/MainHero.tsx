@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import heroCouple from '../../assets/img/hero_couple.png';
 import heroSolo from '../../assets/img/hero_solo.png';
 import Button from '../../components/button/Button';
@@ -20,6 +20,18 @@ interface MainHeroProps {
   isOpenChat: boolean;
   setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+
+const fadeInDown = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(20px) translateX(-50%);
+  }
+`;
 
 const StyledMainHeroContainer = styled.div`
   width: 100%;
@@ -72,8 +84,12 @@ const StyledHeroBtnContainer = styled.div`
 const StyledHeroDownContainer = styled.div`
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
   bottom: 12px;
+  transform: translateX(-50%);
+  &:hover {
+    animation: ${fadeInDown} 1s ease forwards; // 애니메이션 적용 (1초 동안 ease)
+  }
+  cursor: pointer;
 `;
 
 const StyledHeroDownText = styled.p`

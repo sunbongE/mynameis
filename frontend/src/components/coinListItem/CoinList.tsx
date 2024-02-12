@@ -105,9 +105,9 @@ function CoinList(props: CoinProps) {
     partner_order_id: 0,
     item_name: '',
     total_amount: 0,
-    approval_url:'http://localhost:3000/payresult',
-    cancel_url:'http://localhost:3000',
-    fail_url:'http://localhost:3000',
+    // approval_url:'http://localhost:3000/payresult',
+    // cancel_url:'http://localhost:3000',
+    // fail_url:'http://localhost:3000',
   });
 
   const [payApproveData, setPayApproveData ] = useState({
@@ -151,7 +151,7 @@ function CoinList(props: CoinProps) {
 
 
         const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800');
-        navigate('/payresult')
+        // navigate('/payresult')
 
         const searchParams = new URLSearchParams(popup?.location.search);
         const pgToken = searchParams.get('pg_token');

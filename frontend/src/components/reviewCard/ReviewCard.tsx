@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import Icon from '../icon/Icon';
 import { Quote } from '../../config/IconName';
 
@@ -39,12 +39,30 @@ const Reivewer = styled.p`
   text-align: right;
 `;
 
+const fadeInAnimation = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(20);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+
+const StyledReviewCardContent = styled.div`
+  animation: ${fadeInAnimation} 2s ease; // 1초 동안 ease 애니메이션 적용 (원하는 시간 및 타이밍 함수로 수정 가능);
+`;
+
 const ReviewCard = (props: ReviewCardProps) => {
   return (
     <ReviewCardContainer color={props.color}>
+      <StyledReviewCardContent>
       <Icon src={Quote} width='30px' />
       <ReviewText>{props.review.text}</ReviewText>
       <Reivewer>{props.review.reviewer}</Reivewer>
+      </StyledReviewCardContent>
     </ReviewCardContainer>
   );
 };
