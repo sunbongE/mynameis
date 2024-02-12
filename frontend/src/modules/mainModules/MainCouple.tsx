@@ -1,12 +1,32 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import MainCoupleImg from '../../assets/img/main_couple.svg';
 import { BlinkCircle, Warn } from '../../config/IconName';
 import Icon from '../../components/icon/Icon';
+import { Down } from '../../config/IconName';
+
+interface MainCoupleProps {
+  scrollToRef: (ref: React.RefObject<HTMLDivElement>) => void;
+  reviewRef: React.RefObject<HTMLDivElement>;
+  coupleRef: React.RefObject<HTMLDivElement>;
+}
+
+
+const fadeInDown = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(20px) translateX(-50%);
+  }
+`;
 
 const StyledMainCoupleContainer = styled.div`
+  position: relative;
   width: 100%;
-  height: 900px;
+  height: 695px;
   background-color: #f2eeea;
   display: flex;
   column-gap: 75px;
@@ -98,9 +118,36 @@ const StyledCoupleTitle = styled.p`
   color: #333;
   margin-left: 14px;
 `;
-const MainCouple = () => {
+
+
+const StyledHeroDownContainer = styled.div`
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  &:hover {
+    animation: ${fadeInDown} 1s ease forwards; // 애니메이션 적용 (1초 동안 ease)
+  }
+  cursor: pointer;
+`;
+
+const StyledHeroDownText = styled.p`
+  font-family: 'Pretendard Bold';
+  font-size: 20px;
+  color: black;
+  text-align: center;
+`;
+
+
+const MainCouple = ({ scrollToRef, reviewRef }: MainCoupleProps) => {
+
+  const handleScrollToReviewClick = () => {
+    scrollToRef(reviewRef);
+  };
+
+
   return (
-    <StyledMainCoupleContainer>
+    <StyledMainCoupleContainer ref={reviewRef}>
       <StyledTextContainer>
         <StyledSubTitle>Features</StyledSubTitle>
         <StyledTitle>서로를 알아볼까요?</StyledTitle>
@@ -120,6 +167,10 @@ const MainCouple = () => {
         </StyledContentsContainer>
       </StyledTextContainer>
       <StyledSvg src={MainCoupleImg} alt='Main couple' />
+      <StyledHeroDownContainer onClick={handleScrollToReviewClick}>
+        <StyledHeroDownText>My name is</StyledHeroDownText>
+        <Icon src={Down} />
+      </StyledHeroDownContainer>
     </StyledMainCoupleContainer>
   );
 };

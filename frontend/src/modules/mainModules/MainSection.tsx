@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import MainHero from './MainHero';
 import MainStep from './MainStep';
@@ -19,11 +19,27 @@ const MainSection = ({ isOpenChat, setIsOpenChat }: MainSectionProps) => {
   useEffect(() => {
     console.log('열렸니', isOpenChat);
   }, [isOpenChat]);
+
+  const stepRef = useRef<HTMLDivElement>(null);
+  const coupleRef = useRef<HTMLDivElement>(null);
+  const reviewRef = useRef<HTMLDivElement>(null);
+  const startRef = useRef<HTMLDivElement>(null);
+
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>, offsetPercent: number = -100) => {
+    if (ref.current) {
+      const offset = ref.current.offsetTop - (window.innerHeight * offsetPercent) / 100;
+      window.scrollTo({
+        top: offset,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <StyledMainSectionContainer>
-      <MainHero isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />
-      <MainStep />
-      <MainCouple />
+      <MainHero isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} scrollToRef={() => scrollToRef(stepRef)} stepRef={stepRef} />
+      <MainStep stepRef={stepRef} scrollToRef={() => scrollToRef(coupleRef)} coupleRef={coupleRef} />
+      <MainCouple coupleRef={coupleRef} scrollToRef={() => scrollToRef(reviewRef)} reviewRef={reviewRef} />
       <MainReview />
       <MainStart />
     </StyledMainSectionContainer>

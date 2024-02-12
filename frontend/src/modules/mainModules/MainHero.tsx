@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled, {keyframes} from 'styled-components';
 import heroCouple from '../../assets/img/hero_couple.png';
 import heroSolo from '../../assets/img/hero_solo.png';
@@ -19,6 +19,8 @@ import toast from 'react-simple-toasts';
 interface MainHeroProps {
   isOpenChat: boolean;
   setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
+  scrollToRef: (ref: React.RefObject<HTMLDivElement>) => void;
+  stepRef: React.RefObject<HTMLDivElement>;
 }
 
 
@@ -99,7 +101,7 @@ const StyledHeroDownText = styled.p`
   text-align: center;
 `;
 
-const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
+const MainHero = ({ isOpenChat, setIsOpenChat, scrollToRef, stepRef }: MainHeroProps) => {
   const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
   // const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -126,10 +128,17 @@ const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
     setIsOpenChat(!isOpenChat);
   };
 
+  // useRef로 섹션의 DOM 엘리먼트 참조
+  const heroSectionRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollToStepClick = () => {
+    scrollToRef(stepRef);
+  };
+
   return (
     <>
       {userInfo && (
-        <StyledMainHeroContainer>
+        <StyledMainHeroContainer ref={stepRef}>
           {!userInfo.coupleId && <StyledHeroImage src={heroSolo} alt='hero Solo' />}
           {userInfo.coupleId && <StyledHeroImage src={heroCouple} alt='hero Solo' />}
 
@@ -160,7 +169,7 @@ const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
             )}
           </StyledHeroTextContainer>
 
-          <StyledHeroDownContainer>
+          <StyledHeroDownContainer onClick={handleScrollToStepClick}>
             <StyledHeroDownText>My name is</StyledHeroDownText>
             <Icon src={Down} />
           </StyledHeroDownContainer>
