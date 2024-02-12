@@ -13,6 +13,7 @@ interface VoteModalProps {
   voteValues: Array<Object>;
   selectedValue: string;
   setSelectedValue: React.Dispatch<React.SetStateAction<string>>;
+  setIsSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ModalContainer = styled.div`
@@ -77,10 +78,11 @@ const VoteModal = (props: VoteModalProps) => {
           {props.state === 'step123_vote' && '투표 결과는 상대방에게 이름과 함께 전달됩니다!'}
           {props.state === 'step12345_vote' && '투표 결과를 통해 새로운 커플이 탄생 됩니다!'}
         </VoteContent>
-        <RadioButtonContainer>
-          <CustomRadioButton values={props.voteValues} selected={props.selectedValue} setSelected={props.setSelectedValue} version='vote' width='120px' />
-        </RadioButtonContainer>
-
+        <div style={{ pointerEvents: isClick ? 'none' : 'auto' }}>
+          <RadioButtonContainer>
+            <CustomRadioButton values={props.voteValues} selected={props.selectedValue} setSelected={props.setSelectedValue} version='vote' width='120px' />
+          </RadioButtonContainer>
+        </div>
         {!isClick ? (
           <Button
             backgroundColor='#e1a4b4'
@@ -90,7 +92,7 @@ const VoteModal = (props: VoteModalProps) => {
             fontColor='white'
             onButtonClick={() => {
               setIsClick(true);
-              // 선택한 값 datachannel로 보내기
+              props.setIsSelected(true);
             }}
           >
             선택하기

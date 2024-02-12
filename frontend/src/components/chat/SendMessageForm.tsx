@@ -34,6 +34,7 @@ interface WebSocketMessage {
   roomId: string;
   sender: string;
   msg: string;
+  date: string;
 }
 
 const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgFormProps) => {
@@ -45,8 +46,8 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   const [isOut, setIsOut] = useState<boolean>(false);
 
   const socketUrl = 'http://localhost:8080/ws-stomp';
-  let isFirstConnect = true; // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
-  let index = 0;
+  const [isFirstConnect, setIsFirstConnect] = useState<boolean>(true); // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
+
   useEffect(() => {
     if (userInfo === null || coupleId === null) return;
 
@@ -62,12 +63,6 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
           console.log('subscribe 후');
           const newMessage: WebSocketMessage = JSON.parse(message.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-
-          if (isFirstConnect) {
-            console.log('!!! 들어왔ㄴ어??? firstconnect');
-            handleEnterChat();
-            isFirstConnect = false;
-          }
         });
       },
       (error: any) => {
@@ -78,6 +73,15 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       disconnect();
     };
   }, [userInfo, coupleId]);
+
+  useEffect(() => {
+    if (!stompClient || !stompClient.connected) return;
+    if (isFirstConnect) {
+      console.log('!!! 들어왔ㄴ어??? firstconnect');
+      handleEnterChat();
+      setIsFirstConnect(false);
+    }
+  }, [stompClient, stompClient?.connected]);
 
   useEffect(() => {
     if (!stompClient) return;
@@ -92,9 +96,11 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
     if (!stompClient) return;
     stompClient.disconnect();
     setIsOpenChat(false);
+    setIsFirstConnect(true);
+    console.log('연결을 종료합니다. ', 'isOpenChat', isOpenChat, 'isFirstConnect', isFirstConnect);
   };
   // 채팅방 접속
-  const handleEnterChat = () => {
+  const handleEnterChat = async () => {
     console.log('handleEnterChat 채팅방에 들어왔습니다.');
     if (!stompClient || !stompClient.connected) {
       console.error('handleEnterChat : STOMP client is not connected.');
@@ -108,13 +114,19 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       roomId: coupleId,
       sender: userInfo.name,
       msg: '',
+      date: '',
     };
-
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
 
-    // 채팅 메세지 가져오기 (수정 필)
-    // const messages = getMessages(index++);
-    // console.log('messages 받아왔어요', messages);
+    // 채팅방 메세지 불러오기
+    console.log('현재 가지고 있는 메세지 수', chatMessages.length);
+    const loadedMessages = await getMessages(chatMessages.length);
+    // console.log('messages 받아왔어요', loadedMessages.reverse());
+    // const filteredData = loadedMessages.filter((item: any) => item.type !== 'ENTER').reverse();
+    // console.log('filteredData', filteredData);
+    const reversedLoadedMessages = loadedMessages.reverse();
+    console.log('reversed', reversedLoadedMessages);
+    setChatMessages(reversedLoadedMessages);
   };
 
   const handleMessageChange = (msg: string) => {
@@ -136,6 +148,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       roomId: coupleId,
       sender: userInfo.name,
       msg: message,
+      date: '',
     };
 
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
@@ -157,6 +170,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       roomId: coupleId,
       sender: userInfo.name,
       msg: msg,
+      date: '',
     };
 
     stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));

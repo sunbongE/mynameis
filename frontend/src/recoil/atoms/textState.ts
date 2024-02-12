@@ -5,6 +5,7 @@ export interface ChatMessage {
   roomId: string;
   sender: string;
   msg: string;
+  date: string;
 }
 
 export const chatMessagesState = atom<ChatMessage[]>({

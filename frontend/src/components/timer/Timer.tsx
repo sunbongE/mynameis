@@ -48,6 +48,8 @@ const Timer = (props: TimerProps) => {
       props.setState('step12345_vote');
     } else if (props.state === 'step12345_vote') {
       props.setState('');
+    } else if (props.state === '') {
+      props.setState('finish');
     }
   };
 

@@ -10,16 +10,25 @@ export const loginInstance = axios.create({
   // baseURL: 'http://i10c207.p.ssafy.io:8081/',
   // withCredentials: true,
 });
+export const fileInstance = axios.create({
+  baseURL: 'http://localhost:8080',
+});
 
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
-
   return config;
 };
 
 const setLoginCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
   config.headers['Authorization'] = `Bearer ${Cookies.get('accessToken')}`;
+
+  return config;
+};
+
+const setFileCommonHeaders = async (config: any) => {
+  config.headers['Content-Type'] = 'multipart/form-data';
+  // config.headers['Authorization'] = `Bearer ${Cookies.get('accessToken')}`;
 
   return config;
 };
@@ -60,5 +69,8 @@ instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 loginInstance.interceptors.request.use(setLoginCommonHeaders, handleRequestError);
 loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
+
+fileInstance.interceptors.request.use(setFileCommonHeaders, handleRequestError);
+fileInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 export default instance;

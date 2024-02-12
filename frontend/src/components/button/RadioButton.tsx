@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 interface RadioButtonProps extends RadioButtonStyleProps {
   values: Array<any>;
-  selected: string;
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
+  selected: any;
+  setSelected: React.Dispatch<React.SetStateAction<any>>;
 }
 
 interface RadioButtonStyleProps {
@@ -12,7 +12,7 @@ interface RadioButtonStyleProps {
   width?: string;
   id?: string;
   key?: string;
-  onSelected?: (value: string) => void;
+  onSelected?: (value: any) => void;
 }
 
 const RadioInputBox = styled.div<RadioButtonStyleProps>`

@@ -66,7 +66,7 @@ public class CoupleController {
         if (opCouple.isEmpty()) {
             Map<String, String> body = new HashMap<>();
             body.put("msg", "커플이 이뤄지지 않음");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body); // 404
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(body); // 204
         }
 
         // 커플 수락한 경우.
