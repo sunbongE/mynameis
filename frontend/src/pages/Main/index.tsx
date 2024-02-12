@@ -67,8 +67,8 @@ const Main = () => {
 
   const [coinOpen, setCoinOpen] = useState<boolean>(false);
   const handleCoinPage = () => {
-    setCoinOpen(!coinOpen);
-  };
+    setCoinOpen(!coinOpen)
+  }
 
   const [faqOpen, setFaqOpen] = useState<boolean>(false);
 
@@ -76,6 +76,7 @@ const Main = () => {
   const handleModalOpen = () => {
     setIsOpen(true);
   };
+
 
   const tempArray = ['일', '이', '삼', '사', '오'];
 
@@ -94,7 +95,7 @@ const Main = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-
+    console.log('스크롤 값', scrollPosition);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -114,7 +115,7 @@ const Main = () => {
         isCoinPageOpen={coinOpen}
         showHeader={scrolling}
       />
-      <MyModal isOpen={coinOpen} setIsOpen={setCoinOpen} children={<CoinList isOpen={coinOpen} setIsOpen={setCoinOpen} />} />
+      <MyModal isOpen={coinOpen} setIsOpen={setCoinOpen} children={<CoinList isOpen={coinOpen} setIsOpen={setCoinOpen}/>} /> 
       <MainSection isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />
       {/* <Button
         backgroundColor={'#e1a4b4'}

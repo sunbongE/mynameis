@@ -5,6 +5,11 @@ import { useState } from 'react';
 import CustomDropdown from '../../components/dropdown/Dropdown';
 import { userPasswordReset } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/footer/Footer';
+import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
+import Header from '../../components/header/Header';
+import { useRecoilValue, useRecoilCallback } from 'recoil';
+
 
 const StyledPasswordResetContainer = styled.div`
   width: 537px;
@@ -42,6 +47,41 @@ const StyleLabel = styled.label`
 `;
 
 function PasswordReset() {
+  const isLogin = useRecoilValue(isLoginSelector);
+  const setLoginState = useRecoilCallback(({ set }) => (newValue: boolean) => {
+    set(isLoginSelector, newValue);
+  });
+
+  const handleLogin = () => {
+    console.log('로그인');
+    navigate('/login');
+  };
+
+  const handleLogout = () => {
+    console.log('로그아웃');
+    setMyPageOpen(false);
+    setLoginState(false);
+    alert('로그아웃 되었습니다.');
+    window.location.reload();
+  };
+
+  const handleSignUp = () => {
+    console.log('회원가입');
+    navigate('/signup');
+  };
+
+  const [myPageOpen, setMyPageOpen] = useState<boolean>(false);
+
+  const handleMyPage = () => {
+    setMyPageOpen(!myPageOpen);
+  };
+
+  const [coinOpen, setCoinOpen] = useState<boolean>(false);
+  const handleCoinPage = () => {
+    setCoinOpen(!coinOpen);
+  };
+
+  const [scrolling, setScrolling] = useState<boolean>(false);
 
   const [newPasswordData, setNewPasswordData] = useState({
     password: '',
@@ -75,6 +115,18 @@ function PasswordReset() {
 
 
     return (
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <Header
+        isLogin={isLogin}
+        onClickLogin={handleLogin}
+        onClickLogout={handleLogout}
+        onClickSignUp={handleSignUp}
+        onClickMyPage={handleMyPage}
+        isMyPageOpen={myPageOpen}
+        onCoinClick={handleCoinPage}
+        isCoinPageOpen={coinOpen}
+        showHeader={scrolling}
+      />
         <StyledPasswordResetContainer>
             <h2>비밀번호 재설정</h2>
             <StyledPasswordResetInputContainer>
@@ -86,6 +138,8 @@ function PasswordReset() {
                 <Button width="300px" height="50px" borderRadius="10px" backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={onPasswordReset}>비밀번호 변경</Button>
             </StyledPasswordResetInputContainer>
         </StyledPasswordResetContainer>
+        <Footer/>
+      </div>
     );
 }
 

@@ -24,7 +24,7 @@ const Router = () => {
         <Route path='/couple' element={<CoupleMeeting />} />
         {/* <Route path='/history' element={<History />} />; */}
         <Route path='/room/:roomId' element={<Room />} />;
-        <Route path='pay/success' element={<PayResult />} />;
+        <Route path='payresult' element={<PayResult />} />;
         {/* <Route path='/failure' element={<Room />} />; */}
       </Routes>
     </BrowserRouter>

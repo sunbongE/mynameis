@@ -6,9 +6,10 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import Icon from '../icon/Icon';
 import Button from '../button/Button';
-import { userCoinPaymentRequest } from '../../apis/services/user/user';
+import { userCoinPaymentRequest, userCoinPaymentConfirm } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 import { paymentState } from '../../recoil/atoms/paymentState';
+
 
 interface CoinProps {
   isOpen: boolean;
@@ -86,22 +87,35 @@ function CoinList(props: CoinProps) {
 
   const handleItemClick = (item: { orderId: number; coinText: string; coinPrice: string }) => {
     setSelectedCoinId((prevId) => (prevId === item.orderId ? null : item.orderId));
-    setCoinInfoData({
+    setCoinInfoData((prevData) => ({
+      ...prevData,
       partner_user_id: userInfo ? userInfo.userId : '',
       partner_order_id: item.orderId,
       item_name: item.coinText,
       total_amount: parseInt(item.coinPrice.replace(/\D/g, ''), 10), // 숫자만 추출하여 정수로 변환
-    });
+    }));
   };
 
   const userInfo = useRecoilValue(userInfoState);
+  const setPayState = useSetRecoilState(paymentState)
+  const payState = useRecoilValue(paymentState)
 
   const [coinInfoData, setCoinInfoData] = useState({
     partner_user_id: userInfo ? userInfo.userId : '',
     partner_order_id: 0,
     item_name: '',
     total_amount: 0,
+    approval_url:'http://localhost:3000/payresult',
+    cancel_url:'http://localhost:3000',
+    fail_url:'http://localhost:3000',
   });
+
+  const [payApproveData, setPayApproveData ] = useState({
+    tid: window.localStorage.getItem("tid"),
+    partner_user_id: userInfo?.userId,
+    partner_order_id: payState.partner_order_id,
+    pg_token:'',
+  })
 
   const [coinPaymentData, setCoinPaymentData] = useState({
     tid:'',
@@ -110,8 +124,6 @@ function CoinList(props: CoinProps) {
     pg_token:''
   })
 
-  const setPayState = useSetRecoilState(paymentState)
-  const payState = useRecoilValue(paymentState)
   // useEffect(() => {
   //   console.log('Recoil 페이 정보가 업데이트됨:', payState);
   // }, [payState]);
@@ -124,9 +136,9 @@ function CoinList(props: CoinProps) {
         console.log(response);
 
         alert('결제를 위해 새 창이 열립니다. 팝업 차단 기능을 확인해주세요.');
-        const tid = response.tid;
+        // const tid = response.tid;
         window.localStorage.setItem("tid", response.tid);
-        const pcUrl = response.next_redirect_pc_url;
+        // const pcUrl = response.next_redirect_pc_url;
         
         setPayState((prevPayState) => ({
           ...prevPayState,
@@ -135,16 +147,53 @@ function CoinList(props: CoinProps) {
           partner_order_id: coinPaymentData.partner_order_id
         }));
         
-        console.log('리코일 페이정보 : ',payState)
-        
 
-        const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800') as CustomWindow;
+
+
+        const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800');
+        navigate('/payresult')
+
+        const searchParams = new URLSearchParams(popup?.location.search);
+        const pgToken = searchParams.get('pg_token');
+        console.log(popup?.location.href)
+        console.log('팝업창에서 가져온 pg_token:', pgToken);
+
+        window.close
+
+        const handleApprove = async () => {
+          try {
+            // ... (이전 코드 생략)
+            
+            const response = await userCoinPaymentConfirm(payApproveData);
+            console.log(response);
+      
+            // 팝업창의 URL에서 pg_token 값을 가져오기
+            const searchParams = new URLSearchParams(popup?.location.search);
+            const pgToken = searchParams.get('pg_token');
+            console.log('팝업창에서 가져온 pg_token:', pgToken);
+      
+            window.close(); // 결제 완료 후 창이 닫힘
+      
+          } catch (error) {
+            console.error('에러입니다.');
+            console.error(error);
+          }
+        };
+
+        
+        
+        // const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800') as CustomWindow;
+        // if (popup) {
+        //   popup.postMessage({ tid: response.tid, payUrl: response.next_redirect_pc_url }, window.origin);
+        // }
+        
+        // console.log('리코일 페이정보 : ',payState)
         
         
         
         
         
-        navigate('pay/success'); // 성공 페이지로 이동
+        // navigate('/success'); // 성공 페이지로 이동
         // // if (popup) {
         //   // 팝업 창이 닫힐 때 수행할 작업
         //   popup.onbeforeunload = () => {
@@ -182,14 +231,6 @@ function CoinList(props: CoinProps) {
         // })
 
 
-
-        // navigate('/')
-
-        
-        // 코인 가격
-        coinInfoData.total_amount;
-        // 코인 갯수
-        coinInfoData.partner_order_id;
 
         console.log('결제 요청 성공');
       }

@@ -38,7 +38,7 @@ export const userPasswordReset = async (params: { password: string }, query: str
   return response.data;
 };
 
-export const userCoinPaymentRequest = async (params: { partner_user_id: string | undefined; partner_order_id: number; item_name: string; total_amount: number }) => {
+export const userCoinPaymentRequest = async (params: { partner_user_id: string | undefined; partner_order_id: number; item_name: string; total_amount: number; approval_url: string; cancel_url: string; fail_url: string; }) => {
   const response = await instance.post(`${authUrl}/pay`, params);
   return response.data;
 };

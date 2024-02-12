@@ -8,6 +8,10 @@ import { CustomRadioButton } from '../../components/button/RadioButton';
 import Chip from '../../components/chip/Chip';
 import { userPhoneAuthentication, userPhoneNumberSubmit, userSignUp } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
+import Header from '../../components/header/Header';
+import Footer from '../../components/footer/Footer';
+import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
 
 const StyledSignUpContainer = styled.div`
   width: 537px;
@@ -45,6 +49,43 @@ const StyleLabel = styled.label`
 `;
 
 function SignUp() {
+  const isLogin = useRecoilValue(isLoginSelector);
+  const setLoginState = useRecoilCallback(({ set }) => (newValue: boolean) => {
+    set(isLoginSelector, newValue);
+  });
+
+  const handleLogin = () => {
+    console.log('로그인');
+    navigate('/login');
+  };
+
+  const handleLogout = () => {
+    console.log('로그아웃');
+    setMyPageOpen(false);
+    setLoginState(false);
+    alert('로그아웃 되었습니다.');
+    window.location.reload();
+  };
+
+  const handleHeaderSignUp = () => {
+    console.log('회원가입');
+    navigate('/signup');
+  };
+
+  const [myPageOpen, setMyPageOpen] = useState<boolean>(false);
+
+  const handleMyPage = () => {
+    setMyPageOpen(!myPageOpen);
+  };
+
+  const [coinOpen, setCoinOpen] = useState<boolean>(false);
+  const handleCoinPage = () => {
+    setCoinOpen(!coinOpen)
+  }
+
+  const [scrolling, setScrolling] = useState<boolean>(false);
+
+
   const navigate = useNavigate();
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailInput, setEmailInput] = useState('');
@@ -264,6 +305,19 @@ function SignUp() {
   };
 
   return (
+    <div style={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+    <Header
+        isLogin={isLogin}
+        onClickLogin={handleLogin}
+        onClickLogout={handleLogout}
+        onClickSignUp={handleHeaderSignUp}
+        onClickMyPage={handleMyPage}
+        isMyPageOpen={myPageOpen}
+        onCoinClick={handleCoinPage}
+        isCoinPageOpen={coinOpen}
+        showHeader={scrolling}
+      />
+
     <StyledSignUpContainer>
       <h2>회원가입</h2>
       <StyledSignUpInputContainer>
@@ -338,6 +392,8 @@ function SignUp() {
         </Button>
       </StyledSignUpInputContainer>
     </StyledSignUpContainer>
+    <Footer />
+    </div>
   );
 }
 

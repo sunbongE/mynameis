@@ -3,10 +3,10 @@ import { styled } from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { paymentState } from "../../recoil/atoms/paymentState";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { userCoinPaymentConfirm } from "../../apis/services/user/user";
-import { userInfo } from "os";
 import { userInfoState } from "../../recoil/atoms/userState";
+
 
 
 
@@ -18,13 +18,24 @@ const PayResult = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    console.log('로케이션 : ', location)
     const payResultUrl = location.search;
     const pgToken = payResultUrl.split('=')[1];
     console.log('페이url : ', payResultUrl, '피지토큰 : ' , pgToken);
 
+    const payState = useRecoilValue(paymentState)
+    const [popup, setPopup] = useState<Window | null>(null);
+    const handlePopup = () => {
+      // 팝업 창 열기
+      const newPopup = window.open(payState.payUrl, '_blank', 'width=600,height=800');
+      if (newPopup) {
+        setPopup(newPopup);
+      }
+    };
+    
+
 
     const userInfo = useRecoilValue(userInfoState)
-    const payState = useRecoilValue(paymentState)
     const [payApproveData, setPayApproveData ] = useState({
       tid: window.localStorage.getItem("tid"),
       partner_user_id: userInfo?.userId,
