@@ -96,4 +96,16 @@ public class UserServiceImpl implements UserService {
         user.setReportPoint(user.getReportPoint() + 1);
         userRepository.save(user);
     }
+    @Override
+    public void useCoin(String userId, int coin) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
+        int currentCoin = user.getCoin();
+
+        if (currentCoin < coin) {
+            throw new IllegalArgumentException("Not enough coin");
+        }
+
+        user.setCoin(currentCoin - coin);
+        userRepository.save(user);
+    }
 }
