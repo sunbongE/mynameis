@@ -28,7 +28,8 @@ services:
     networks:
       - jenkins-network
     volumes:
-      - /etc/letsencrypt/:/etc/letsencrypt
+       - /etc/letsencrypt/:/etc/letsencrypt
+
     depends_on:
       - back
 
