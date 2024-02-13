@@ -29,12 +29,13 @@ interface MeetingRoomProps {
   setIsSelected: React.Dispatch<React.SetStateAction<boolean>>;
   receivedCount: number;
   roomId: string | undefined;
+  curId: number;
 }
 
 const MeetingRoom = (props: MeetingRoomProps) => {
   const [notice, setNotice] = useState<string>('공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.');
-  const [time, setTime] = useState<number>(2); // 공지 부분 타이머 시간, 초단위
-  const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
+  const [time, setTime] = useState<number>(60); // 공지 부분 타이머 시간, 초단위
+  const [repeatCount, setRepeatCount] = useState<number>(props.subscribers.length + 1); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
   const matchingInfo = useRecoilValue(matchingInfoState);
@@ -55,22 +56,27 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     '싸움 뒤에 모든 것을 얘기하는 연인 vs 싸움 뒤에 전혀 영향받지 않는 듯한 연인',
   ];
 
-  // let intervalId: NodeJS.Timeout | null = null;
+  let intervalId: NodeJS.Timeout | null = null;
 
-  // function updateBalanceGame() {
-  //   if (balanceGame.length >= 1) {
-  //     setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
-  //     balanceGame.shift();
-  //   } else {
-  //     clearInterval(intervalId!);
-  //   }
-  // }
+  const updateBalanceGame = () => {
+    if (balanceGame.length > 1) {
+      balanceGame.shift();
+      setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
+    } else {
+      clearInterval(intervalId!);
+    }
+  };
 
-  // if (props.state === 'step12345') {
-  //   intervalId = setInterval(() => {
-  //     updateBalanceGame();
-  //   }, 10000);
-  // }
+  useEffect(() => {
+    if (props.state === 'step12345') {
+      intervalId = setInterval(
+        () => {
+          updateBalanceGame();
+        },
+        time * 1000 + 500
+      );
+    }
+  }, [time]);
 
   useEffect(() => {
     if (props.state === 'step12') {
@@ -84,18 +90,18 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setVoteModalOpen(false);
       setNotice('공개된 정보인 [직업]을 통해 1명당 5분씩 질의응답 시간을 가져 보세요.');
       setTime(3);
-      setRepeatCount(1);
+      setRepeatCount(props.subscribers.length + 1);
     } else if (props.state === 'step123_vote') {
       setModalTime(10);
       setVoteModalOpen(true);
     } else if (props.state === 'step1234') {
       setNotice('참여자 분들의 얼굴이 공개되었습니다! 1명당 5분씩 자유롭게 질문 시간을 가져보세요. 질문 시간 후에는 밸런스 게임이 시작됩니다.');
       setTime(2);
-      setRepeatCount(4);
+      setRepeatCount(props.subscribers.length + 1);
     } else if (props.state === 'step12345') {
+      setTime(10);
       setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
-      setTime(2);
-      setRepeatCount(1);
+      setRepeatCount(3);
     } else if (props.state === 'step12345_vote') {
       setModalTime(10);
       setVoteModalOpen(true);
@@ -255,7 +261,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         <ExitModal handleLeave={props.leaveSession} exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </MyModal>
       <MyModal isOpen={reportModalOpen} setIsOpen={setReportModalOpen}>
-        <ReportModal roomId={props.roomId} userId={reportUser} reportModalOpen={reportModalOpen} setReportModalOpen={setReportModalOpen} />
+        <ReportModal curId={props.curId} roomId={props.roomId} userId={reportUser} reportModalOpen={reportModalOpen} setReportModalOpen={setReportModalOpen} />
       </MyModal>
     </MeetingRoomContainer>
   );

@@ -16,6 +16,7 @@ import SuccessModal from '../../modules/roomModules/SuccessModal';
 import FailModal from '../../modules/roomModules/FailModal';
 import { getUserInfo } from '../../apis/services/user/user';
 import { userInfoState } from '../../recoil/atoms/userState';
+import { blobToFile, sendRecordingFile } from '../../utils/reportUtils';
 
 const Room = () => {
   const navigate = useNavigate();
@@ -39,6 +40,9 @@ const Room = () => {
   });
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined); // 방 생성한 사람
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]); // 나를 제외한 참여자들
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
+  const [curId, setCurId] = useState<number>(0);
 
   const initOV = () => {
     // 1. OpenVidu 객체 생성
@@ -93,6 +97,8 @@ const Room = () => {
     };
   });
 
+  let recordArray: Blob[] = [];
+
   // 방 생성 로직 (publish 과정)
   const joinSession = () => {
     // 1. OpenVidu 객체 생성
@@ -143,6 +149,53 @@ const Room = () => {
 
                 setPublisher(newPublisher);
               });
+
+              // 신고 녹화 시작
+              const options = {
+                audioBitsPerSecond: 128000,
+                videoBitsPerSecond: 2500000,
+              };
+
+              const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
+              setMediaRecorder(mediaRecorder);
+
+              // 데이터를 수집하여 사용 가능할 때
+              mediaRecorder.ondataavailable = (event) => {
+                console.log('event.data', event.data);
+                recordArray.push(event.data);
+              };
+
+              // 녹화 종료했을 때
+              mediaRecorder.onstop = (event) => {
+                console.log('녹화를 종료합니다.', event);
+                const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
+                const file = blobToFile(recordBlob, `${initMyData.myUserId}_${curId}.mp4`); // blob 데이터 파일로 변환
+                console.log('녹화 결과', recordBlob);
+
+                // 서버에 녹화 업로드 하는 부분
+                // if (param.roomId) {
+                //   sendRecordingFile(file, param.roomId);
+                // }
+              };
+
+              console.log('녹화를 시작할게요, 녹화 번호: ', curId);
+
+              mediaRecorder.start(); // 녹화시작
+
+              // 여기서는 일단 5분 녹화
+              const newIntervalId = setInterval(
+                () => {
+                  mediaRecorder.stop(); // 녹화 종료
+                  setCurId(curId + 1);
+                  recordArray = []; // 이전 녹화 내역 초기화
+                  console.log('다시 녹화 시작, 녹화 번호: ', curId);
+                  mediaRecorder.start(); // 다시 녹화 시작
+                },
+                5 * 60 * 1000 // 5분
+              );
+              setIntervalId(newIntervalId);
+
+              // 신고 끝
             });
           })
           .catch(async (error: any) => {
@@ -193,6 +246,17 @@ const Room = () => {
     if (session) {
       session.disconnect();
     }
+
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setMediaRecorder(null);
+    }
+
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+
     const params = { roomId: param.roomId };
     await matchingExit(params); // 매칭 나가기 요청
     await matchingCancel();
@@ -240,6 +304,36 @@ const Room = () => {
       console.log('token 에러', error);
     }
   };
+
+  // 사용자가 나가는게 감지 됐을 때 checkStatus 호출
+  // 호출 결과 status가 202 일 경우 성비불균형에 의한 방 폭파 해야함
+  useEffect(() => {
+    const checkStatus = async () => {
+      const data = await matchingCheck();
+      if (state !== ('' || 'finish') && data.status === 202) {
+        // 백한테 매칭이 종료 됐음을 보내야함
+
+        // 녹화 종료해야함
+        if (mediaRecorder) {
+          mediaRecorder.stop();
+          setMediaRecorder(null);
+        }
+
+        if (intervalId) {
+          clearInterval(intervalId);
+          setIntervalId(null);
+        }
+
+        toast('과반수가 퇴장하여 매칭이 취소되었습니다.', { theme: 'dark' });
+        toast('메인페이지로 이동합니다.', { theme: 'dark' });
+        leaveSession();
+
+        navigate('/');
+      }
+    };
+
+    checkStatus();
+  }, [state, subscribers]);
 
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
@@ -343,6 +437,8 @@ const Room = () => {
           }
           navigate('/');
         }
+
+        // 여기서 백한테 이 방 매칭 종료 됐음을 보내야됨
       };
 
       setUserInfo();
@@ -437,6 +533,7 @@ const Room = () => {
           setIsSelected={setIsSelected}
           receivedCount={receivedCount}
           roomId={param.roomId}
+          curId={curId}
         />
       )}
       {state.includes('ready') && <MeetingReady leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}

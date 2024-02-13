@@ -14,5 +14,6 @@ public interface UserService {
     ResponseEntity<?> leave(String userId);
     void increaseReportPoint(String userId);
     void addCoins(int coins, String userId);
+    void useCoin(String userId, int coin);
 }
 

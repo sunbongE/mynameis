@@ -116,7 +116,7 @@ const MainHero = ({ isOpenChat, setIsOpenChat, scrollToRef, stepRef }: MainHeroP
 
   const handleStartBtn = () => {
     // 로그인 상태가 아니면
-    if (userInfo) {
+    if (!userInfo) {
       toast('로그인 후 사용해주세요', { theme: 'dark' });
     } else {
       // 로그인 상태면
