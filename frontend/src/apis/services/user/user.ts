@@ -38,16 +38,23 @@ export const userPasswordReset = async (params: { password: string }, query: str
   return response.data;
 };
 
-export const userCoinPaymentRequest = async (params: { partner_user_id: string | undefined; partner_order_id: number; item_name: string; total_amount: number; approval_url: string; cancel_url: string; fail_url: string; }) => {
+export const userCoinPaymentRequest = async (params: {
+  partner_user_id: string | undefined;
+  partner_order_id: number;
+  item_name: string;
+  total_amount: number;
+  approval_url: string;
+  cancel_url: string;
+  fail_url: string;
+}) => {
   const response = await instance.post(`${authUrl}/pay`, params);
   return response.data;
 };
 
-export const userCoinPaymentConfirm = async (params: { tid:string | null, partner_user_id:string | undefined, partner_order_id:number, pg_token:string }) => {
+export const userCoinPaymentConfirm = async (params: { tid: string | null; partner_user_id: string | undefined; partner_order_id: number; pg_token: string }) => {
   const response = await instance.post(`${authUrl}/approve`, params);
-  return response.data
-}
-
+  return response.data;
+};
 
 export const getUserInfo = async () => {
   try {
@@ -76,8 +83,18 @@ export const userJoin = async (params: { name: string; coin: number; gender: boo
 /**
  * 신고
  */
-export const reportUser = async (fData: FormData) => {
+export const uploadVideo = async (fData: FormData) => {
   const response = await fileInstance.post(`${authUrl}/upload`, fData);
+  return response.data;
+};
+
+export const reportUser = async (params: { roomId: string; reportedId: string; reportType: string }) => {
+  const response = await instance.post(`${authUrl}/report`, params);
+  return response.data;
+};
+
+export const useCoin = async () => {
+  const response = await loginInstance.post('coin/use');
   return response.data;
 };
 
