@@ -134,7 +134,7 @@ const StyledHeroDownContainer = styled.div`
 const StyledHeroDownText = styled.p`
   font-family: 'Pretendard Bold';
   font-size: 20px;
-  color: black;
+  color: white;
   text-align: center;
 `;
 
