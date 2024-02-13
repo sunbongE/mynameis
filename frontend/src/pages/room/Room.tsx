@@ -305,6 +305,36 @@ const Room = () => {
     }
   };
 
+  // 사용자가 나가는게 감지 됐을 때 checkStatus 호출
+  // 호출 결과 status가 202 일 경우 성비불균형에 의한 방 폭파 해야함
+  useEffect(() => {
+    const checkStatus = async () => {
+      const data = await matchingCheck();
+      if (state !== ('' || 'finish') && data.status === 202) {
+        // 백한테 매칭이 종료 됐음을 보내야함
+
+        // 녹화 종료해야함
+        if (mediaRecorder) {
+          mediaRecorder.stop();
+          setMediaRecorder(null);
+        }
+
+        if (intervalId) {
+          clearInterval(intervalId);
+          setIntervalId(null);
+        }
+
+        toast('과반수가 퇴장하여 매칭이 취소되었습니다.', { theme: 'dark' });
+        toast('메인페이지로 이동합니다.', { theme: 'dark' });
+        leaveSession();
+
+        navigate('/');
+      }
+    };
+
+    checkStatus();
+  }, [state, subscribers]);
+
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////
@@ -408,7 +438,7 @@ const Room = () => {
           navigate('/');
         }
 
-        // 여기서 백한테 이 방 매칭 끝났음을 보내야됨
+        // 여기서 백한테 이 방 매칭 종료 됐음을 보내야됨
       };
 
       setUserInfo();
