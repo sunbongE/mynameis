@@ -22,7 +22,7 @@ public class FirebaseInitializer {
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://myname-e13be-default-rtdb.firebaseio.com/")
+                    .setDatabaseUrl("https://myname-69262-default-rtdb.firebaseio.com/")
                     .build();
 
             if (FirebaseApp.getApps().isEmpty()) {
