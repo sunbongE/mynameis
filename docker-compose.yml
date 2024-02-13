@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 # todo
 # 1. 이름 바꿀것
 # 2. jenkins에 docker hub, github credentials 추가
