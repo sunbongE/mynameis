@@ -4,14 +4,14 @@ import { reportUser } from '../apis/services/user/user';
  * 녹화파일 전송하는 메소드
  * @param recordingFile
  */
-export const sendRecordingFile = async (recordingFile: File) => {
+export const sendRecordingFile = async (recordingFile: File, roomId: string) => {
   console.log('recordingFile', recordingFile);
   const fData = new FormData(); // formData 변환
   fData.append('file', recordingFile);
-  fData.append('roomId', '1');
-  fData.append('reporterId', '');
-  fData.append('reportedId', '');
-  fData.append('reportType', '욕설');
+  fData.append('roomId', roomId);
+  // fData.append('reporterId', '');
+  // fData.append('reportedId', '');
+  // fData.append('reportType', '욕설');
 
   console.log('전송할 데이터 params', fData);
   const data = await reportUser(fData);
