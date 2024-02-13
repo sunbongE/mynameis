@@ -45,7 +45,7 @@ const MessageList = () => {
         console.log('messages 받아왔어요', loadedMessages);
         // const filteredData = loadedMessages.filter((item: any) => item.type !== 'ENTER').reverse();
         // console.log('filteredData', filteredData);
-        const reversedLoadedMessages = loadedMessages.reverse();
+        const reversedLoadedMessages = loadedMessages;
         console.log('reversed', reversedLoadedMessages);
         setChatMessages((prevMessages) => [...reversedLoadedMessages, ...prevMessages]);
       }
