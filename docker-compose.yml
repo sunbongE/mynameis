@@ -28,7 +28,8 @@ services:
     networks:
       - jenkins-network
     volumes:
-      -   /etc/letsencrypt:./certbot/conf:ro
+#      - ./certbot/conf:/etc/letsencrypt:ro
+      -   ./etc/letsencrypt:/certbot/conf:ro
 #      - ./certbot/www:/var/www/certbot:ro
     depends_on:
       - back
@@ -54,7 +55,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8180:8180"
+      - "8081:8081"
     networks:
       - jenkins-network
 # 환경변수 지정
