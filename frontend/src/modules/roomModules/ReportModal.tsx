@@ -12,6 +12,7 @@ interface ReportModalProps {
   setReportModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string;
   roomId: string | undefined;
+  curId: number;
 }
 
 const ReportModal = (props: ReportModalProps) => {
@@ -30,8 +31,8 @@ const ReportModal = (props: ReportModalProps) => {
 
   const handleReport = () => {
     console.log(`${props.userId}에 대해 ${reportTitle}으로 신고할거임`);
-    const params = { file: '', roomId: props.roomId, reporterId: myInfo.userId, reportedId: props.userId, reportType: reportTitle };
-    // 신고 보내는 api
+    const params = { roomId: props.roomId, reporterId: myInfo.userId, reportedId: props.userId, reportType: reportTitle, curId: props.curId };
+    // 여기서 백한테 신고 보내야함
     // const data = reportUpload(params);
     props.setReportModalOpen(false);
   };
