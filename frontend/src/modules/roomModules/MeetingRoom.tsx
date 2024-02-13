@@ -34,8 +34,8 @@ interface MeetingRoomProps {
 
 const MeetingRoom = (props: MeetingRoomProps) => {
   const [notice, setNotice] = useState<string>('공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.');
-  const [time, setTime] = useState<number>(60); // 공지 부분 타이머 시간, 초단위
-  const [repeatCount, setRepeatCount] = useState<number>(props.subscribers.length + 1); // 공지 부분 타이머 반복 횟수
+  const [time, setTime] = useState<number>(10); // 공지 부분 타이머 시간, 초단위
+  const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
   const matchingInfo = useRecoilValue(matchingInfoState);
