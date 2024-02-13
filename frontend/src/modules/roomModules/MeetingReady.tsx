@@ -16,6 +16,7 @@ interface MeetingReadyProps {
   userType: number;
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
+  leaveSession: () => Promise<void>;
 }
 
 const StyledContainer = styled.div`
@@ -52,7 +53,7 @@ const HashtagContainer = styled.div`
 `;
 
 const MeetingReady = (props: MeetingReadyProps) => {
-  const [time, setTime] = useState(15);
+  const [time, setTime] = useState(10);
   const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
   const matchingInfo = useRecoilValue(matchingInfoState);
   const [userInfo, setUserInfo] = useState({
@@ -86,7 +87,7 @@ const MeetingReady = (props: MeetingReadyProps) => {
         <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </VideoButtonContainer>
       <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
-        <ExitModal exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+        <ExitModal handleLeave={props.leaveSession} exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </MyModal>
     </StyledContainer>
   );

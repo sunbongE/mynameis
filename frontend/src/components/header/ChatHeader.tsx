@@ -2,6 +2,11 @@ import styled from 'styled-components';
 import Icon from '../icon/Icon';
 import { Out, Blink, Video } from '../../config/IconName';
 
+interface ChatHeaderProps {
+  isClickedOutBtn: boolean;
+  setIsClickedOutBtn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const StyledHeaderContainer = styled.div`
   width: 320px;
   height: 50px;
@@ -33,7 +38,21 @@ const StyledReceiver = styled.p`
   font-size: 15px;
   letter-spacing: 0.5px;
 `;
-const ChatHeader = () => {
+
+const StyledIconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ChatHeader = ({ setIsClickedOutBtn, isClickedOutBtn }: ChatHeaderProps) => {
+  const handleClickOutBtn = () => {
+    setIsClickedOutBtn(!isClickedOutBtn);
+  };
+
+  const handleClickVideoBtn = () => {
+    console.log('화상 버튼 클릭');
+  };
   return (
     <StyledHeaderContainer>
       <StyledHeaderLeft>
@@ -44,8 +63,12 @@ const ChatHeader = () => {
       </StyledHeaderLeft>
 
       <StyledHeaderRight>
-        <Icon src={Video} width='20px' />
-        <Icon src={Out} width='20px' />
+        <StyledIconContainer onClick={handleClickVideoBtn}>
+          <Icon src={Video} width='20px' />
+        </StyledIconContainer>
+        <StyledIconContainer onClick={handleClickOutBtn}>
+          <Icon src={Out} width='20px' />
+        </StyledIconContainer>
       </StyledHeaderRight>
     </StyledHeaderContainer>
   );

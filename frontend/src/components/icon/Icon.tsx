@@ -6,11 +6,13 @@ interface IconProps {
   height?: string | '100%';
   src: string;
   children?: React.ReactNode;
+  marginRight?:string;
 }
 
 const StyledIconContainer = styled.div<IconProps>`
   width: ${(props) => props.width || 'auto'};
   height: ${(props) => props.height || 'auto'};
+  margin-right: ${(props) => props.marginRight || undefined};
   position: relative;
   display: flex;
   align-items: center;

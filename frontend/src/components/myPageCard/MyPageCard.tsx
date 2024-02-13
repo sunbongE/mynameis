@@ -9,7 +9,10 @@ import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { column } from 'stylis';
 
-interface MyPageCardProps {}
+interface MyPageCardProps {
+  isCoinOpenPage:boolean
+  onCoinClick:() => void;
+}
 
 interface TextStyleProps {
   fontSize: string;
@@ -219,9 +222,9 @@ const MyPageCard = (props: MyPageCardProps) => {
                     borderRadius={'12px'}
                     fontColor='#FF9393'
                     fontSize='12px'
-                    onButtonClick={() => {
-                      console.log('코인 충전');
-                    }}
+                    onButtonClick={
+                      props.onCoinClick
+                    }
                   >
                     충전
                   </Button>

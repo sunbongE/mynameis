@@ -13,6 +13,14 @@ import { CoupleMeetingUtilsProps } from '../../utils/CoupleMeetingUtilsProps';
 import { instance } from '../../apis/utils/axiosInstance';
 import MyModal from '../../components/modal/MyModal';
 import StartModal from './StartModal';
+import toast from 'react-simple-toasts';
+// import { IsLoginAtom } from '../../recoil/atoms/userAuthAtom';
+
+interface MainHeroProps {
+  isOpenChat: boolean;
+  setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const StyledMainHeroContainer = styled.div`
   width: 100%;
   height: calc(100vh - 64px);
@@ -75,27 +83,33 @@ const StyledHeroDownText = styled.p`
   text-align: center;
 `;
 
-const MainHero = () => {
+const MainHero = ({ isOpenChat, setIsOpenChat }: MainHeroProps) => {
   const [userInfo, setUserInfo] = useRecoilState<UserInfo | null>(userInfoState);
-
+  // const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
   const navigate = useNavigate();
+  // const [isLogin, setIsLogin] = useRecoilState(IsLoginAtom);
 
   const [startModalOpen, setStartModalOpen] = useState<boolean>(false);
 
-  // console.log('userInfo', userInfo.couple);
   const handleVideoBtn = () => {
-    console.log('화상 채팅 버튼 클릭');
-
-    // const accessToken = sessionStorage.getItem('accessToken');
-    // console.log('accessToken 가져왔어', accessToken);
-    // instance.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('accessToken')}`;
-    // instance.defaults.headers.common['Content-Type'] = 'application/json';
-
-    // console.log('instance 형태', instance);
-    // console.log('accessToken 형태', accessToken);
-
+    console.log('화상 버튼 클릭');
     navigate('/couple');
   };
+
+  const handleStartBtn = () => {
+    // 로그인 상태가 아니면
+    if (userInfo) {
+      toast('로그인 후 사용해주세요', { theme: 'dark' });
+    } else {
+      // 로그인 상태면
+      setStartModalOpen(true);
+    }
+  };
+  const handleChatBtn = () => {
+    console.log('커플 채팅 버튼 클릭');
+    setIsOpenChat(!isOpenChat);
+  };
+
   return (
     <>
       {userInfo && (
@@ -110,7 +124,11 @@ const MainHero = () => {
 
             {!userInfo.coupleId && (
               <StyledHeroBtnContainer>
+<<<<<<< HEAD
                 <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
+=======
+                <Button backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white' onButtonClick={handleChatBtn}>
+>>>>>>> e9b14fa4d44e0a32aefaf52f8db40740930d0bc2
                   채팅하기
                 </Button>
                 <Button backgroundColor='#fff' width='100px' height='40px' borderRadius='15px' fontColor='#E1A4B4' onButtonClick={handleVideoBtn}>
@@ -120,7 +138,7 @@ const MainHero = () => {
             )}
             {userInfo.coupleId && (
               <>
-                <Button onButtonClick={() => setStartModalOpen(true)} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
+                <Button onButtonClick={handleStartBtn} backgroundColor='#E1A4B4' width='100px' height='40px' borderRadius='15px' fontColor='white'>
                   시작하기
                 </Button>
                 <MyModal isOpen={startModalOpen} setIsOpen={setStartModalOpen}>

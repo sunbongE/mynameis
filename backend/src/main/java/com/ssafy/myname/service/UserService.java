@@ -11,7 +11,8 @@ public interface UserService {
     GetUserInfoResDto getUserInfo(Principal principal);
     ResponseEntity<?> modifyTag(String userId, List<String> tagNameList);
     ResponseEntity<?> modifyUser(String userId, ModifyUserDto modifyUserDto);
-
     ResponseEntity<?> leave(String userId);
-
+    void increaseReportPoint(String userId);
+    void addCoins(int coins, String userId);
 }
+

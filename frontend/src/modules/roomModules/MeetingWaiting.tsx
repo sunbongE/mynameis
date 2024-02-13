@@ -15,10 +15,11 @@ interface LoadingProps {
   userType: number;
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
+  leaveSession: () => Promise<void>;
 }
 
 const MeetingWaiting = (props: LoadingProps) => {
-  const [seconds, setSeconds] = useState<number>(100);
+  const [seconds, setSeconds] = useState<number>(10);
   const [exitModalOpen, setExitModalOpen] = useState<boolean>(false);
   const [matchingInfo, setMatchingInfo] = useRecoilState<MatchingInfo>(matchingInfoState);
 
@@ -41,14 +42,10 @@ const MeetingWaiting = (props: LoadingProps) => {
         <Icon src={Star} width='16px' height='16px' />
         <StyledText fontSize='28px' margin='20px'>
           저의 이름은
-        </StyledText>{' '}
+        </StyledText>
         <StyledText fontSize='18px'>당신의 이름은 "{props.streamManager !== undefined && JSON.parse(JSON.parse(props.streamManager.stream.connection.data).clientData).myUserName}" 입니다.</StyledText>
-        <StyledText fontSize='18px'>당신의 이름은 "{props.streamManager !== undefined && JSON.parse(props.streamManager.stream.connection.data).clientData}" 입니다.</StyledText>
-        <StyledText fontSize='18px'>당신의 이름은 "{props.streamManager !== undefined && typeof JSON.parse(props.streamManager.stream.connection.data).clientData}" 입니다.</StyledText>
-        {/* <StyledText fontSize='18px'>당신의 이름은 "{typeof props.streamManager?.stream.connection.data}" 입니다.</StyledText> */}
       </LoadingHeader>
       <VideoContainer>
-        {/* **********여기에 openvidu 화면 추가해야함******** */}
         <VideoCard width={'600px'} height={'320px'} streamManager={props.streamManager} userType={props.userType} />
       </VideoContainer>
       <StyledText fontSize='18px' margin='0 0 10px 0'>
@@ -60,7 +57,7 @@ const MeetingWaiting = (props: LoadingProps) => {
       </ButtonContainer>
       <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
-        <ExitModal exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+        <ExitModal handleLeave={props.leaveSession} exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </MyModal>
     </LoadingContainer>
   );

@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
         logger.info("tags : {}", tags);
         dto.addTags(tags);
 
-
         return dto ;
     }
 
@@ -61,7 +60,6 @@ public class UserServiceImpl implements UserService {
             tagRepository.save(new Tags(user, tagname));
         }
         return ResponseDto.ok();
-
     }
 
     @Override
@@ -84,5 +82,18 @@ public class UserServiceImpl implements UserService {
         return ResponseDto.ok();
     }
 
+    @Override
+    public void addCoins(int coins, String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setCoin(user.getCoin() + coins);
+        userRepository.save(user);
+    }
 
+    @Override
+    public void increaseReportPoint(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디의 사용자를 찾을 수 없습니다."));
+        user.setReportPoint(user.getReportPoint() + 1);
+        userRepository.save(user);
+    }
 }
