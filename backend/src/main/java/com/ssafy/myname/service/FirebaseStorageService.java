@@ -38,7 +38,7 @@ public class FirebaseStorageService {
             FileInputStream serviceAccount = new FileInputStream(file);
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://myname-e13be-default-rtdb.firebaseio.com/")
+                    .setDatabaseUrl("https://myname-69262-default-rtdb.firebaseio.com/")
                     .build();
 
             FirebaseApp.initializeApp(options);
@@ -81,10 +81,12 @@ public String uploadFile(MultipartFile multipartFile, String roomId, String user
             String timestamp = String.valueOf(System.currentTimeMillis());
             String fileName = roomId + "_" + userId + "_" + timestamp;
             ByteArrayInputStream bais = new ByteArrayInputStream(multipartFile.getBytes());
-            BlobId blobId = BlobId.of("myname-e13be.appspot.com", fileName);
+            BlobId blobId = BlobId.of("myname-69262.appspot.com", fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(multipartFile.getContentType()).build();
             storage.create(blobInfo, bais);
-            String url = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media", "myname-e13be.appspot.com", URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
+            String url = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media",
+                    "myname-69262.appspot.com", URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
+
             Map<String, Object> data = new HashMap<>();
             data.put("roomId", roomId);
             data.put("userId", userId);
@@ -140,10 +142,10 @@ public String uploadFile(MultipartFile multipartFile, String roomId, String user
                 String videoUrl = document.getString("videoUrl");  // videoUrl 필드의 값을 읽어옵니다.
                 if (videoUrl != null) {
                     // videoUrl에서 파일 경로를 추출합니다.
-                    String filePath = videoUrl.replace("https://firebasestorage.googleapis.com/v0/b/myname-e13be.appspot.com/o/", "");
+                    String filePath = videoUrl.replace("https://firebasestorage.googleapis.com/v0/b/myname-69262.appspot.com/o/", "");
                     filePath = URLDecoder.decode(filePath, StandardCharsets.UTF_8.name());
                     filePath = filePath.substring(0, filePath.indexOf("?"));
-                    storage.delete(BlobId.of("myname-e13be.appspot.com", filePath));  // Storage에서 파일을 삭제합니다.
+                    storage.delete(BlobId.of("myname-69262.appspot.com", filePath));  // Storage에서 파일을 삭제합니다.
                 } else {
                     System.out.println("No video URL found for report: " + reportId);
                 }

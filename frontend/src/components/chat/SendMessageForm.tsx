@@ -44,7 +44,6 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const [isOut, setIsOut] = useState<boolean>(false);
-
   const socketUrl = 'http://localhost:8080/ws-stomp';
   const [isFirstConnect, setIsFirstConnect] = useState<boolean>(true); // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
 
@@ -59,7 +58,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       () => {
         console.log('subscribe 전');
         console.log(coupleId, '커플아이디');
-        stompClient.subscribe(`/sub/chat/1`, (message: any) => {
+        stompClient.subscribe(`/sub/chat/${coupleId}`, (message: any) => {
           console.log('subscribe 후');
           const newMessage: WebSocketMessage = JSON.parse(message.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -124,7 +123,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
     // console.log('messages 받아왔어요', loadedMessages.reverse());
     // const filteredData = loadedMessages.filter((item: any) => item.type !== 'ENTER').reverse();
     // console.log('filteredData', filteredData);
-    const reversedLoadedMessages = loadedMessages.reverse();
+    const reversedLoadedMessages = loadedMessages;
     console.log('reversed', reversedLoadedMessages);
     setChatMessages(reversedLoadedMessages);
   };

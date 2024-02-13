@@ -6,7 +6,7 @@ import VideoButton from '../../components/videoButton/VideoButton';
 import VideoCard from '../../components/videoCard/VideoCard';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import MyModal from '../../components/modal/MyModal';
-import ExitModal from './ExitModal';
+import { ExitModal } from './ExitModal';
 import { StreamManager } from 'openvidu-browser';
 import { matchingInfoState } from '../../recoil/atoms/matchingState';
 import { useRecoilValue } from 'recoil';

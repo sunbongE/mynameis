@@ -53,23 +53,26 @@ public class CoupleServiceImpl implements CoupleService {
                 coupleRepository.save(couple);
 
                 // 회원들의 CoupleId 변경.
-                User men = couple.getUserM();
-                User women = couple.getUserW();
+                User men = userRepository.findByUserId(couple.getUserM().getUserId());
+                User women = userRepository.findByUserId(couple.getUserW().getUserId());
+
                 men.setCouple(couple);
-                userRepository.save(men);
                 women.setCouple(couple);
-                userRepository.save(women);
+
+                List<User> couples = Arrays.asList(men,women);
+                userRepository.saveAll(couples);
+
 
                 body.put("msg","커플이 되었습니다.");
                 String roomId = String.valueOf(couple.getCoupleId());
-                // 커플 채팅방 테이블 생성.
-                coupleChatRoomRepository.createChatRoom(roomId);
+
 
                 return ResponseEntity.status(HttpStatus.OK).body(body);
             }
                 body.put("msg","한명이 수락했습니다.");
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(body);
         }catch (Exception e){
+            e.printStackTrace();
             Map<String, String> body = new HashMap<>();
             body.put("msg",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);

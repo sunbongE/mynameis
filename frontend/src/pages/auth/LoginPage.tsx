@@ -5,9 +5,13 @@ import { useState } from 'react';
 import { getUserInfo, userLogin } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilCallback, useRecoilValue } from 'recoil';
 import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
 import { userInfoState } from '../../recoil/atoms/userState';
+import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
+import Header from '../../components/header/Header';
+import Footer from '../../components/footer/Footer';
+
 const StyledLoginContainer = styled.div`
   width: 537px;
   height: 70vh;
@@ -45,6 +49,42 @@ function Login() {
     password: '',
   });
 
+  const isLogin = useRecoilValue(isLoginSelector);
+  const setLoginState = useRecoilCallback(({ set }) => (newValue: boolean) => {
+    set(isLoginSelector, newValue);
+  });
+
+  const handleLogin = () => {
+    console.log('로그인');
+    navigate('/login');
+  };
+
+  const handleLogout = () => {
+    console.log('로그아웃');
+    setMyPageOpen(false);
+    setLoginState(false);
+    alert('로그아웃 되었습니다.');
+    window.location.reload();
+  };
+
+  const handleSignUp = () => {
+    console.log('회원가입');
+    navigate('/signup');
+  };
+
+  const [myPageOpen, setMyPageOpen] = useState<boolean>(false);
+
+  const handleMyPage = () => {
+    setMyPageOpen(!myPageOpen);
+  };
+
+  const [coinOpen, setCoinOpen] = useState<boolean>(false);
+  const handleCoinPage = () => {
+    setCoinOpen(!coinOpen)
+  }
+
+  const [scrolling, setScrolling] = useState<boolean>(false);
+
   const handleUserIdChange = (value: string) => {
     setLoginData((prevData) => ({ ...prevData, userId: value }));
   };
@@ -64,6 +104,7 @@ function Login() {
   const [user, setUser] = useRecoilState(userInfoState)
 
   const onLogin = async () => {
+    console.log(user)
     try {
       // console.log('logindata', loginData);
       const response = await userLogin(loginData);
@@ -92,7 +133,18 @@ function Login() {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center' }}>
+      <Header
+        isLogin={isLogin}
+        onClickLogin={handleLogin}
+        onClickLogout={handleLogout}
+        onClickSignUp={handleSignUp}
+        onClickMyPage={handleMyPage}
+        isMyPageOpen={myPageOpen}
+        onCoinClick={handleCoinPage}
+        isCoinPageOpen={coinOpen}
+        showHeader={scrolling}
+      />
       <StyledLoginContainer>
         <h2>로그인</h2>
         <StyledLoginInputContainer>
@@ -105,6 +157,7 @@ function Login() {
         </StyledLoginInputContainer>
         <StyledLoginText onClick={goToSignUp}>계정이 없으신가요? 회원가입하러 가기</StyledLoginText>
       </StyledLoginContainer>
+      <Footer />
     </div>
   );
 }

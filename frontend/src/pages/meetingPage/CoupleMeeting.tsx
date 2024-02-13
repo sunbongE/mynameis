@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import VideoCard from '../../components/videoCard/VideoCard';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, Session } from 'openvidu-browser';
 import { getCoupleRoomToken } from '../../apis/services/user/room';
+import VideoCard from '../../components/videoCard/VideoCard';
+import NoticeBox from '../../components/noticeBox/NoticeBox';
 import Button from '../../components/button/Button';
-import { useNavigate } from 'react-router-dom';
+import { reportUser } from '../../apis/services/user/user';
+import VideoButton from '../../components/videoButton/VideoButton';
+import MyModal from '../../components/modal/MyModal';
+import { ExitCoupleModal } from '../../modules/roomModules/ExitModal';
+import HashtagButton from '../../components/hashtagButton/HashtagButton';
+import { blobToFile, sendRecordingFile } from '../../utils/reportUtils';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../recoil/atoms/userState';
+import { getBalanceGame } from '../../apis/services/matching/matching';
+import toast from 'react-simple-toasts';
 
 export interface MyData {
   mySessionId: String;
@@ -12,17 +23,19 @@ export interface MyData {
 }
 
 const CoupleMeeting = () => {
+  const myInfo = useRecoilValue(userInfoState);
   // 1. 필요한 상태 정의
   const [OV, setOV] = useState<OpenVidu | null>(null);
   const [session, setSession] = useState<OVSession | undefined>(undefined);
-  const [initMyData, setInitMyData] = useState<MyData>({
+  const [initMyData, setInitMyData] = useState({
     mySessionId: '',
-    myUserName: '김아현',
+    myUserName: myInfo?.name,
   });
   const [mainStreamManager, setMainStreamManager] = useState<StreamManager | undefined>(undefined); // 방장?!
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined); // 방 생성한 사람
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]); // 나를 제외한 참여자들
-
+  const [notice, setNotice] = useState<string>('연인의 이성 사람 친구에 대한 당신의 생각은 어떤가요? 허용할 수 있는 범위는 어디까지인가요?'); // 질문 리스트 넣어야해
+  const [exitModalOpen, setExitModalOpen] = useState(false);
   const navigate = useNavigate();
 
   // 방 나가기 버튼
@@ -33,9 +46,6 @@ const CoupleMeeting = () => {
     console.log('leaveSession subscribers ', subscribers);
     navigate('/');
   };
-
-  // var nOV: OpenVidu;
-  // var nSession: Session;
 
   const initOV = () => {
     // 1. OpenVidu 객체 생성
@@ -50,7 +60,6 @@ const CoupleMeeting = () => {
 
   useEffect(() => {
     if (initMyData.mySessionId === '') {
-      console.log('initOV가 되니? 안되는 것 같은데..??????');
       initOV();
     }
   }, [initMyData.mySessionId]);
@@ -66,7 +75,6 @@ const CoupleMeeting = () => {
     // 2. session에서 나간 사용자 삭제
     session.on('streamDestroyed', (event: StreamEvent) => {
       if (event.stream.typeOfVideo === 'CUSTOM') {
-        console.log('event.stream.typeOfVideo가 뭔디', event.stream.typeOfVideo);
         deleteSubscriber(event.stream.streamManager);
         console.log('사용자 삭제 ing ', subscribers);
       }
@@ -80,7 +88,7 @@ const CoupleMeeting = () => {
 
   // 새로고침
   const beforeUnLoad = (event: BeforeUnloadEvent) => {
-    console.log('beforeUnLoad 새로고침이 일어났지');
+    console.log('beforeUnLoad 새로고침이 일어났어요');
     event.stopPropagation();
     event.returnValue = '';
     leaveSession();
@@ -114,6 +122,7 @@ const CoupleMeeting = () => {
         insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
         mirror: false,
         contentHint: 'grid',
+        audio: true,
       };
 
       // 사용자가 방송하는(퍼블리싱하는) 스트림에 대한 설정
@@ -131,21 +140,24 @@ const CoupleMeeting = () => {
       // 4.1 token 가져오기
       getToken().then(async (token: string) => {
         console.log('가져온 token', token);
+        console.log('내 정보', initMyData);
         session
-          .connect(token, { clientData: initMyData.myUserName })
+          .connect(token, { clientData: JSON.stringify(initMyData) })
           .then(async () => {
             // 4.2 user media 객체 생성
-            OV.getUserMedia(cameraStream).then((mediaStream) => {
+            OV.getUserMedia(cameraStream).then((mediaStream: any) => {
               const videoTrack = mediaStream.getVideoTracks()[0];
               publisherStream.videoSource = videoTrack;
               console.log('publisherStream', publisherStream);
-              const newPublisher = OV.initPublisher(initMyData.myUserName as string, publisherStream);
+              const newPublisher = OV.initPublisher(JSON.stringify(initMyData), publisherStream);
 
               newPublisher.once('accessAllowed', async () => {
                 await session.publish(newPublisher); // 개별 사용자가 개시하는 스트림
                 setPublisher(newPublisher); //
               });
             });
+
+            // 질문 데이터 받아오기
           })
           .catch((error: any) => {
             console.log('세션 연결과정에서 에러 떴어요', error.code, error.message);
@@ -159,6 +171,7 @@ const CoupleMeeting = () => {
     // 1. session에 참가한 사용자 추가
     session.on('streamCreated', (event: StreamEvent) => {
       console.log('제가 들어왔어요', event);
+
       const subscriberOptions = {
         insertMode: 'APPEND',
         mirror: false,
@@ -166,6 +179,7 @@ const CoupleMeeting = () => {
       };
 
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
+      console.log('입장한 사용자 데이터', JSON.parse(event.stream.connection.data));
       const newSubscribers = [...subscribers, newSubscriber];
 
       setSubscribers(newSubscribers);
@@ -197,59 +211,168 @@ const CoupleMeeting = () => {
     setOV(null);
     setSession(undefined);
     setSubscribers([]);
-    setInitMyData({ mySessionId: '', myUserName: '김아현' });
+    setInitMyData({ mySessionId: '', myUserName: '' });
     setPublisher(undefined);
   };
 
   // token 가져오기 > 백에서 가져올거임
   const getToken = async () => {
     try {
-      const data = await getCoupleRoomToken({ coupleId: 1 });
-      // console.log('data token 받았어요', data.token);
-      console.log('data 받아', data);
-      setInitMyData({
-        mySessionId: data.videoId,
-        myUserName: '아현',
-      });
-      return data.token;
+      if (myInfo && myInfo.coupleId) {
+        const data = await getCoupleRoomToken({ coupleId: parseInt(myInfo.coupleId) });
+
+        // console.log('data token 받았어요', data.token);
+        // console.log('data 받아', data);
+        // console.log('data ---- getToken', data.videoId, data.name);
+
+        // const updateData: MyData = {
+        //   mySessionId: data.videoId,
+        //   myUserName: data.name,
+        // };
+        // console.log('getToken ---  updateData', updateData);
+
+        // setInitMyData(updateData);
+
+        // console.log('getToken', initMyData);
+        // return data.token;
+
+        return data.token;
+      }
     } catch (error) {
       console.log('token 에러', error);
     }
   };
 
+  const handleGameBtn = async () => {
+    if (!subscribers[0]) {
+      toast('상대방이 들어오면 다시 시도해주세요.', { theme: 'dark' });
+    } else {
+      // 커플 질문리스트 가져오기
+      const data = await getBalanceGame();
+
+      // 상대방한테 질문리스트 보내기
+      if (!session) return;
+
+      session
+        .signal({
+          data: `${data.data.questions.slice(1, -1).split(',')[0]}`,
+          to: [subscribers[0].stream.connection],
+          type: 'game',
+        })
+        .then(() => {
+          setNotice(data.data.questions.slice(1, -1).split(',')[0]);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (!session) return;
+
+    session.on(`signal:game`, (event) => {
+      if (event.data) {
+        console.log(event.data);
+        setNotice(event.data);
+      }
+    });
+  }, [session]);
+
   return (
-    <StyledMeetingContainer>
-      {session && (
-        <VideoContainer>
-          {publisher !== undefined && (
-            <StreamContainer>
-              <VideoCard streamManager={publisher} userType={0} width='500px' height='400px' />
-            </StreamContainer>
-          )}
-          {subscribers.map((sub, i) => (
-            <StreamContainer key={i}>
-              <span>{sub.id}</span>
-              <VideoCard streamManager={sub} userType={1} width='400px' height='300px' />
-            </StreamContainer>
-          ))}
-        </VideoContainer>
-      )}
-      <Button backgroundColor='#e1a4b4' width='168px' height='48px' borderRadius='10px' fontColor='white' onButtonClick={handleLeaveBtn}>
-        방 나갈래
-      </Button>
-    </StyledMeetingContainer>
+    <CoupleMeetingRoomContainer>
+      <NoticeContainer>
+        <NoticeBox noticeText={notice} />
+        <Button backgroundColor='#e1a4b4' width='145px' height='43px' borderRadius='30px' fontColor='white' onButtonClick={handleGameBtn}>
+          커플 게임
+        </Button>
+      </NoticeContainer>
+      <VideoContainer>
+        {session && (
+          <>
+            <>
+              {publisher !== undefined && (
+                <PublisherStreamContainer>
+                  <VideoCard streamManager={publisher} userType={0} width={'65vw'} height={'75vh'}>
+                    {/* <HashtagButton backgroundColor='#E1A4B4'>{JSON.parse(JSON.parse(subscriber.stream.connection.data).clientData).myGender}</HashtagButton> */}
+                    <UserInfoContainer>
+                      <HashtagButton backgroundColor={myInfo?.gender ? '#A5A4E1' : '#E1A4B4'} padding='10px 30px' fontSize='18px'>
+                        {initMyData.myUserName}
+                      </HashtagButton>
+                    </UserInfoContainer>
+                  </VideoCard>
+                </PublisherStreamContainer>
+              )}
+            </>
+            <>
+              {subscribers.map((sub, i) => (
+                <StreamContainer key={i}>
+                  <VideoCard streamManager={sub} userType={1} width='360px' height='270px'>
+                    <UserInfoContainer>
+                      <HashtagButton backgroundColor='#E1A4B4' padding='10px 30px' fontSize='18px'>
+                        {JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}
+                      </HashtagButton>
+                    </UserInfoContainer>
+                  </VideoCard>
+                </StreamContainer>
+              ))}
+            </>
+          </>
+        )}
+      </VideoContainer>
+
+      <VideoButtonContainer>
+        <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+      </VideoButtonContainer>
+      <MyModal isOpen={exitModalOpen} setIsOpen={setExitModalOpen}>
+        <ExitCoupleModal handleLeave={handleLeaveBtn} exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+      </MyModal>
+    </CoupleMeetingRoomContainer>
   );
 };
 
-const StyledMeetingContainer = styled.div`
+////////////////////////////////////////////////////
+/////////// styled component //////////////////////
+///////////////////////////////////////////////////
+
+const CoupleMeetingRoomContainer = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 0 20px 0;
+`;
+
+const NoticeContainer = styled.div`
+  width: 100%;
+  padding: 15px 60px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const VideoContainer = styled.div`
+  position: relative;
+  display: flex;
   justify-content: center;
   align-items: center;
+  height: 70vh;
 `;
-const VideoContainer = styled.div``;
-const StreamContainer = styled.div``;
 
+const PublisherStreamContainer = styled.div``;
+const StreamContainer = styled.div`
+  position: absolute;
+  right: 20px;
+  bottom: 0;
+`;
+
+const VideoButtonContainer = styled.div`
+  margin-top: 3px;
+  display: flex;
+  justify-content: center;
+`;
+
+const UserInfoContainer = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 30px;
+`;
 export default CoupleMeeting;
