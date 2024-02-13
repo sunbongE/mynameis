@@ -11,9 +11,11 @@ import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/dark.css';
 import Cookies from 'js-cookie';
 import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
 import { useNavigate } from 'react-router-dom';
+import { userInfoState } from '../../recoil/atoms/userState';
+import { useCoin } from '../../apis/services/user/user';
 
 interface StartModalProps {
   isOpen: boolean;
@@ -54,6 +56,7 @@ const StyledText = styled.p<TextStyleProps>`
 
 const StartModal = (props: StartModalProps) => {
   const navigate = useNavigate();
+  const myInfo = useRecoilValue(userInfoState);
 
   const values: Array<Object> = [
     { id: 'two', name: 'number', value: '2:2' },
@@ -72,6 +75,14 @@ const StartModal = (props: StartModalProps) => {
   };
 
   const handelStart = async () => {
+    // 코인 있는지 확인
+    // if (myInfo && myInfo.coin < 30) {
+    //   toast('매칭에 참여하기 위해서는 30코인이 필요합니다.', { theme: 'dark' });
+    //   toast('코인 충전 후 이용해주세요.', { theme: 'dark' });
+    //   props.setIsOpen(false);
+    //   return;
+    // }
+
     setIsStart(true);
     const params = { type: selectedNumber };
     const data = await matchingStart(params);
@@ -80,8 +91,6 @@ const StartModal = (props: StartModalProps) => {
       setTimeout(() => {
         setLoadingModalOpen(true);
       }, 300);
-
-      // 여기서 매칭 체크
     } else {
       toast('이미 대기열에 등록되어 있습니다', { theme: 'dark', duration: 1000 });
       props.setIsOpen(false);
@@ -106,6 +115,7 @@ const StartModal = (props: StartModalProps) => {
 
       if (data && data.status === 200) {
         toast('매칭이 생성되었습니다. 5초 후에 이동합니다', { theme: 'dark' });
+        // await useCoin(); // 코인 차감
         const params = { roomId: data.data.roomId };
         const matchingData = await matchingEnter(params); // 매칭 참가 알림
         const userInfo = JSON.parse(data.data.userInfo);
