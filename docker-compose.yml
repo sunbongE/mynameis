@@ -28,10 +28,7 @@ services:
     networks:
       - jenkins-network
     volumes:
-#      - ./certbot/conf:/etc/letsencrypt:ro
-#      -   /etc/letsencrypt:/certbot/conf
-      - /etc/letsencrypt/:etc/letsencrypt
-#      - ./certbot/www:/var/www/certbot:ro
+      - /etc/letsencrypt/:/etc/letsencrypt
     depends_on:
       - back
 
