@@ -6,7 +6,7 @@ import VideoCard from '../../components/videoCard/VideoCard';
 import VideoButton from '../../components/videoButton/VideoButton';
 import HashtagButton from '../../components/hashtagButton/HashtagButton';
 import Icon from '../../components/icon/Icon';
-import { Report } from '../../config/IconName';
+import { Notice, Report, Star } from '../../config/IconName';
 import { calcAge } from '../../utils/numberUtil';
 import MyModal from '../../components/modal/MyModal';
 import VoteModal from './VoteModal';
@@ -132,11 +132,6 @@ const MeetingRoom = (props: MeetingRoomProps) => {
                 <HashtagButton backgroundColor={myInfo.myGender ? '#A5A4E1' : '#E1A4B4'}>{myInfo.myUserName}</HashtagButton>
                 {props.state.includes('step123') && <VoteCountHeart color={myInfo.myGender ? 'purple' : 'pink'} count={props.receivedCount} />}
               </div>
-              {myInfo.myUserId !== myInfo.myUserId && (
-                <ClickBox onClick={() => handleReport(myInfo.myUserId)}>
-                  <Icon src={Report} width='24px' height='24px' />
-                </ClickBox>
-              )}
             </HashtagContainer>
             <HashtagWrapper>
               {props.state.includes('step1') && (
@@ -192,6 +187,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
                   </HashtagButton>
                 </div>
                 <ClickBox onClick={() => handleReport(JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserId)}>
+                  {/* <HashtagButton>신고</HashtagButton> */}
                   <Icon src={Report} width='24px' height='24px' />
                 </ClickBox>
               </HashtagContainer>
