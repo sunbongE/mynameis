@@ -1,6 +1,5 @@
 def component = [
         front: false,
-        nginx: true,
         redis: true,
         back: true
 ]
