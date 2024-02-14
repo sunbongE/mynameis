@@ -1,17 +1,20 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
+const BASEURL = 'http://i10c207.p.ssafy.io/api';
+
 export const instance = axios.create({
-  baseURL: 'http://localhost:8080/',
+  // baseURL: 'http://localhost:8080/',
+  baseURL: `${BASEURL}`,
 });
 
 export const loginInstance = axios.create({
-  baseURL: 'http://localhost:8080',
-  // baseURL: 'http://i10c207.p.ssafy.io:8081/',
-  // withCredentials: true,
+  // baseURL: 'http://localhost:8080',
+  baseURL: `${BASEURL}`,
 });
 export const fileInstance = axios.create({
-  baseURL: 'http://localhost:8080',
+  // baseURL: 'http://localhost:8080',
+  baseURL: `${BASEURL}`,
 });
 
 export const pgTokenInstance = axios.create({

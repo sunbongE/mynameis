@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Icon from '../../components/icon/Icon';
-import { ReportRed } from '../../config/IconName';
+import { Close, ReportRed } from '../../config/IconName';
 import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
 import Button from '../../components/button/Button';
 import { useRecoilState } from 'recoil';
@@ -44,8 +44,15 @@ const ReportModal = (props: ReportModalProps) => {
     props.setReportModalOpen(false);
   };
 
+  const handleClose = () => {
+    props.setReportModalOpen(false);
+  };
+
   return (
     <ModalContainer>
+      <div onClick={handleClose} style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+        <Icon src={Close} width='8px' height='8px' />
+      </div>
       <ModalTitle>
         <Icon src={ReportRed} width='26px' height='26px' />
         <StyledText fontSize='24px'>사용자 신고하기</StyledText>
