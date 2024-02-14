@@ -180,20 +180,20 @@ const Room = () => {
 
               console.log('녹화를 시작할게요, 녹화 번호: ', curId);
 
-              // mediaRecorder.start(); // 녹화시작
+              mediaRecorder.start(); // 녹화시작
 
-              // // 여기서는 일단 5분 녹화
-              // const newIntervalId = setInterval(
-              //   () => {
-              //     mediaRecorder.stop(); // 녹화 종료
-              //     setCurId(curId + 1);
-              //     recordArray = []; // 이전 녹화 내역 초기화
-              //     console.log('다시 녹화 시작, 녹화 번호: ', curId);
-              //     mediaRecorder.start(); // 다시 녹화 시작
-              //   },
-              //   10 * 1000 // 5분
-              // );
-              // setIntervalId(newIntervalId);
+              // 여기서는 일단 5분 녹화
+              const newIntervalId = setInterval(
+                () => {
+                  mediaRecorder.stop(); // 녹화 종료
+                  setCurId(curId + 1);
+                  recordArray = []; // 이전 녹화 내역 초기화
+                  console.log('다시 녹화 시작, 녹화 번호: ', curId);
+                  mediaRecorder.start(); // 다시 녹화 시작
+                },
+                5 * 60 * 1000 // 5분
+              );
+              setIntervalId(newIntervalId);
 
               // 신고 끝
             });
