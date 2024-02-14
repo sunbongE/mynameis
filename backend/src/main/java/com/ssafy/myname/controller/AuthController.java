@@ -137,7 +137,7 @@ public class AuthController {
     }
 
     @Async
-    private void sendEmail(String email) {
+    protected void sendEmail(String email) {
         authService.emailUrl(email);
     }
 
