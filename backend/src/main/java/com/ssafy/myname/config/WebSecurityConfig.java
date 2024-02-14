@@ -72,8 +72,8 @@ public class WebSecurityConfig {
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setMaxAge(3600L);
 //        corsConfiguration.addAllowedOrigin("http://localhost:3000");
-        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**"));
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**","https://i10c207.p.ssafy.io"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000","https://i10c207.p.ssafy.io"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration);
 
