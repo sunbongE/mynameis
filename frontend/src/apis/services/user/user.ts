@@ -1,5 +1,5 @@
 import instance from '../../utils/axiosInstance';
-import { loginInstance, fileInstance } from '../../utils/axiosInstance';
+import { loginInstance, fileInstance, pgTokenInstance } from '../../utils/axiosInstance';
 import Cookies from 'js-cookie';
 
 const authUrl = 'auth';
@@ -38,16 +38,13 @@ export const userPasswordReset = async (params: { password: string }, query: str
   return response.data;
 };
 
-export const userCoinPaymentRequest = async (params: {
-  partner_user_id: string | undefined;
-  partner_order_id: number;
-  item_name: string;
-  total_amount: number;
-  approval_url: string;
-  cancel_url: string;
-  fail_url: string;
-}) => {
+export const userCoinPaymentRequest = async (params: { partner_user_id: string | undefined; partner_order_id: number; item_name: string; total_amount: number;  }) => {
   const response = await instance.post(`${authUrl}/pay`, params);
+  return response.data;
+};
+
+export const pgTokenReceive = async () => {
+  const response = await pgTokenInstance.get(`${authUrl}/success`);
   return response.data;
 };
 

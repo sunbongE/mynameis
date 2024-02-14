@@ -11,6 +11,7 @@ import ChatPage from '../pages/chatPage/ChatPage';
 import CoupleMeeting from '../pages/meetingPage/CoupleMeeting';
 import CoinList from '../components/coinListItem/CoinList';
 import PayResult from '../components/coinListItem/PayResult';
+import MainStep from '../modules/mainModules/MainStep';
 
 const Router = () => {
   return (

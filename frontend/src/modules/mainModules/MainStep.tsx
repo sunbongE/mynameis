@@ -1,11 +1,31 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import MainStepImg from '../../assets/img/main_step.svg';
 import { BlinkRed } from '../../config/IconName';
 import Icon from '../../components/icon/Icon';
+import { Down } from '../../config/IconName';
+
+interface MainStepProps {
+  scrollToRef: (ref: React.RefObject<HTMLDivElement>) => void;
+  coupleRef: React.RefObject<HTMLDivElement>;
+  stepRef:React.RefObject<HTMLDivElement>;
+}
+
+const fadeInDown = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(20px) translateX(-50%);
+  }
+`;
+
 const StyledMainStepContainer = styled.div`
+  position: relative;
   width: 100%;
-  height: 900px;
+  height: 695px;
   background-color: #f2eeea;
   display: flex;
   column-gap: 85px;
@@ -16,6 +36,10 @@ const StyledMainStepContainer = styled.div`
 
 const StyledSvg = styled.img`
   width: 40vw;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledTextContainer = styled.div`
   width: 37vw;
@@ -26,16 +50,28 @@ const StyledSubTitle = styled.p`
   color: #333333;
   letter-spacing: 4px;
   margin-bottom: 7px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledTitle = styled.p`
   font-family: 'Pretendard Bold';
   font-size: 36px;
   color: #333333;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledStep = styled.div`
   margin-top: 30px;
   padding-bottom: 10px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledStepTextContainer = styled.div`
   display: flex;
@@ -54,9 +90,33 @@ const StyledStepContents = styled.p`
   margin-top: 10px;
   line-height: 27px;
 `;
-const MainStep = () => {
+
+const StyledHeroDownContainer = styled.div`
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  &:hover {
+    animation: ${fadeInDown} 1s ease forwards; // 애니메이션 적용 (1초 동안 ease)
+  }
+  cursor: pointer;
+`;
+
+const StyledHeroDownText = styled.p`
+  font-family: 'Pretendard Bold';
+  font-size: 20px;
+  color: white;
+  text-align: center;
+`;
+
+const MainStep = ({ scrollToRef, coupleRef }: MainStepProps) => {
+  
+  const handleScrollToCoupleClick = () => {
+    scrollToRef(coupleRef);
+  };
+
   return (
-    <StyledMainStepContainer>
+    <StyledMainStepContainer ref={coupleRef}>
       <StyledSvg src={MainStepImg} alt='Main Step' />
       <StyledTextContainer>
         <StyledSubTitle>features</StyledSubTitle>
@@ -90,6 +150,10 @@ const MainStep = () => {
           <StyledStepContents>서로에게 관심이 있을 경우 투표로 매칭을 결정하고, 매칭된 분들은 1 : 1 시간을 가져 자유롭게 대화할 수 있어요.</StyledStepContents>
         </StyledStep>
       </StyledTextContainer>
+      <StyledHeroDownContainer onClick={handleScrollToCoupleClick}>
+        <StyledHeroDownText>My name is</StyledHeroDownText>
+        <Icon src={Down} />
+      </StyledHeroDownContainer>
     </StyledMainStepContainer>
   );
 };

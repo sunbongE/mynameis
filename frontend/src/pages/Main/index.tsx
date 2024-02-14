@@ -116,17 +116,6 @@ const Main = () => {
       />
       <MyModal isOpen={coinOpen} setIsOpen={setCoinOpen} children={<CoinList isOpen={coinOpen} setIsOpen={setCoinOpen} />} />
       <MainSection isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />
-      {/* <Button
-        backgroundColor={'#e1a4b4'}
-        width={'200px'}
-        height={'80px'}
-        borderRadius={'16px'}
-        onButtonClick={() => {
-          navigate('/room');
-        }}
-      >
-        준비페이지로 이동
-      </Button> */}
       <Footer />
       <ActionButton faqOpen={faqOpen} setFaqOpen={setFaqOpen} />
       {isOpenChat && <ChatPage initialPosition={{ x: initialPosition.x, y: initialPosition.y }} isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />}

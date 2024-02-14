@@ -1,12 +1,32 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import MainCoupleImg from '../../assets/img/main_couple.svg';
 import { BlinkCircle, Warn } from '../../config/IconName';
 import Icon from '../../components/icon/Icon';
+import { Down } from '../../config/IconName';
+
+interface MainCoupleProps {
+  scrollToRef: (ref: React.RefObject<HTMLDivElement>) => void;
+  reviewRef: React.RefObject<HTMLDivElement>;
+  coupleRef: React.RefObject<HTMLDivElement>;
+}
+
+
+const fadeInDown = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(20px) translateX(-50%);
+  }
+`;
 
 const StyledMainCoupleContainer = styled.div`
+  position: relative;
   width: 100%;
-  height: 900px;
+  height: 695px;
   background-color: #f2eeea;
   display: flex;
   column-gap: 75px;
@@ -24,11 +44,19 @@ const StyledSubTitle = styled.p`
   color: #333333;
   letter-spacing: 4px;
   margin-bottom: 7px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 const StyledTitle = styled.p`
   font-family: 'Pretendard Bold';
   font-size: 36px;
   color: #333333;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledContentsContainer = styled.div`
@@ -43,6 +71,10 @@ const StyledContents = styled.p`
   font-size: 18px;
   color: #888;
   line-height: 27px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledWarnContainer = styled.div`
@@ -50,6 +82,11 @@ const StyledWarnContainer = styled.div`
   align-items: center;
   margin-top: 40px;
   margin-bottom: 5px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
+  
 `;
 
 const StyledWarnText = styled.p`
@@ -60,11 +97,19 @@ const StyledWarnText = styled.p`
 `;
 const StyledSvg = styled.img`
   width: 40vw;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledCoupleTitleContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
+  transition: transform 0.3s ease; // 크기 변환 애니메이션
+  &:hover {
+    transform: scale(1.1); // hover 시 크기 확대
+  }
 `;
 
 const StyledCoupleTitle = styled.p`
@@ -73,9 +118,36 @@ const StyledCoupleTitle = styled.p`
   color: #333;
   margin-left: 14px;
 `;
-const MainCouple = () => {
+
+
+const StyledHeroDownContainer = styled.div`
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  &:hover {
+    animation: ${fadeInDown} 1s ease forwards; // 애니메이션 적용 (1초 동안 ease)
+  }
+  cursor: pointer;
+`;
+
+const StyledHeroDownText = styled.p`
+  font-family: 'Pretendard Bold';
+  font-size: 20px;
+  color: white;
+  text-align: center;
+`;
+
+
+const MainCouple = ({ scrollToRef, reviewRef }: MainCoupleProps) => {
+
+  const handleScrollToReviewClick = () => {
+    scrollToRef(reviewRef);
+  };
+
+
   return (
-    <StyledMainCoupleContainer>
+    <StyledMainCoupleContainer ref={reviewRef}>
       <StyledTextContainer>
         <StyledSubTitle>Features</StyledSubTitle>
         <StyledTitle>서로를 알아볼까요?</StyledTitle>
@@ -95,6 +167,10 @@ const MainCouple = () => {
         </StyledContentsContainer>
       </StyledTextContainer>
       <StyledSvg src={MainCoupleImg} alt='Main couple' />
+      <StyledHeroDownContainer onClick={handleScrollToReviewClick}>
+        <StyledHeroDownText>My name is</StyledHeroDownText>
+        <Icon src={Down} />
+      </StyledHeroDownContainer>
     </StyledMainCoupleContainer>
   );
 };

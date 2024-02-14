@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import Icon from '../icon/Icon';
 import Button from '../button/Button';
-import { userCoinPaymentRequest, userCoinPaymentConfirm } from '../../apis/services/user/user';
+import { userCoinPaymentRequest, userCoinPaymentConfirm, pgTokenReceive } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 import { paymentState } from '../../recoil/atoms/paymentState';
 
@@ -105,9 +105,9 @@ function CoinList(props: CoinProps) {
     partner_order_id: 0,
     item_name: '',
     total_amount: 0,
-    approval_url:'http://localhost:3000/payresult',
-    cancel_url:'http://localhost:3000',
-    fail_url:'http://localhost:3000',
+    // approval_url:'http://localhost:3000/payresult',
+    // cancel_url:'http://localhost:3000',
+    // fail_url:'http://localhost:3000',
   });
 
   const [payApproveData, setPayApproveData ] = useState({
@@ -149,16 +149,27 @@ function CoinList(props: CoinProps) {
         
 
 
-
         const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800');
-        navigate('/payresult')
+        // navigate('/payresult')
 
         const searchParams = new URLSearchParams(popup?.location.search);
         const pgToken = searchParams.get('pg_token');
         console.log(popup?.location.href)
         console.log('팝업창에서 가져온 pg_token:', pgToken);
 
-        window.close
+
+        // const fetchData = async () => {
+        //   try {
+        //     const responsePgToken = await pgTokenReceive();
+        //     console.log(responsePgToken);
+        //   } catch (error) {
+        //     // 오류 처리
+        //     console.error('Error fetching data:', error);
+        //   }
+        // };
+  
+        // fetchData();
+
 
         const handleApprove = async () => {
           try {
