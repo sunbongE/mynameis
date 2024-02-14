@@ -1,7 +1,7 @@
 def component = [
         front: false,
-//      redis: true,
         back: true
+        database : true,
 ]
 pipeline {
     agent any
