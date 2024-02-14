@@ -73,7 +73,7 @@ const MeetingReady = (props: MeetingReadyProps) => {
   return (
     <StyledContainer>
       <NoticeContainer>
-        <NoticeBox noticeText={'15초 후에 참여자 분들의 얼굴이 공개 됩니다! 얼굴 공개 전 잠시 준비 시간을 가져 볼까요?'} />
+        <NoticeBox noticeText={'10초 후에 참여자 분들의 얼굴이 공개 됩니다! 얼굴 공개 전 잠시 준비 시간을 가져 볼까요?'} />
         <Timer time={time} state={props.state} setState={props.setState} repeatCount={0} />
       </NoticeContainer>
       <VideoContainer>

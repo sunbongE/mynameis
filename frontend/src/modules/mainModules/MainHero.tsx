@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import styled, {keyframes} from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import heroCouple from '../../assets/img/hero_couple.png';
 import heroSolo from '../../assets/img/hero_solo.png';
 import Button from '../../components/button/Button';
@@ -22,7 +22,6 @@ interface MainHeroProps {
   scrollToRef: (ref: React.RefObject<HTMLDivElement>) => void;
   stepRef: React.RefObject<HTMLDivElement>;
 }
-
 
 const fadeInDown = keyframes`
   0% {
@@ -116,7 +115,7 @@ const MainHero = ({ isOpenChat, setIsOpenChat, scrollToRef, stepRef }: MainHeroP
 
   const handleStartBtn = () => {
     // 로그인 상태가 아니면
-    if (!userInfo) {
+    if (!userInfo?.name) {
       toast('로그인 후 사용해주세요', { theme: 'dark' });
     } else {
       // 로그인 상태면
