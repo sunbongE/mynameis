@@ -49,7 +49,7 @@ public class KakaoPayService {
         params.put("quantity", 1);
         params.put("total_amount", paymentRequest.getTotal_amount());
         params.put("tax_free_amount", 0);
-        params.put("approval_url", "http://lvh.me:8080/payresult");
+        params.put("approval_url", "http://lvh.me:8080/auth/success");
         params.put("cancel_url", "http://lvh.me:8080/cancel");
         params.put("fail_url", "http://lvh.me:8080/fail");
 

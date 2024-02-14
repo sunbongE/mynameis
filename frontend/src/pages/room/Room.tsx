@@ -173,33 +173,33 @@ const Room = () => {
                 console.log('녹화 결과', recordBlob);
 
                 // 서버에 녹화 업로드 하는 부분
-                // if (param.roomId) {
-                //   sendRecordingFile(file, param.roomId);
-                // }
+                if (param.roomId) {
+                  sendRecordingFile(file, param.roomId, initMyData.myUserId);
+                }
               };
 
               console.log('녹화를 시작할게요, 녹화 번호: ', curId);
 
-              mediaRecorder.start(); // 녹화시작
+              // mediaRecorder.start(); // 녹화시작
 
-              // 여기서는 일단 5분 녹화
-              const newIntervalId = setInterval(
-                () => {
-                  mediaRecorder.stop(); // 녹화 종료
-                  setCurId(curId + 1);
-                  recordArray = []; // 이전 녹화 내역 초기화
-                  console.log('다시 녹화 시작, 녹화 번호: ', curId);
-                  mediaRecorder.start(); // 다시 녹화 시작
-                },
-                5 * 60 * 1000 // 5분
-              );
-              setIntervalId(newIntervalId);
+              // // 여기서는 일단 5분 녹화
+              // const newIntervalId = setInterval(
+              //   () => {
+              //     mediaRecorder.stop(); // 녹화 종료
+              //     setCurId(curId + 1);
+              //     recordArray = []; // 이전 녹화 내역 초기화
+              //     console.log('다시 녹화 시작, 녹화 번호: ', curId);
+              //     mediaRecorder.start(); // 다시 녹화 시작
+              //   },
+              //   10 * 1000 // 5분
+              // );
+              // setIntervalId(newIntervalId);
 
               // 신고 끝
             });
           })
           .catch(async (error: any) => {
-            toast('세션 연결 과정에서 에러가 발생했습니다. 메인페이지로 이동합니다.', { theme: 'dark' });
+            // toast('세션 연결 과정에서 에러가 발생했습니다. 메인페이지로 이동합니다.', { theme: 'dark' });
             const params = { roomId: param.roomId };
             await matchingExit(params);
             await matchingCancel();
@@ -286,11 +286,11 @@ const Room = () => {
     if (['loading', 'ready'].includes(state)) {
       setMediaVisibility(true, false);
     } else if (['step1234', 'step12345'].includes(state)) {
-      setMediaVisibility(true, false);
+      setMediaVisibility(true, true);
     } else if (state.includes('vote')) {
       setMediaVisibility(false, false);
     } else {
-      setMediaVisibility(false, false);
+      setMediaVisibility(false, true);
     }
   }, [state]);
 
@@ -310,28 +310,22 @@ const Room = () => {
   useEffect(() => {
     const checkStatus = async () => {
       const data = await matchingCheck();
-      if (state !== ('' || 'finish') && data.status === 202) {
-        // 백한테 매칭이 종료 됐음을 보내야함
-
+      if (state !== ('loading' || '' || 'finish') && data.status === 202) {
         // 녹화 종료해야함
         if (mediaRecorder) {
           mediaRecorder.stop();
           setMediaRecorder(null);
         }
-
         if (intervalId) {
           clearInterval(intervalId);
           setIntervalId(null);
         }
-
         toast('과반수가 퇴장하여 매칭이 취소되었습니다.', { theme: 'dark' });
         toast('메인페이지로 이동합니다.', { theme: 'dark' });
         leaveSession();
-
         navigate('/');
       }
     };
-
     checkStatus();
   }, [state, subscribers]);
 
@@ -428,17 +422,15 @@ const Room = () => {
         const userInfo = await getUserInfo();
         if (userInfo) {
           setMyInfo(userInfo);
-          if (myInfo?.coupleId) {
+          if (userInfo.coupleId) {
             toast('축하드립니다! 최종 커플이 성사되었습니다!', { theme: 'dark' });
-            toast('커플만이 사용할 수 있는 기능들을 즐겨보세요!', { theme: 'dark' });
+            toast('연인과 함께 커플만이 사용할 수 있는 기능들을 즐겨보세요!', { theme: 'dark' });
           } else {
             toast('아쉽지만 최종 커플이 되지 못하였습니다.', { theme: 'dark' });
             toast('새로운 매칭을 시도해보세요.', { theme: 'dark' });
           }
           navigate('/');
         }
-
-        // 여기서 백한테 이 방 매칭 종료 됐음을 보내야됨
       };
 
       setUserInfo();

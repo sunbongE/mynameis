@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import Icon from '../icon/Icon';
 import Button from '../button/Button';
-import { userCoinPaymentRequest, userCoinPaymentConfirm } from '../../apis/services/user/user';
+import { userCoinPaymentRequest, userCoinPaymentConfirm, pgTokenReceive } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 import { paymentState } from '../../recoil/atoms/paymentState';
 
@@ -149,7 +149,6 @@ function CoinList(props: CoinProps) {
         
 
 
-
         const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800');
         // navigate('/payresult')
 
@@ -158,7 +157,19 @@ function CoinList(props: CoinProps) {
         console.log(popup?.location.href)
         console.log('팝업창에서 가져온 pg_token:', pgToken);
 
-        window.close
+
+        // const fetchData = async () => {
+        //   try {
+        //     const responsePgToken = await pgTokenReceive();
+        //     console.log(responsePgToken);
+        //   } catch (error) {
+        //     // 오류 처리
+        //     console.error('Error fetching data:', error);
+        //   }
+        // };
+  
+        // fetchData();
+
 
         const handleApprove = async () => {
           try {

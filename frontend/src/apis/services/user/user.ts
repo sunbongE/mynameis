@@ -1,5 +1,5 @@
 import instance from '../../utils/axiosInstance';
-import { loginInstance, fileInstance } from '../../utils/axiosInstance';
+import { loginInstance, fileInstance, pgTokenInstance } from '../../utils/axiosInstance';
 import Cookies from 'js-cookie';
 
 const authUrl = 'auth';
@@ -43,11 +43,15 @@ export const userCoinPaymentRequest = async (params: { partner_user_id: string |
   return response.data;
 };
 
-export const userCoinPaymentConfirm = async (params: { tid:string | null, partner_user_id:string | undefined, partner_order_id:number, pg_token:string }) => {
-  const response = await instance.post(`${authUrl}/approve`, params);
-  return response.data
-}
+export const pgTokenReceive = async () => {
+  const response = await pgTokenInstance.get(`${authUrl}/success`);
+  return response.data;
+};
 
+export const userCoinPaymentConfirm = async (params: { tid: string | null; partner_user_id: string | undefined; partner_order_id: number; pg_token: string }) => {
+  const response = await instance.post(`${authUrl}/approve`, params);
+  return response.data;
+};
 
 export const getUserInfo = async () => {
   try {
@@ -76,8 +80,18 @@ export const userJoin = async (params: { name: string; coin: number; gender: boo
 /**
  * 신고
  */
-export const reportUser = async (fData: FormData) => {
+export const uploadVideo = async (fData: FormData) => {
   const response = await fileInstance.post(`${authUrl}/upload`, fData);
+  return response.data;
+};
+
+export const reportUser = async (params: { roomId: string; reportedId: string; reportType: string }) => {
+  const response = await instance.post(`${authUrl}/report`, params);
+  return response.data;
+};
+
+export const useCoin = async () => {
+  const response = await loginInstance.post('coin/use');
   return response.data;
 };
 

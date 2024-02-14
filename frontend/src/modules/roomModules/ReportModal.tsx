@@ -6,6 +6,8 @@ import ReportCheckBoxItem from '../../components/reportCheckBox/ReportCheckBox';
 import Button from '../../components/button/Button';
 import { useRecoilState } from 'recoil';
 import { matchingInfoState } from '../../recoil/atoms/matchingState';
+import { reportUser } from '../../apis/services/user/user';
+import toast from 'react-simple-toasts';
 
 interface ReportModalProps {
   reportModalOpen: boolean;
@@ -29,11 +31,16 @@ const ReportModal = (props: ReportModalProps) => {
 
   const [myInfo, setMyInfo] = useRecoilState(matchingInfoState);
 
-  const handleReport = () => {
+  const handleReport = async () => {
     console.log(`${props.userId}에 대해 ${reportTitle}으로 신고할거임`);
-    const params = { roomId: props.roomId, reporterId: myInfo.userId, reportedId: props.userId, reportType: reportTitle, curId: props.curId };
+
+    const params = { roomId: String(props.roomId), reportedId: props.userId, reportType: reportTitle };
+
     // 여기서 백한테 신고 보내야함
-    // const data = reportUpload(params);
+    const data = await reportUser(params);
+    console.log('신고 보냈음', data);
+    toast('신고가 접수 되었습니다.', { theme: 'dark' });
+
     props.setReportModalOpen(false);
   };
 
