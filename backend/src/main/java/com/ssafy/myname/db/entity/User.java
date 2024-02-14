@@ -123,6 +123,7 @@ public class User {
         this.religion = dto.getReligion();
         this.job = dto.getJob();
         this.phone = dto.getPhone();
+        this.coin = 100;
         // tag들 저장.
     }
     // 출력
