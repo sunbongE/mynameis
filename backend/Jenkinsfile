@@ -1,6 +1,6 @@
 def component = [
         front: false,
-        back: true
+        back: true,
         database : true,
 ]
 pipeline {
