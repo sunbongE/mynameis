@@ -266,41 +266,44 @@ function SignUp() {
 
       const response = await userSignUp({ gender: booleanGender, tags: registrationData.tag, ...restData });
       console.log(registrationData);
-      console.log('회원가입 성공:', response);
+      // console.log('회원가입 성공:', response);
       alert('회원가입 되었습니다. 로그인 페이지로 이동합니다.');
       navigate('/login'); // 로그인 페이지 이동
     } catch (error) {
-      console.log(registrationData);
-      console.log('회원가입 실패:', error);
+      // console.log(registrationData);
+      // console.log('회원가입 실패:', error);
       alert('정보를 입력 안한 부분이 있는지 확인해보세요!');
       // 회원가입 실패 후 처리 : 에러 메시지 표시, 로그인 페이지 이동 등
     }
   };
 
   const handleBeforePhoneAuth = async () => {
-    try {
-      const response = await userPhoneNumberSubmit({ phoneId: submitPhoneNumber });
-      console.log('휴대폰 인증 전송', response, submitPhoneNumber);
-      alert('휴대폰 번호를 전송했습니다.');
-    } catch (error) {
-      console.log('휴대폰 인증 전송 안됨', error, submitPhoneNumber);
-      alert('휴대폰 인증 전송 실패');
-    }
+    setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
+    console.log(registrationData)
+    // try {
+    //   const response = await userPhoneNumberSubmit({ phoneId: submitPhoneNumber });
+    //   console.log('휴대폰 인증 전송', response, submitPhoneNumber);
+    //   alert('휴대폰 번호를 전송했습니다.');
+    // } catch (error) {
+    //   console.log('휴대폰 인증 전송 안됨', error, submitPhoneNumber);
+    //   alert('휴대폰 인증 전송 실패');
+    // }
   };
 
   const handleAfterPhoneAuth = async () => {
     try {
-      const response = await userPhoneAuthentication({ phoneId: submitPhoneNumber, certificationNumber: phoneAuthNumber });
-      setIsPhoneAuth(true);
-      setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
+      console.log('아무런 효과가 없습니다.')
+      // const response = await userPhoneAuthentication({ phoneId: submitPhoneNumber, certificationNumber: phoneAuthNumber });
+      // setIsPhoneAuth(true);
+      // setRegistrationData((prevData) => ({ ...prevData, phone: submitPhoneNumber }));
 
-      console.log('핸드폰 등록 : ', registrationData.phone);
-      console.log('휴대폰 인증 성공', response, submitPhoneNumber);
-      alert('휴대폰 인증에 성공했습니다.');
+      // console.log('핸드폰 등록 : ', registrationData.phone);
+      // console.log('휴대폰 인증 성공', response, submitPhoneNumber);
+      // alert('휴대폰 인증에 성공했습니다.');
     } catch (error) {
-      console.log('휴대폰 인증 실패', error, submitPhoneNumber);
-      console.log('핸드폰 등록 : ', registrationData.phone);
-      alert('휴대폰 인증에 실패했습니다.');
+      // console.log('휴대폰 인증 실패', error, submitPhoneNumber);
+      // console.log('핸드폰 등록 : ', registrationData.phone);
+      // alert('휴대폰 인증에 실패했습니다.');
     }
   };
 
@@ -387,7 +390,7 @@ function SignUp() {
           <StyleLabel htmlFor='religion'>종교</StyleLabel>
           <CustomDropdown options={['종교를 선택하세요', '무교', '기독교', '천주교', '불교']} width='300px' onSelected={(value) => handleReligionChange(value, 'religion')} />
         </div>
-        <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={isPhoneAuth ? handleSignUp : undefined} disabled={!isPhoneAuth}>
+        <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={handleSignUp} >
           입력 완료
         </Button>
       </StyledSignUpInputContainer>
