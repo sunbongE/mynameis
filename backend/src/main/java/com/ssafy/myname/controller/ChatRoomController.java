@@ -24,7 +24,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/history")
+@RequestMapping("/api/history")
 @Slf4j
 public class ChatRoomController {
     private final ChatService chatService;
