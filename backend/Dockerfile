@@ -9,7 +9,8 @@ COPY settings.gradle .
 COPY src src
 # gradlew 실행 권한 부여
 RUN chmod +x ./gradlew
-RUN ./gradlew bootJar
+CMD [ "./gradlew", "clean", "bootJar" ]
+# RUN ./gradlew bootJar
 
 # 실행 스테이지
 FROM openjdk:17
