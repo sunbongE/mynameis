@@ -7,7 +7,7 @@ import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.users.ModifyUserDto;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
-import com.ssafy.myname.provider.EmailProvider;
+//import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

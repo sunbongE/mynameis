@@ -8,7 +8,7 @@ import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.dto.response.email.EmailResponseDto;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.AuthService;
-import com.ssafy.myname.service.implement.JwtService;
+//import com.ssafy.myname.service.implement.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -36,12 +36,19 @@ public class AuthController {
 
     private final JwtProvider jwtProvider;
     private final AuthService authService;
-    private final JwtService jwtService;
+//    private final JwtService jwtService;
     private final UserRepository userRepository;
     @Value("${secret-key}")
     private String secretKey;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("back 연결성공");
+    }
+
 
     /**
      *
@@ -55,24 +62,26 @@ public class AuthController {
     }
 
 
-    @PostMapping("/phone-certification")
-    public ResponseEntity<? super PhoneCertificationResponseDto> phonecerfitication(
-            @RequestBody @Valid PhoneCertificationRequestDto requestBody
-    ) {
-        logger.info("requestBody : {}", requestBody);
-        ResponseEntity<? super PhoneCertificationResponseDto> response =
-                authService.phoneCertification(requestBody);
-        return response;
-    }
 
 
-    @PostMapping("/check-phonecertification")
-    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(
-            @RequestBody @Valid CheckPhoneCertificationReqDto requestBody
-    ) {
-        ResponseEntity<? super CheckPhoneCertificationResDto> response = authService.checkPhoneCertification(requestBody);
-        return response;
-    }
+//    @PostMapping("/phone-certification")
+//    public ResponseEntity<? super PhoneCertificationResponseDto> phonecerfitication(
+//            @RequestBody @Valid PhoneCertificationRequestDto requestBody
+//    ) {
+//        logger.info("requestBody : {}", requestBody);
+//        ResponseEntity<? super PhoneCertificationResponseDto> response =
+//                authService.phoneCertification(requestBody);
+//        return response;
+//    }
+
+
+//    @PostMapping("/check-phonecertification")
+//    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(
+//            @RequestBody @Valid CheckPhoneCertificationReqDto requestBody
+//    ) {
+//        ResponseEntity<? super CheckPhoneCertificationResDto> response = authService.checkPhoneCertification(requestBody);
+//        return response;
+//    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<? super SignUpResDto> signUp(
@@ -121,7 +130,7 @@ public class AuthController {
             User user = userRepository.findByUserId(dto.getUserId());
             String email = user.getEmail();
             if(user!=null && dto.getEmail().equals(email)){
-                sendEmail(dto.getEmail());
+//                sendEmail(dto.getEmail());
 
                 response.put("msg","이메일 발송");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -136,16 +145,16 @@ public class AuthController {
         }
     }
 
-    @Async
-    protected void sendEmail(String email) {
-        authService.emailUrl(email);
-    }
-
-    @PatchMapping("/change")
-    public ResponseEntity<?> emailModify(@RequestBody PasswordChangeDto dto,@RequestParam("email") String email){
-
-        ResponseEntity<?> response = authService.emailModify(email, dto.getPassword());
-        return response;
-    }
+//    @Async
+//    protected void sendEmail(String email) {
+//        authService.emailUrl(email);
+//    }
+//
+//    @PatchMapping("/change")
+//    public ResponseEntity<?> emailModify(@RequestBody PasswordChangeDto dto,@RequestParam("email") String email){
+//
+//        ResponseEntity<?> response = authService.emailModify(email, dto.getPassword());
+//        return response;
+//    }
 
 }
