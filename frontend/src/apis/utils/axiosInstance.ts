@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
-const BASEURL = 'http://mynameis.site:8081/api';
+const BASEURL = 'http://mynameis.site/api';
 
 export const instance = axios.create({
   // baseURL: 'http://localhost:8080/',
