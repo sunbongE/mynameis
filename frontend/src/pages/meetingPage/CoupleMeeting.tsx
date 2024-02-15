@@ -219,6 +219,7 @@ const CoupleMeeting = () => {
   const getToken = async () => {
     try {
       if (myInfo && myInfo.coupleId) {
+        console.log('getToken 커플아이디 : ', myInfo.coupleId);
         const data = await getCoupleRoomToken({ coupleId: parseInt(myInfo.coupleId) });
 
         // console.log('data token 받았어요', data.token);

@@ -1,7 +1,6 @@
 version: '3.3'
 
 services:
-
   front:
     container_name: front
     image: taehopark/myname-front
@@ -26,23 +25,6 @@ services:
       - "8081:8081"
     networks:
       - jenkins-network
-
-  nginx:
-    container_name: nginx
-    image: taehopark/myname-nginx
-    build:
-      context: nginx
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "4443:443"
-    networks:
-      - jenkins-network
-    volumes:
-      - /etc/letsencrypt/:/etc/letsencrypt
-#    depends_on:
-#      - back
 
 networks:
   jenkins-network:

@@ -1,8 +1,8 @@
 def component = [
         front: false,
         back: true,
-        nginx : false,
 ]
+
 pipeline {
     agent any
     environment {
