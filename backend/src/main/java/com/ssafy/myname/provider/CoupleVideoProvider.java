@@ -3,11 +3,12 @@ package com.ssafy.myname.provider;
 import io.openvidu.java.client.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CoupleVideoProvider {
@@ -29,6 +30,7 @@ public class CoupleVideoProvider {
 
         // 활성화된 방이 없으면 만들기
         if(activeRoom==null){
+            log.info("coupleId :{}",coupleId);
             activeRoom = openvidu.createSession(new SessionProperties.Builder().customSessionId(coupleId).build());
         }
 
