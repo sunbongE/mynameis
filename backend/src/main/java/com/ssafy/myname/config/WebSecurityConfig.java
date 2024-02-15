@@ -48,10 +48,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request -> request
 //                        .requestMatchers().permitAll()
                         .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat").permitAll()
-                        .requestMatchers("/", "/auth/**","/couple/create","/matching/questions").permitAll()
+                        .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/refresh/**","/users/**","/matching/**","/couple/**","/chat/**","/history/**","/coin/**").hasRole("USER")
+                        .requestMatchers("/refresh/**","/api/users/**","/matching/**","/couple/**","/chat/**","/history/**","/coin/**").hasRole("USER")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 )
@@ -62,23 +62,40 @@ public class WebSecurityConfig {
         return httpSecurity.build();
     }
 
-    @Bean
-    protected CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
-//        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.setAllowedHeaders((Collections.singletonList("*")));
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setMaxAge(3600L);
-//        corsConfiguration.addAllowedOrigin("http://localhost:3000");
-        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**"));
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",corsConfiguration);
+//    @Bean
+//    protected CorsConfigurationSource corsConfigurationSource(){
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+////        corsConfiguration.addAllowedOrigin("*");
+//        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+////        corsConfiguration.addAllowedHeader("*");
+//        corsConfiguration.setAllowedHeaders((Collections.singletonList("*")));
+////        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setMaxAge(3600L);
+////        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+////        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**","https://i10c207.p.ssafy.io/**"));
+////        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000","https://i10c207.p.ssafy.io"));
+//
+//        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+//        corsConfiguration.setAllowedOrigins(List.of("*"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**",corsConfiguration);
+//
+//        return source;
+//    }
+@Bean
+protected CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.addAllowedOriginPattern("*");
+    corsConfiguration.addAllowedMethod("*");
+    corsConfiguration.setExposedHeaders(List.of("*"));
+    corsConfiguration.addAllowedHeader("*");
+    corsConfiguration.setAllowCredentials(true);
 
-        return source;
-    }
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfiguration);
+
+    return source;
+}
 }
 class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint{
 
