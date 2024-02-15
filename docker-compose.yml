@@ -35,8 +35,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "81:80"
-      - "8001:443"
+      - "80:80"
+      - "4443:443"
     networks:
       - jenkins-network
     volumes:
