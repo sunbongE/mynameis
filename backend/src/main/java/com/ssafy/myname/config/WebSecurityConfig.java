@@ -48,10 +48,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request -> request
 //                        .requestMatchers().permitAll()
                         .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat").permitAll()
-                        .requestMatchers("/", "/auth/**","/couple/create","/matching/questions").permitAll()
+                        .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/refresh/**","/users/**","/matching/**","/couple/**","/chat/**","/history/**","/coin/**").hasRole("USER")
+                        .requestMatchers("/refresh/**","/api/users/**","/matching/**","/couple/**","/chat/**","/history/**","/coin/**").hasRole("USER")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 )
@@ -72,8 +72,11 @@ public class WebSecurityConfig {
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setMaxAge(3600L);
 //        corsConfiguration.addAllowedOrigin("http://localhost:3000");
-        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**"));
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+//        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**","https://i10c207.p.ssafy.io/**"));
+//        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000","https://i10c207.p.ssafy.io"));
+
+        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+        corsConfiguration.setAllowedOrigins(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration);
 

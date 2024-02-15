@@ -1,8 +1,20 @@
 version: '3.3'
-# todo
-# 1. 이름 바꿀것
-# 2. jenkins에 docker hub, github credentials 추가
+
 services:
+<<<<<<< HEAD
+=======
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: mysql
+      MYSQL_ROOT_PASSWORD: 9546
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+
+>>>>>>> cefe23814f37c42a231af2eac47a5e337f23a6c0
   front:
     container_name: front
     image: taehopark/myname-front
@@ -31,3 +43,6 @@ services:
 networks:
   jenkins-network:
     external: true
+
+volumes:
+  mysql:

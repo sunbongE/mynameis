@@ -1,6 +1,11 @@
 def component = [
         front: false,
+<<<<<<< HEAD
         back: true
+=======
+        back: true,
+
+>>>>>>> cefe23814f37c42a231af2eac47a5e337f23a6c0
 ]
 pipeline {
     agent any
@@ -8,14 +13,6 @@ pipeline {
         REPO = "s10-webmobile1-sub2/S10P12C207"
     }
     stages {
-//        stage('Checkout') {
-//            steps {
-//               checkout scmGit(
-//                        branches: [[name: 'develop']],
-//                        extensions: [submodule(parentCredentials: true, trackingSubmodules: true)],
-//                        userRemoteConfigs: [[credentialsId: 'Github-Access-Token', url: 'https://github.com/KPPSC/myname-setting']]
-//                )
-//            }
 
 
 stage('Checkout') {
