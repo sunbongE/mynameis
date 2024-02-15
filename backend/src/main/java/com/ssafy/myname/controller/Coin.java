@@ -9,7 +9,7 @@ import java.security.Principal;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/coin")
+@RequestMapping("/api/coin")
 public class Coin {
 
     @Autowired

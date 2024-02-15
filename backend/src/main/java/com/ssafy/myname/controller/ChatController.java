@@ -28,7 +28,7 @@ public class ChatController {
     private final ChatService chatService;
     private final JwtProvider jwtProvider;
     private final RedisTemplate<String,Object> redisTemplate;
-    @MessageMapping("/chat/message")
+    @MessageMapping("/api/chat/message")
     public void messages(ChatDto msg, @Header("Authorization") String token){
         log.info("message 실행");
         String userId = jwtProvider.validate(token.substring(7));

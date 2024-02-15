@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/matching")
+@RequestMapping("/api/matching")
 @RequiredArgsConstructor
 public class MatchingController {
     private final MatchingService matchingService;

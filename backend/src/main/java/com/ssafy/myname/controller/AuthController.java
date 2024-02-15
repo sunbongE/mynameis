@@ -9,6 +9,7 @@ import com.ssafy.myname.dto.response.email.EmailResponseDto;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.AuthService;
 //import com.ssafy.myname.service.implement.JwtService;
+import com.ssafy.myname.service.implement.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -36,7 +37,7 @@ public class AuthController {
 
     private final JwtProvider jwtProvider;
     private final AuthService authService;
-//    private final JwtService jwtService;
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     @Value("${secret-key}")
     private String secretKey;
@@ -145,16 +146,16 @@ public class AuthController {
         }
     }
 
-//    @Async
-//    protected void sendEmail(String email) {
-//        authService.emailUrl(email);
-//    }
-//
-//    @PatchMapping("/change")
-//    public ResponseEntity<?> emailModify(@RequestBody PasswordChangeDto dto,@RequestParam("email") String email){
-//
-//        ResponseEntity<?> response = authService.emailModify(email, dto.getPassword());
-//        return response;
-//    }
+    @Async
+    protected void sendEmail(String email) {
+        authService.emailUrl(email);
+    }
+
+    @PatchMapping("/change")
+    public ResponseEntity<?> emailModify(@RequestBody PasswordChangeDto dto,@RequestParam("email") String email){
+
+        ResponseEntity<?> response = authService.emailModify(email, dto.getPassword());
+        return response;
+    }
 
 }

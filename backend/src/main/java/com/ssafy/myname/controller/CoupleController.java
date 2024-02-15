@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/couple")
+@RequestMapping("/api/couple")
 @RequiredArgsConstructor
 public class CoupleController {
 
