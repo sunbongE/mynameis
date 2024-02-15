@@ -1,7 +1,6 @@
 def component = [
         front: false,
-        back: true,
-
+        back: true
 ]
 pipeline {
     agent any
