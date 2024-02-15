@@ -62,26 +62,40 @@ public class WebSecurityConfig {
         return httpSecurity.build();
     }
 
-    @Bean
-    protected CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
-//        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.setAllowedHeaders((Collections.singletonList("*")));
-//        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setMaxAge(3600L);
-//        corsConfiguration.addAllowedOrigin("http://localhost:3000");
-//        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**","https://i10c207.p.ssafy.io/**"));
-//        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000","https://i10c207.p.ssafy.io"));
+//    @Bean
+//    protected CorsConfigurationSource corsConfigurationSource(){
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+////        corsConfiguration.addAllowedOrigin("*");
+//        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+////        corsConfiguration.addAllowedHeader("*");
+//        corsConfiguration.setAllowedHeaders((Collections.singletonList("*")));
+////        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setMaxAge(3600L);
+////        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+////        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**","https://i10c207.p.ssafy.io/**"));
+////        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000","https://i10c207.p.ssafy.io"));
+//
+//        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+//        corsConfiguration.setAllowedOrigins(List.of("*"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**",corsConfiguration);
+//
+//        return source;
+//    }
+@Bean
+protected CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.addAllowedOriginPattern("*");
+    corsConfiguration.addAllowedMethod("*");
+    corsConfiguration.setExposedHeaders(List.of("*"));
+    corsConfiguration.addAllowedHeader("*");
+    corsConfiguration.setAllowCredentials(true);
 
-        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-        corsConfiguration.setAllowedOrigins(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",corsConfiguration);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfiguration);
 
-        return source;
-    }
+    return source;
+}
 }
 class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint{
 
