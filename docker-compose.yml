@@ -12,8 +12,8 @@ services:
     command : npm start
     ports:
       - "3000:3000"
-#    networks:
-#      - jenkins-network
+    networks:
+      - jenkins-network
 
   back:
     container_name: back
@@ -24,9 +24,26 @@ services:
     restart: always
     ports:
       - "8081:8081"
-#    networks:
-#      - jenkins-network
+    networks:
+      - jenkins-network
 
-#networks:
-#  jenkins-network:
-#    external: true
+  nginx:
+    container_name: nginx
+    image: taehopark/myname-nginx
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - jenkins-network
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt
+    depends_on:
+      - back
+
+networks:
+  jenkins-network:
+    external: true
