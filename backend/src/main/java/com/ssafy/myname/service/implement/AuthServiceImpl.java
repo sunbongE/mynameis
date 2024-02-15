@@ -10,11 +10,11 @@ import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.*;
 import com.ssafy.myname.dto.response.email.EmailResponseDto;
-import com.ssafy.myname.provider.EmailProvider;
+//import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.provider.JwtProvider;
-import com.ssafy.myname.provider.PhoneProvider;
+//import com.ssafy.myname.provider.PhoneProvider;
 import com.ssafy.myname.service.AuthService;
-import com.ssafy.myname.service.RedisService;
+//import com.ssafy.myname.service.RedisService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,10 +34,10 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PhoneCertificationRepository phoneCertificationRepository;
-    private final EmailProvider emailProvider;
-    private final PhoneProvider phoneProvider;
+//    private final EmailProvider emailProvider;
+//    private final PhoneProvider phoneProvider;
     private final JwtProvider jwtProvider;
-    private final RedisService redisService;
+//    private final RedisService redisService;
     private final TagRepository tagRepository;
 
 
@@ -97,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
             // 회원 저장.
             // 리프레시토큰 저장.
             String token = jwtProvider.create(userId, "RT");
-            redisService.setDataExpire(userId,token,60*60*24*15); // 15일
+//            redisService.setDataExpire(userId,token,60*60*24*15); // 15일
 
 
         }catch (Exception exception){
@@ -127,17 +127,19 @@ public class AuthServiceImpl implements AuthService {
             boolean isMatched = passwordEncoder.matches(password, encodedPassword);
             if (!isMatched) return SignInResDto.fail(); // 비번이 다르면 실패안내.
 
+            //=========================================================================
             // 엑세스 토큰 발급
-            token = jwtProvider.create(userId, "AT");
+//            token = jwtProvider.create(userId, "AT");
+//
+//            // 레디스에서 리프레시토큰 가져오기.
+//            refreshToken = redisService.getData(userId);
+//
+//            if (refreshToken == null) {                     // 리프레시 토큰이 없는 경우 새로 발급
+//                // refreshToken만들고 저장하는 메서드 호출(userId)
+//                refreshToken = jwtProvider.createSaveRefreshToken(userId);
+//            }
 
-            // 레디스에서 리프레시토큰 가져오기.
-            refreshToken = redisService.getData(userId);
-
-            if (refreshToken == null) {                     // 리프레시 토큰이 없는 경우 새로 발급
-                // refreshToken만들고 저장하는 메서드 호출(userId)
-                refreshToken = jwtProvider.createSaveRefreshToken(userId);
-            }
-
+            //=========================================================================
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
@@ -145,78 +147,78 @@ public class AuthServiceImpl implements AuthService {
         return SignInResDto.success(token, refreshToken);
     }
 
-    @Override
-    public void emailUrl(String email) {
-        try{
-            boolean isSuccess = emailProvider.sendMail(email);
-            if(!isSuccess) {
-                logger.info("** 없는 이메일 ");
-            }
+//    @Override
+//    public void emailUrl(String email) {
+//        try{
+//            boolean isSuccess = emailProvider.sendMail(email);
+//            if(!isSuccess) {
+//                logger.info("** 없는 이메일 ");
+//            }
+//
+//        }catch (Exception e){
+//            logger.info(e.getMessage());
+//
+//        }
+//        logger.info("** 이메일 전송");
+//    }
+//
+//    @Override
+//    public ResponseEntity<?> emailModify(String email, String password) {
+//        try {
+//            User user = userRepository.findByEmail(email);
+//            String newPassword = passwordEncoder.encode(password);
+//            user.setPassword(newPassword);
+//            userRepository.save(user);
+//
+//            return ResponseDto.ok();
+//        }catch (Exception e){
+//            logger.info(e.getMessage());
+//            return ResponseDto.databaseError();
+//        }
+//    }
 
-        }catch (Exception e){
-            logger.info(e.getMessage());
 
-        }
-        logger.info("** 이메일 전송");
-    }
-
-    @Override
-    public ResponseEntity<?> emailModify(String email, String password) {
-        try {
-            User user = userRepository.findByEmail(email);
-            String newPassword = passwordEncoder.encode(password);
-            user.setPassword(newPassword);
-            userRepository.save(user);
-
-            return ResponseDto.ok();
-        }catch (Exception e){
-            logger.info(e.getMessage());
-            return ResponseDto.databaseError();
-        }
-    }
-
-
-    @Override // 휴대폰 번호로 인증번호 발급해준다
-    public ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto) {
-        try {
-            String phoneId = dto.getPhoneId();
-
-            boolean isExistId = userRepository.existsByPhone(phoneId); //<==============
-            if(isExistId) return PhoneCertificationResponseDto.duplicateId();
-
-            String certificationNumber = CertificationNumber.getCertificationNumber();
-            boolean isSuccess = phoneProvider.sendCertificationPhone(phoneId, certificationNumber);
-            if(!isSuccess) return PhoneCertificationResponseDto.mailSendFail();
-
-            PhoneCertification phonecertification = new PhoneCertification(phoneId, certificationNumber);
-            phoneCertificationRepository.save(phonecertification);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-        return PhoneCertificationResponseDto.success();
-    }
-
-    @Override
-    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto) {
-        try {
-//            String certificationId = dto.getCertificationId();
-//            String phone = dto.getPhone();
-            String phoneId = dto.getPhoneId();
-            String certificationNumber = dto.getCertificationNumber();
-
-            PhoneCertification phoneCertification = phoneCertificationRepository.findByPhoneId(phoneId);
-            if (phoneCertification == null) return CheckPhoneCertificationResDto.fail();
-
-            if (!isPhoneMatched(phoneCertification, phoneId, certificationNumber)) {
-                return SignUpResDto.fail();
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-        return CheckPhoneCertificationResDto.success();
-    }
+//    @Override // 휴대폰 번호로 인증번호 발급해준다
+//    public ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto) {
+//        try {
+//            String phoneId = dto.getPhoneId();
+//
+//            boolean isExistId = userRepository.existsByPhone(phoneId); //<==============
+//            if(isExistId) return PhoneCertificationResponseDto.duplicateId();
+//
+//            String certificationNumber = CertificationNumber.getCertificationNumber();
+//            boolean isSuccess = phoneProvider.sendCertificationPhone(phoneId, certificationNumber);
+//            if(!isSuccess) return PhoneCertificationResponseDto.mailSendFail();
+//
+//            PhoneCertification phonecertification = new PhoneCertification(phoneId, certificationNumber);
+//            phoneCertificationRepository.save(phonecertification);
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//            return ResponseDto.databaseError();
+//        }
+//        return PhoneCertificationResponseDto.success();
+//    }
+//
+//    @Override
+//    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto) {
+//        try {
+////            String certificationId = dto.getCertificationId();
+////            String phone = dto.getPhone();
+//            String phoneId = dto.getPhoneId();
+//            String certificationNumber = dto.getCertificationNumber();
+//
+//            PhoneCertification phoneCertification = phoneCertificationRepository.findByPhoneId(phoneId);
+//            if (phoneCertification == null) return CheckPhoneCertificationResDto.fail();
+//
+//            if (!isPhoneMatched(phoneCertification, phoneId, certificationNumber)) {
+//                return SignUpResDto.fail();
+//            }
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//            return ResponseDto.databaseError();
+//        }
+//        return CheckPhoneCertificationResDto.success();
+//    }
 
     // 회원 아이디가 존재하는지 확인
     private  boolean isExistUserId(String userId){

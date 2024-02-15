@@ -2,7 +2,7 @@ package com.ssafy.myname.provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.myname.dto.response.ResponseDto;
-import com.ssafy.myname.service.RedisService;
+//import com.ssafy.myname.service.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -24,7 +24,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    private final RedisService redisService;
+//    private final RedisService redisService;
 
     @Value("${secret-key}")
     private String secretKey;
@@ -79,7 +79,7 @@ public class JwtProvider {
 
     public String createSaveRefreshToken(String userId) {
         String refreshToken = create(userId, "RT");
-        redisService.setDataExpire(userId, refreshToken, 60 * 60 * 24 * 15); // 저장 15동안.
+//        redisService.setDataExpire(userId, refreshToken, 60 * 60 * 24 * 15); // 저장 15동안.
         return refreshToken;
     }
 
