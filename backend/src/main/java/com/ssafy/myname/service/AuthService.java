@@ -6,17 +6,17 @@ import com.ssafy.myname.dto.response.email.EmailResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
-
+    public void emailUrl(String email);
     ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto);
     // 이메일로 인증번호 전송.
 
     //=======================================================
 
+//     휴대폰 인증
+    ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto);
+
     // 휴대폰 인증
-//    ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto);
-//
-//    // 휴대폰 인증
-//    ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto);
+    ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto);
     //=======================================================
 
     // 회원가입
@@ -26,7 +26,7 @@ public interface AuthService {
 //    void emailUrl(String userId);
 //
 //
-//    ResponseEntity<?> emailModify(String email, String password);
+    ResponseEntity<?> emailModify(String email, String password);
 
 
 
