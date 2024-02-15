@@ -1,6 +1,5 @@
 def component = [
         front: false,
-//         redis: true,
         back: true
 ]
 pipeline {
