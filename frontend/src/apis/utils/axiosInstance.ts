@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
-const BASEURL = 'http://i10c207.p.ssafy.io/api';
+const BASEURL = 'http://i10c207.p.ssafy.io:8080/api';
 
 export const instance = axios.create({
   // baseURL: 'http://localhost:8080/',
