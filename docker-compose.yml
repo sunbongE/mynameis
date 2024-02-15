@@ -1,20 +1,7 @@
 version: '3.3'
 
 services:
-<<<<<<< HEAD
-=======
-  database:
-    image: mysql:latest
-    environment:
-      MYSQL_DATABASE: mysql
-      MYSQL_ROOT_PASSWORD: 9546
-      MYSQL_ROOT_HOST: '%'
-    ports:
-      - 3306:3306
-    volumes:
-      - mysql:/var/lib/mysql
 
->>>>>>> cefe23814f37c42a231af2eac47a5e337f23a6c0
   front:
     container_name: front
     image: taehopark/myname-front
@@ -25,8 +12,8 @@ services:
     command : npm start
     ports:
       - "3000:3000"
-    networks:
-      - jenkins-network
+#    networks:
+#      - jenkins-network
 
   back:
     container_name: back
@@ -37,12 +24,9 @@ services:
     restart: always
     ports:
       - "8081:8081"
-    networks:
-      - jenkins-network
+#    networks:
+#      - jenkins-network
 
-networks:
-  jenkins-network:
-    external: true
-
-volumes:
-  mysql:
+#networks:
+#  jenkins-network:
+#    external: true
