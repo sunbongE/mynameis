@@ -13,6 +13,7 @@ import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.GetUserInfoResDto;
 import com.ssafy.myname.provider.JwtProvider;
 //import com.ssafy.myname.service.AlarmService;
+import com.ssafy.myname.service.AlarmService;
 import com.ssafy.myname.service.AuthService;
 import com.ssafy.myname.service.UserService;
 import com.ssafy.myname.service.implement.AuthServiceImpl;
@@ -39,7 +40,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-//    private final AlarmService alarmService;
+    private final AlarmService alarmService;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -125,38 +126,38 @@ public class UserController {
      * @param principal
      * @return
      */
-//    @GetMapping("/alarm")
-//    public ResponseEntity<?> getAlarm(Principal principal){
-//        logger.info("** getAlarm 실행");
-//        String userId = principal.getName();
-//        try{
-//            ResponseEntity<?> response = alarmService.getAlarm(userId);
-//            return response;
-//        }catch (Exception e){
-//            logger.info(e.getMessage());
-//            return ResponseDto.databaseError();
-//        }
-//    }
-//
-//    /**
-//     * 알람 읽음처리하는 로직
-//     * @param dto
-//     * @return
-//     */
-//    @PostMapping("/read")
-//    public ResponseEntity<?> readAlarm(@RequestBody ReadAlarmDto dto){
-//        List<Long> alarmsId = dto.getAlarmsId();
-//        try {
-//            if(alarmsId.size()==0) return null;
-//
-//            ResponseEntity<?> response = alarmService.readAlarm(alarmsId);
-//            return response;
-//
-//        }catch (Exception e){
-//            logger.info(e.getMessage());
-//            return ResponseDto.databaseError();
-//        }
-//    }
+    @GetMapping("/alarm")
+    public ResponseEntity<?> getAlarm(Principal principal){
+        logger.info("** getAlarm 실행");
+        String userId = principal.getName();
+        try{
+            ResponseEntity<?> response = alarmService.getAlarm(userId);
+            return response;
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+    }
+
+    /**
+     * 알람 읽음처리하는 로직
+     * @param dto
+     * @return
+     */
+    @PostMapping("/read")
+    public ResponseEntity<?> readAlarm(@RequestBody ReadAlarmDto dto){
+        List<Long> alarmsId = dto.getAlarmsId();
+        try {
+            if(alarmsId.size()==0) return null;
+
+            ResponseEntity<?> response = alarmService.readAlarm(alarmsId);
+            return response;
+
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+    }
 
 
 

@@ -48,6 +48,8 @@ dependencies {
 	// openvidu
 	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.29.0'
 
+//	implementation("io.openvidu:openvidu-java-client:2.29.0")
+
 	implementation 'org.json:json:20230618'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
