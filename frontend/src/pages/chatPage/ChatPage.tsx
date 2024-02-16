@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Dispatch } from 'react';
 import styled from 'styled-components';
-import ChatHeader from '../../components/header/ChatHeader';
+import ChatHeader from '../../components/Header/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
 import SenderMessageForm from '../../components/chat/SendMessageForm';
 

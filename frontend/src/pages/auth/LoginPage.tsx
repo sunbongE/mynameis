@@ -9,8 +9,8 @@ import { useRecoilState, useRecoilCallback, useRecoilValue } from 'recoil';
 import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer';
 
 const StyledLoginContainer = styled.div`
   width: 537px;
@@ -80,8 +80,8 @@ function Login() {
 
   const [coinOpen, setCoinOpen] = useState<boolean>(false);
   const handleCoinPage = () => {
-    setCoinOpen(!coinOpen)
-  }
+    setCoinOpen(!coinOpen);
+  };
 
   const [scrolling, setScrolling] = useState<boolean>(false);
 
@@ -101,10 +101,10 @@ function Login() {
     navigate('/signup');
   };
 
-  const [user, setUser] = useRecoilState(userInfoState)
+  const [user, setUser] = useRecoilState(userInfoState);
 
   const onLogin = async () => {
-    console.log(user)
+    console.log(user);
     try {
       // console.log('logindata', loginData);
       const response = await userLogin(loginData);
@@ -115,11 +115,11 @@ function Login() {
         setAccessToken(response.token);
         // 프론트에서 토큰 쿠키 저장 : name, value, 만료기한
         Cookies.set('accessToken', response.token, { expires: 7 });
-        
+
         if (Cookies.get('accessToken')) {
           const userInfo = await getUserInfo();
           setUser(userInfo);
-          
+
           console.log('userInfo (after setUser) ', userInfo);
           console.log('로그인 성공');
         }
@@ -133,7 +133,7 @@ function Login() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       <Header
         isLogin={isLogin}
         onClickLogin={handleLogin}

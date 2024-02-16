@@ -5,8 +5,8 @@ import { useState } from 'react';
 import CustomDropdown from '../../components/dropdown/Dropdown';
 import { userEmailAuthentication } from '../../apis/services/user/user';
 import { isLoginSelector } from '../../recoil/selectors/isLoginSelector';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer';
 import { useRecoilValue, useRecoilCallback } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
@@ -156,7 +156,7 @@ function EmailAuth() {
           </Button>
         </StyledEmailInputContainer>
       </StyledEmailContainer>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

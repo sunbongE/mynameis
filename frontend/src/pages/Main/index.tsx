@@ -3,9 +3,8 @@ import Modal from 'react-modal';
 import styled from 'styled-components';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/header/Header';
 import MainSection from '../../modules/mainModules/MainSection';
-import Footer from '../../components/footer/Footer';
+import Footer from '../../components/Footer';
 import Cookies from 'js-cookie';
 import { useRecoilState, useRecoilValue, RecoilValue, useRecoilCallback } from 'recoil';
 import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
@@ -14,8 +13,8 @@ import { userInfoState } from '../../recoil/atoms/userState';
 import ActionButton from '../../components/actionButton/ActionButton';
 import CoinList from '../../components/coinListItem/CoinList';
 import MyModal from '../../components/modal/MyModal';
-
 import ChatPage from '../chatPage/ChatPage';
+import Header from '../../components/Header/Header';
 
 interface Position {
   x: number;
