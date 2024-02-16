@@ -1,10 +1,16 @@
 package com.ssafy.myname.provider;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.myname.dto.response.ResponseDto;
 //import com.ssafy.myname.service.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+=======
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+>>>>>>> 9b8b0d6d0cb03d2dc78694eb8362301f18f7236b
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

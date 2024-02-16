@@ -182,50 +182,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-
-    @Override // 휴대폰 번호로 인증번호 발급해준다
-    public ResponseEntity<? super PhoneCertificationResponseDto> phoneCertification(PhoneCertificationRequestDto dto) {
-        try {
-            String phoneId = dto.getPhoneId();
-
-            boolean isExistId = userRepository.existsByPhone(phoneId); //<==============
-            if(isExistId) return PhoneCertificationResponseDto.duplicateId();
-
-            String certificationNumber = CertificationNumber.getCertificationNumber();
-            boolean isSuccess = phoneProvider.sendCertificationPhone(phoneId, certificationNumber);
-            if(!isSuccess) return PhoneCertificationResponseDto.mailSendFail();
-
-            PhoneCertification phonecertification = new PhoneCertification(phoneId, certificationNumber);
-            phoneCertificationRepository.save(phonecertification);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-        return PhoneCertificationResponseDto.success();
-    }
-
-    @Override
-    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(CheckPhoneCertificationReqDto dto) {
-        try {
-//            String certificationId = dto.getCertificationId();
-//            String phone = dto.getPhone();
-            String phoneId = dto.getPhoneId();
-            String certificationNumber = dto.getCertificationNumber();
-
-            PhoneCertification phoneCertification = phoneCertificationRepository.findByPhoneId(phoneId);
-            if (phoneCertification == null) return CheckPhoneCertificationResDto.fail();
-
-            if (!isPhoneMatched(phoneCertification, phoneId, certificationNumber)) {
-                return SignUpResDto.fail();
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-        return CheckPhoneCertificationResDto.success();
-    }
-
-    // 회원 아이디가 존재하는지 확인
     private  boolean isExistUserId(String userId){
         return userRepository.existsByUserId(userId);
     }
