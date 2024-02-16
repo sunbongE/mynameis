@@ -68,13 +68,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-tasks.register('copyApplication', Copy) {
-	from 'secure-settings'
-	include "*.properties"
-	into 'src/main/resources'
-}
-
-processResources {
-	dependsOn 'copyApplication'
-}

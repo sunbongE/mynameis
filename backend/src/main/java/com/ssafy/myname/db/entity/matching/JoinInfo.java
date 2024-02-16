@@ -1,4 +1,4 @@
-package com.ssafy.myname.db.entity.meeting;
+package com.ssafy.myname.db.entity.matching;
 
 import com.ssafy.myname.db.entity.User;
 import jakarta.persistence.*;

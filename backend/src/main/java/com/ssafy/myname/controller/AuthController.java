@@ -18,10 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +32,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final JwtProvider jwtProvider;
     private final AuthService authService;
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -57,7 +53,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/id-check")
-    public ResponseEntity<? super IdCheckResponseDto> idCheck(@RequestBody @Valid IdCheckRequestDto requestBody) {
+    public ResponseEntity<? super IdCheckResponseDto> idCheck(@RequestBody @Valid IdCheckRequestDto requestBody){
         ResponseEntity<? super IdCheckResponseDto> response = authService.idCheck(requestBody);
         return response;
     }
@@ -87,7 +83,7 @@ public class AuthController {
     @PostMapping("/sign-up")
     public ResponseEntity<? super SignUpResDto> signUp(
             @RequestBody @Valid SignUpReqDto reqBody
-    ) {
+            ){
 
         ResponseEntity<? super SignUpResDto> response = authService.signUp(reqBody);
         return response;
@@ -96,9 +92,9 @@ public class AuthController {
     @PostMapping("/sign-in")
     public ResponseEntity<? super SignInResDto> signIn(
             @RequestBody @Valid SignInReqDto reqBody
-    ) {
+    ){
         ResponseEntity<? super SignInResDto> response = authService.signIn(reqBody);
-        return response;
+        return  response;
     }
 
     @PostMapping("/reissue")

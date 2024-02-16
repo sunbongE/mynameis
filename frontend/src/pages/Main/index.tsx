@@ -32,6 +32,11 @@ const ImgContainer = styled.div`
   height: 400px;
   border: 1px solid black;
 `;
+interface Review {
+  id: number;
+  text: string;
+  reviewer: string;
+}
 
 const Main = () => {
   const navigate = useNavigate();

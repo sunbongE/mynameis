@@ -6,12 +6,7 @@ import com.ssafy.myname.dto.response.ResponseDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -20,7 +15,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-@RequiredArgsConstructor
 @Component
 public class JwtProvider {
 
@@ -28,6 +22,7 @@ public class JwtProvider {
 
     @Value("${secret-key}")
     private String secretKey;
+    public String create(String userId){
 
     public String create(String userId, String type) {
         Date expiredDate;
@@ -37,40 +32,25 @@ public class JwtProvider {
             expiredDate = Date.from(Instant.now().plus(15, ChronoUnit.DAYS)); // 15일.
         }
 
-        return Jwts.builder()
+        String jwt = Jwts.builder()
+                .signWith(key, SignatureAlgorithm.HS256)
                 .setSubject(userId).setIssuedAt(new Date()).setExpiration(expiredDate)
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
+        return jwt;
     }
-
-//    public Boolean isTokenExpired(String token){
-//        try {
-//
-//        Claims claims = Jwts.parserBuilder()
-//                .setSigningKey(getSignInKey())
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody();
-//            System.out.println("claims.getExpiration().before(new Date()) = " + claims.getExpiration().before(new Date()));
-//        return claims.getExpiration().before(new Date());
-//        }catch (ExpiredJwtException e){
-//            return false;
-//        }
-//    }
-
-    public String validate(String jwt) {
+    public String validate(String jwt){
         String userId;
-//        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(jwt)
                     .getBody();
 
             userId = claims.getSubject();
 
-        }catch (Exception exception) {
+        }catch (Exception exception){
             exception.printStackTrace();
             return null;
         }

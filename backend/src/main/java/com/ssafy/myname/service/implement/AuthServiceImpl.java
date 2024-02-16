@@ -2,10 +2,9 @@ package com.ssafy.myname.service.implement;
 
 import com.ssafy.myname.commons.CertificationNumber;
 import com.ssafy.myname.db.entity.Certification;
-import com.ssafy.myname.db.entity.PhoneCertification;
-import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
-import com.ssafy.myname.db.repository.*;
+import com.ssafy.myname.db.repository.CertificationRepository;
+import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.*;
@@ -38,7 +37,6 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PhoneCertificationRepository phoneCertificationRepository;
     private final EmailProvider emailProvider;
-    private final PhoneProvider phoneProvider;
     private final JwtProvider jwtProvider;
     private final RedisService redisService;
     private final TagRepository tagRepository;
@@ -70,25 +68,32 @@ public class AuthServiceImpl implements AuthService {
 
 
 
-    @Override // 회원가입
+    @Override
     public ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto) {
         logger.info("signUp, dto:{}",dto.toString());
         try {
-            // 아이디 중복확인
+
             String userId = dto.getUserId();
             if(isExistUserId(userId)) return SignUpResDto.duplicateId();//이미 있는 아이디인경우.
-            // 이메일 중복확인
+
             String email = dto.getEmail();
-            if(isExistUserEmail(email)) return SignUpResDto.duplicateEmail();//이미 있는 email인경우.
-            // 전화번호 중복확인
-            String phone = dto.getPhone();
-            if(isExistUserPhone(phone)) return SignUpResDto.duplicatePhone();//이미 있는 phone인경우.
-            // 비밀번호 암호화.
+            String certificationNumber = dto.getCertificationNumber();
+
+            Certification certification = certificationRepository.findByUserId(userId);
+            System.out.println("certification.toString() = " + certification.toString());
+            System.out.println("SignUpReqDto = " + dto.toString());
+            if(!isMatched(certification, email, certificationNumber)){
+                return SignUpResDto.fail();
+            }
+
             String password = dto.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             dto.setPassword(encodedPassword);
 
             User user = new User(dto);
+//            System.out.println("user = " + user.toString());
+//            System.out.println(user.getPassword().length());
+            LOGGER.info("[signUp], user:{}",user.toString());
             userRepository.save(user);
 
             List<String> tagNames = dto.getTags();
@@ -111,24 +116,20 @@ public class AuthServiceImpl implements AuthService {
         return SignUpResDto.success();
     }
 
-
-
-    @Override // 로그인.
+    @Override
     public ResponseEntity<? super SignInResDto> signIn(SignInReqDto dto) {
         String token = null;
-        String refreshToken=null;
 
-        try {
-            // 회원아이디로 회원엔터티 조회
+        try{
+
             String userId = dto.getUserId();
             User user = userRepository.findByUserId(userId);
-            if (user == null) return SignInResDto.fail(); // 회원이 없으면 로그인 실패안내
+            if(user==null) return SignInResDto.fail();
 
-            // 입력받은 비밀번호 암호화 후 db의 비밀번호와 비교
             String password = dto.getPassword();
-            String encodedPassword = user.getPassword();
+            String encodedPassword =user.getPassword();
             boolean isMatched = passwordEncoder.matches(password, encodedPassword);
-            if (!isMatched) return SignInResDto.fail(); // 비번이 다르면 실패안내.
+            if(!isMatched) return SignInResDto.fail();
 
             //=========================================================================
             // 엑세스 토큰 발급
@@ -147,7 +148,8 @@ public class AuthServiceImpl implements AuthService {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-        return SignInResDto.success(token, refreshToken);
+
+        return SignInResDto.success(token);
     }
 
     @Override
@@ -241,8 +243,4 @@ public class AuthServiceImpl implements AuthService {
                 certification.getCertificationNumber().equals(CertificationNumber);
     }
 
-    private boolean isPhoneMatched(PhoneCertification phoneCertification, String phone, String certificationNumber) {
-        return phoneCertification.getPhoneId().equals(phone) &&
-                phoneCertification.getCertificationNumber().equals(certificationNumber);
-    }
 }

@@ -14,9 +14,6 @@ const StyledIconContainer = styled.div<IconProps>`
   height: ${(props) => props.height || 'auto'};
   margin-right: ${(props) => props.marginRight || undefined};
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const StyledIcon = styled.img`
@@ -32,20 +29,6 @@ const StyledChildrenContainer = styled.div`
   color: #fff;
 `;
 
-/**
- * Icon 컴포넌트
- *
- * [필수]
- * - src : '/icons/check.svg'와 같이 icon 경로 입력. / config에서 경로 선언 후 가져와서 사용하는 것을 추천
- *
- * [선택]
- * - width : '12px' 과 같이 크기 단위와 함께 지정 | '100%'
- * - height : '12px' 과 같이 크기 단위와 함께 지정 | '100%'
- * - children
- * @author 김아현
- * @param props
- * @returns
- */
 const Icon = (props: IconProps) => {
   return (
     <StyledIconContainer {...props}>

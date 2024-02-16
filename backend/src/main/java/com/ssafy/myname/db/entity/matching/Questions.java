@@ -1,4 +1,4 @@
-package com.ssafy.myname.db.entity.meeting;
+package com.ssafy.myname.db.entity.matching;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +13,5 @@ public class Questions {
     private int questionId; // 식별자.
 
     @NotNull
-    @Column(name = "contents")
-    private String contents; // 질문
+    private String question; // 질문
 }

@@ -1,7 +1,6 @@
 export const Quote: string = '/icons/quote.svg';
 export const Heart_Pink: string = '/icons/pinkHeart.svg';
 export const Heart_Purple: string = '/icons/purpleHeart.svg';
-export const Coin: string = '/icons/coin.svg';
 export const Notice: string = '/icons/notice.svg';
 export const Bell: string = '/icons/bell.svg';
 export const Alarm: string = '/icons/alarm.svg';
@@ -34,3 +33,4 @@ export const Video: string = '/icons/video.svg';
 export const Warn: string = '/icons/warn.svg';
 export const Down: string = '/icons/down.svg';
 export const Close: string = '/icons/close.svg';
+export const Coin: string = '/icons/coin.svg';

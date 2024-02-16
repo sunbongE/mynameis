@@ -3,9 +3,7 @@ package com.ssafy.myname.commons;
 public interface ResponseMessage {
     String SUCCESS = "Success.";
     String VALIDATION_FAIL = "Validation_fail.";
-    String EXPIRATION_FAIL = "Expiration_fail.";
     String DUPLICATE_ID = "Duplicate_id.";
-    String DUPLICATE_EMAIL = "Duplicate_email.";
 
     String SING_IN_FAIL ="Login information mismatch.";
 

@@ -21,7 +21,6 @@ public interface AuthService {
 
     // 회원가입
     ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto);
-    // 로그인
     ResponseEntity<? super SignInResDto> signIn(SignInReqDto dto);
 //    void emailUrl(String userId);
 //
