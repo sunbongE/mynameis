@@ -23,26 +23,26 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
         config.setApplicationDestinationPrefixes("/api/pub");   // 메시지를 발행.
     }
 
-//    @Override
-//    public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/ws-stomp")
-//                .setAllowedOrigins(
-//                        "http://localhost:3000", "http://localhost:8081",
-//                        "https://i10c207.p.ssafy.io", "https://mynameis.site")
-//                .setAllowedOriginPatterns(
-//                        "http://localhost:3000/**", "http://localhost:8081/**",
-//                        "https://i10c207.p.ssafy.io/**", "https://mynameis.site/**")
-//                .withSockJS()
-//                .setDisconnectDelay(30 * 1000)
-//                .setClientLibraryUrl(
-//                        "https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.4/sockjs.min.js");
-//
-//    }
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*");
-                 }
+        registry.addEndpoint("/ws-stomp")
+                .setAllowedOrigins(
+                        "http://localhost:3000", "http://localhost:8081",
+                        "https://i10c207.p.ssafy.io", "https://mynameis.site")
+                .setAllowedOriginPatterns(
+                        "http://localhost:3000/**", "http://localhost:8081/**",
+                        "https://i10c207.p.ssafy.io/**", "https://mynameis.site/**")
+                .withSockJS()
+                .setDisconnectDelay(30 * 1000)
+                .setClientLibraryUrl(
+                        "https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.4/sockjs.min.js");
+
+    }
+
+//    @Override
+//    public void registerStompEndpoints(StompEndpointRegistry registry) {
+//        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*");
+//                 }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
