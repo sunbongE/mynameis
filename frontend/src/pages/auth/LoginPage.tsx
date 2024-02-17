@@ -115,11 +115,11 @@ function Login() {
         setAccessToken(response.token);
         // 프론트에서 토큰 쿠키 저장 : name, value, 만료기한
         Cookies.set('accessToken', response.token, { expires: 7 });
-        
+
         if (Cookies.get('accessToken')) {
           const userInfo = await getUserInfo();
           setUser(userInfo);
-          
+
           console.log('userInfo (after setUser) ', userInfo);
           console.log('로그인 성공');
         }
@@ -133,7 +133,7 @@ function Login() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       <Header
         isLogin={isLogin}
         onClickLogin={handleLogin}
@@ -151,9 +151,7 @@ function Login() {
           <SimpleInput placeholder='아이디' value={loginData.userId} onInputChange={handleUserIdChange} />
           <PasswordInput placeholder='비밀번호' value={loginData.password} onInputChange={handlePasswordChange} onEnterKeyUp={onLogin} />
           <StyledLoginText onClick={goToEmailAuth}>비밀번호를 잊어버리셨나요?</StyledLoginText>
-          <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={onLogin}>
-            로그인
-          </Button>
+          <Button width='300px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' onButtonClick={onLogin} $children={"로그인"} />
         </StyledLoginInputContainer>
         <StyledLoginText onClick={goToSignUp}>계정이 없으신가요? 회원가입하러 가기</StyledLoginText>
       </StyledLoginContainer>

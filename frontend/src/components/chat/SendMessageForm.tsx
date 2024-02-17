@@ -179,7 +179,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   return (
     <StyledMsgFormContainer>
       <SimpleInput2 placeholder='메세지를 입력하세요' value={message} height='40px' fontSize='12px' onInputChange={handleMessageChange} onEnterKeyUp={handleEnterPress} />
-      <Button backgroundColor='#E1A4B4' width='45px' height='40px' borderRadius='10px' children={<Icon src={SendMsg} />} onButtonClick={handleSendMessage} />
+      <Button $backgroundColor='#E1A4B4' width='45px' height='40px' $borderRadius='10px' $children={<Icon src={SendMsg} />} onButtonClick={handleSendMessage} />
     </StyledMsgFormContainer>
   );
 };

@@ -22,7 +22,7 @@ const progressBarAnimation = keyframes`
 `;
 
 interface StyledReviewContainerProps {
-  slideWidth: number;
+  $slideWidth: number;
 }
 
 const StyledMainStartContainer = styled.div`
@@ -61,7 +61,7 @@ const StyledReviewContainer = styled.div<StyledReviewContainerProps>`
   margin-top: 60px;
   overflow: hidden;
   margin-bottom: 60px;
-  width: ${(props) => props.slideWidth};
+  width: ${(props) => props.$slideWidth};
 `;
 
 
@@ -111,7 +111,7 @@ const MainReview = () => {
     <StyledMainStartContainer>
       <StyledReviewSubTitle>REVIEW</StyledReviewSubTitle>
       <StyledReviewTitle>사용자들은 이렇게 말해요</StyledReviewTitle>
-      <StyledReviewContainer slideWidth={reviews.length * 100} key={currentReviewIndex} >
+      <StyledReviewContainer $slideWidth={reviews.length * 100} key={currentReviewIndex} >
         <ReviewCard color={currentReviewIndex % 2 === 0 ? 'pink' : 'dpink'} review={reviews[currentReviewIndex]} />
         <ProgressBar />
       </StyledReviewContainer>

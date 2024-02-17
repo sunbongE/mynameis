@@ -51,9 +51,7 @@ const FailModal = (props: FailModalProps) => {
         여전히 많은 사용자들이 당신을 기다리고 있어요. <br />
         다음 기회에서 더 좋은 인연이 있을 거예요!
       </ModalContent>
-      <Button onButtonClick={handleClick} backgroundColor='#e1a4b4' width='168px' height='48px' borderRadius='10px' fontColor='white'>
-        메인으로 가기
-      </Button>
+      <Button onButtonClick={handleClick} $backgroundColor='#e1a4b4' width='168px' height='48px' $borderRadius='10px' $fontColor='white' $children={"메인으로 가기"} />
     </ModalContainer>
   );
 };

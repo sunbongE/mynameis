@@ -110,18 +110,18 @@ function CoinList(props: CoinProps) {
     // fail_url:'http://localhost:3000',
   });
 
-  const [payApproveData, setPayApproveData ] = useState({
+  const [payApproveData, setPayApproveData] = useState({
     tid: window.localStorage.getItem("tid"),
     partner_user_id: userInfo?.userId,
     partner_order_id: payState.partner_order_id,
-    pg_token:'',
+    pg_token: '',
   })
 
   const [coinPaymentData, setCoinPaymentData] = useState({
-    tid:'',
+    tid: '',
     partner_user_id: userInfo ? userInfo.userId : '',
     partner_order_id: coinInfoData.partner_order_id,
-    pg_token:''
+    pg_token: ''
   })
 
   // useEffect(() => {
@@ -139,14 +139,14 @@ function CoinList(props: CoinProps) {
         // const tid = response.tid;
         window.localStorage.setItem("tid", response.tid);
         // const pcUrl = response.next_redirect_pc_url;
-        
+
         setPayState((prevPayState) => ({
           ...prevPayState,
           tid: response.tid,
           payUrl: response.next_redirect_pc_url,
           partner_order_id: coinPaymentData.partner_order_id
         }));
-        
+
 
 
         const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800');
@@ -167,43 +167,43 @@ function CoinList(props: CoinProps) {
         //     console.error('Error fetching data:', error);
         //   }
         // };
-  
+
         // fetchData();
 
 
         const handleApprove = async () => {
           try {
             // ... (이전 코드 생략)
-            
+
             const response = await userCoinPaymentConfirm(payApproveData);
             console.log(response);
-      
+
             // 팝업창의 URL에서 pg_token 값을 가져오기
             const searchParams = new URLSearchParams(popup?.location.search);
             const pgToken = searchParams.get('pg_token');
             console.log('팝업창에서 가져온 pg_token:', pgToken);
-      
+
             window.close(); // 결제 완료 후 창이 닫힘
-      
+
           } catch (error) {
             console.error('에러입니다.');
             console.error(error);
           }
         };
 
-        
-        
+
+
         // const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800') as CustomWindow;
         // if (popup) {
         //   popup.postMessage({ tid: response.tid, payUrl: response.next_redirect_pc_url }, window.origin);
         // }
-        
+
         // console.log('리코일 페이정보 : ',payState)
-        
-        
-        
-        
-        
+
+
+
+
+
         // navigate('/success'); // 성공 페이지로 이동
         // // if (popup) {
         //   // 팝업 창이 닫힐 때 수행할 작업
@@ -222,13 +222,13 @@ function CoinList(props: CoinProps) {
         //     }
         //   // };
         // }
-        
+
 
         // const newWindow = window.open(pcUrl, '_blank', 'width=600,height=800');
         // window.location.href = pcUrl;
 
         // console.log(window.location.search, '==================')
-        
+
         // if (newWindow) {
         //   newWindow.onload = () => {
         //     console.log('새 창의 위치 : ', newWindow.location.search);
@@ -268,7 +268,7 @@ function CoinList(props: CoinProps) {
               {coinItems.map((item) => (
                 <CoinListItem key={item.orderId} id={item.orderId} coinText={item.coinText} coinPrice={item.coinPrice} isSelected={selectedCoinId === item.orderId} onClick={() => handleItemClick(item)} />
               ))}
-              <Button onButtonClick={kakaoPayment} backgroundColor={'#E1A3B3'} width={'339.2px'} height={'38.4px'} borderRadius={'16px'} children={<p>결제하기</p>} fontColor='#fff' fontSize='18px'></Button>
+              <Button onButtonClick={kakaoPayment} $backgroundColor={'#E1A3B3'} width={'339.2px'} height={'38.4px'} $borderRadius={'16px'} $children={<p>결제하기</p>} $fontColor='#fff' $fontSize='18px'></Button>
             </StyledCoinList>
           </CoinListContainer>
         </>

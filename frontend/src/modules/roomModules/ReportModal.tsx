@@ -70,9 +70,7 @@ const ReportModal = (props: ReportModalProps) => {
         ))}
       </CheckBoxContainer>
       <ButtonContainer>
-        <Button onButtonClick={handleReport} backgroundColor={'#e1a4b4'} width={'176px'} height={'50px'} borderRadius={'10px'} fontColor='white'>
-          신고하기
-        </Button>
+        <Button onButtonClick={handleReport} $backgroundColor={'#e1a4b4'} width={'176px'} height={'50px'} $borderRadius={'10px'} $fontColor='white' $children={"신고하기"} />
       </ButtonContainer>
     </ModalContainer>
   );

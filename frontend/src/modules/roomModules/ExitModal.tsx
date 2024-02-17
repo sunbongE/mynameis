@@ -23,29 +23,27 @@ const ExitModal = (props: ExitModalProps) => {
               props.handleLeave();
               navigate('/');
             }}
-            backgroundColor='white'
+            $backgroundColor='white'
             width='168px'
             height='48px'
-            borderRadius='10px'
-            fontColor='black'
-            borderColor='#e1a4b4'
-            fontSize='14px'
-          >
-            그만하기
-          </Button>
+            $borderRadius='10px'
+            $fontColor='black'
+            $borderColor='#e1a4b4'
+            $fontSize='14px'
+            $children={"그만하기"}
+          />
           <Button
             onButtonClick={() => {
               props.setExitModalOpen(!props.exitModalOpen);
             }}
-            backgroundColor='#e1a4b4'
+            $backgroundColor='#e1a4b4'
             width='168px'
             height='48px'
-            borderRadius='10px'
-            fontColor='white'
-            fontSize='14px'
-          >
-            계속 진행하기
-          </Button>
+            $borderRadius='10px'
+            $fontColor='white'
+            $fontSize='14px'
+            $children={"계속 진행하기"}
+          />
         </ButtonContainer>
       </VoteContainer>
     </ModalContainer>
@@ -68,29 +66,28 @@ const ExitCoupleModal = (props: ExitModalProps) => {
               props.handleLeave();
               navigate('/');
             }}
-            backgroundColor='white'
+            $backgroundColor='white'
             width='168px'
             height='48px'
-            borderRadius='10px'
-            fontColor='black'
-            borderColor='#e1a4b4'
-            fontSize='14px'
-          >
-            그만하기
-          </Button>
+            $borderRadius='10px'
+            $fontColor='black'
+            $borderColor='#e1a4b4'
+            $fontSize='14px'
+            $children={"그만하기"}
+          />
+
           <Button
             onButtonClick={() => {
               props.setExitModalOpen(!props.exitModalOpen);
             }}
-            backgroundColor='#e1a4b4'
+            $backgroundColor='#e1a4b4'
             width='168px'
             height='48px'
-            borderRadius='10px'
-            fontColor='white'
-            fontSize='14px'
-          >
-            계속 진행하기
-          </Button>
+            $borderRadius='10px'
+            $fontColor='white'
+            $fontSize='14px'
+            $children={"계속 진행하기"}
+          />
         </ButtonContainer>
       </VoteContainer>
     </ModalContainer>

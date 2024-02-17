@@ -33,8 +33,7 @@
     "stompjs": "^2.3.3",
     "styled-components": "^6.1.8",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
-    "ws": "^8.16.0"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

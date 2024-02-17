@@ -281,9 +281,7 @@ const CoupleMeeting = () => {
     <CoupleMeetingRoomContainer>
       <NoticeContainer>
         <NoticeBox noticeText={notice} />
-        <Button backgroundColor='#e1a4b4' width='145px' height='43px' borderRadius='30px' fontColor='white' onButtonClick={handleGameBtn}>
-          커플 게임
-        </Button>
+        <Button $backgroundColor='#e1a4b4' width='145px' height='43px' $borderRadius='30px' $fontColor='white' onButtonClick={handleGameBtn} $children={"커플 게임"} />
       </NoticeContainer>
       <VideoContainer>
         {session && (

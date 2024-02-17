@@ -85,22 +85,20 @@ const VoteModal = (props: VoteModalProps) => {
         </div>
         {!isClick ? (
           <Button
-            backgroundColor='#e1a4b4'
+            $backgroundColor='#e1a4b4'
             width='168px'
             height='48px'
-            borderRadius='10px'
-            fontColor='white'
+            $borderRadius='10px'
+            $fontColor='white'
             onButtonClick={() => {
               setIsClick(true);
               props.setIsSelected(true);
             }}
-          >
-            선택하기
-          </Button>
+            $children={"선택하기"}
+          />
+
         ) : (
-          <Button backgroundColor='#e1a4b4' width='168px' height='48px' borderRadius='10px' fontColor='white'>
-            대기...
-          </Button>
+          <Button $backgroundColor='#e1a4b4' width='168px' height='48px' $borderRadius='10px' $fontColor='white' $children={"대기..."} />
         )}
       </VoteContainer>
     </ModalContainer>

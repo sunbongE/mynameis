@@ -151,12 +151,10 @@ function EmailAuth() {
               <CustomDropdown options={['이메일 선택', 'gmail.com', 'naver.com', 'hanmail.net', 'kakao.com']} width='103px' onSelected={handleEmailDropdown} />
             </div>
           </div>
-          <Button width='300px' height='50px' borderRadius='10px' backgroundColor='#E1A4B4' fontColor='#FFF' onButtonClick={onEmailAuth}>
-            비밀번호 찾기
-          </Button>
+          <Button width='300px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' onButtonClick={onEmailAuth} $children={"비밀번호 찾기"} />
         </StyledEmailInputContainer>
       </StyledEmailContainer>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

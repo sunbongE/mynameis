@@ -104,12 +104,8 @@ const SuccessModal = (props: SuccessModalProps) => {
         <StyledText underline={true}>수락시 1:1 화상채팅으로 이동합니다.</StyledText>
       </StyledBox>
       <ButtonContainer>
-        <Button onButtonClick={handlRefuse} backgroundColor={'white'} width={'160px'} height={'60px'} borderRadius={'8px'} borderColor='#e1a4b4'>
-          거절하기
-        </Button>
-        <Button onButtonClick={handleApprove} backgroundColor={'#E1A4B4'} width={'160px'} height={'60px'} borderRadius={'8px'} fontColor='white'>
-          수락하기
-        </Button>
+        <Button onButtonClick={handlRefuse} $backgroundColor={'white'} width={'160px'} height={'60px'} $borderRadius={'8px'} $borderColor='#e1a4b4' $children={"거절하기"} />
+        <Button onButtonClick={handleApprove} $backgroundColor={'#E1A4B4'} width={'160px'} height={'60px'} $borderRadius={'8px'} $fontColor='white' $children={"수락하기"} />
       </ButtonContainer>
     </StyledBox>
   );

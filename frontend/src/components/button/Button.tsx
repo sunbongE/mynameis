@@ -2,27 +2,27 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface ButtonProps {
-  backgroundColor: string;
+  $backgroundColor: string;
   width: string;
   height: string;
-  borderRadius: string;
-  borderColor?: string;
-  fontColor?: string;
-  fontSize?: string;
-  children: React.ReactNode;
+  $borderRadius: string;
+  $borderColor?: string;
+  $fontColor?: string;
+  $fontSize?: string;
+  $children?: React.ReactNode;
   onButtonClick?: () => void;
   disabled?: boolean;
 }
 
 const StyledButton = styled.button<ButtonProps>`
   font-family: 'Pretendard SemiBold';
-  background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : '#FFFFFF')};
+  background-color: ${(props) => (props.$backgroundColor ? props.$backgroundColor : '#FFFFFF')};
   width: ${(props) => (props.width ? props.width : '455px')};
   height: ${(props) => (props.height ? props.height : '66px')};
-  border-radius: ${(props) => (props.borderRadius ? props.borderRadius : '10px')};
-  color: ${(props) => (props.fontColor ? props.fontColor : '#000000')};
-  font-size: ${(props) => (props.fontSize ? props.fontSize : '18px')};
-  border: ${(props) => (props.borderColor ? `1px solid ${props.borderColor}` : '0')};
+  border-radius: ${(props) => (props.$borderRadius ? props.$borderRadius : '10px')};
+  color: ${(props) => (props.$fontColor ? props.$fontColor : '#000000')};
+  font-size: ${(props) => (props.$fontSize ? props.$fontSize : '18px')};
+  border: ${(props) => (props.$borderColor ? `1px solid ${props.$borderColor}` : '0')};
   cursor: pointer;
 `;
 
@@ -43,15 +43,15 @@ const Button = (props: ButtonProps) => {
   return (
     <StyledButton
       onClick={props.onButtonClick}
-      backgroundColor={props.backgroundColor}
+      $backgroundColor={props.$backgroundColor}
       width={props.width}
       height={props.height}
-      borderRadius={props.borderRadius}
-      borderColor={props.borderColor}
-      fontColor={props.fontColor}
-      fontSize={props.fontSize}
+      $borderRadius={props.$borderRadius}
+      $borderColor={props.$borderColor}
+      $fontColor={props.$fontColor}
+      $fontSize={props.$fontSize}
     >
-      {props.children}
+      {props.$children}
     </StyledButton>
   );
 };

@@ -186,17 +186,16 @@ const StartModal = (props: StartModalProps) => {
                 selectedNumber !== ''
                   ? handelStart
                   : () => {
-                      toast('인원을 선택해주세요', { theme: 'dark', duration: 1000 });
-                    }
+                    toast('인원을 선택해주세요', { theme: 'dark', duration: 1000 });
+                  }
               }
-              backgroundColor={'#e1a4b4'}
+              $backgroundColor={'#e1a4b4'}
               width={'400px'}
               height={'60px'}
-              borderRadius={'10px'}
-              fontColor='white'
-            >
-              매칭 시작하기
-            </Button>
+              $borderRadius={'10px'}
+              $fontColor='white'
+              $children={"매칭 시작하기"}
+            />
           </ModalBox>
         </>
       )}
