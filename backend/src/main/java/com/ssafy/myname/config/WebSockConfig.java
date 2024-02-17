@@ -24,8 +24,18 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*")
-                .withSockJS();
+        registry.addEndpoint("/ws-stomp")
+                .setAllowedOrigins(
+                        "http://localhost:3000", "http://localhost:8081",
+                        "https://i10c207.p.ssafy.io", "https://mynameis.site/**")
+                .setAllowedOriginPatterns(
+                        "http://localhost:3000/**", "http://localhost:8081/**",
+                        "https://i10c207.p.ssafy.io/**", "https://mynameis.site/**")
+                .withSockJS()
+                .setDisconnectDelay(30 * 1000)
+                .setClientLibraryUrl(
+                        "https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.4/sockjs.min.js");
+
     }
 
     @Override
@@ -34,7 +44,7 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @EventListener
-    public void connectionEvent(SessionConnectedEvent sessionConnectedEvent){
+    public void connectionEvent(SessionConnectedEvent sessionConnectedEvent) {
         System.out.println(sessionConnectedEvent);
         System.out.println("연결 성공 감지");
     }
