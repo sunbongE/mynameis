@@ -126,7 +126,6 @@ const MyPageCard = (props: MyPageCardProps) => {
 
   const [userInfo, setuser] = useRecoilState(userInfoState);
 
-  console.log(userInfo);
 
   return (
     <>

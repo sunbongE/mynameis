@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { SimpleInput2 } from '../input/Input';
 import Button from '../button/Button';
 import Icon from '../icon/Icon';
 import { SendMsg } from '../../config/IconName';
-import StompJS, { CompatClient, IMessage, Stomp } from '@stomp/stompjs';
+// import StompJS, { CompatClient, IMessage, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ChatMessage } from '../../recoil/atoms/textState';
@@ -12,6 +12,7 @@ import { chatMessagesState } from '../../recoil/atoms/textState';
 import { userInfoState, UserInfo } from '../../recoil/atoms/userState';
 import Cookies from 'js-cookie';
 import { getMessages } from '../../apis/services/chatting/chatting';
+import { Client } from '@stomp/stompjs';
 const StyledMsgFormContainer = styled.div`
   width: 320px;
   padding: 5px;
@@ -42,7 +43,8 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   const userInfo: UserInfo | null = useRecoilValue(userInfoState);
   const [coupleId, setCoupleId] = useState<string | null>('1');
   const [message, setMessage] = useState('');
-  const [stompClient, setStompClient] = useState<CompatClient | null>(null);
+  const client = useRef<Client | null>(null)
+  // const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const [isOut, setIsOut] = useState<boolean>(false);
   const socketUrl = 'https://mynameis.site/ws-stomp';
   const [isFirstConnect, setIsFirstConnect] = useState<boolean>(true); // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
@@ -50,50 +52,72 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   useEffect(() => {
     if (userInfo === null || coupleId === null) return;
 
-    const sock = new SockJS(socketUrl);
-    const stompClient = Stomp.over(sock);
-    setStompClient(stompClient);
-    stompClient.connect(
-      { Authorization: `Bearer ${Cookies.get('accessToken')}`, 'Content-Type': 'application/json', reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
-      () => {
-        console.log('subscribe 전');
-        console.log(coupleId, '커플아이디');
-        stompClient.subscribe(`/api/sub/chat/${coupleId}`, (message: any) => {
-          console.log('subscribe 후');
-          const newMessage: WebSocketMessage = JSON.parse(message.body);
+    // const sock = new SockJS(socketUrl);
+    // const stompClient = Stomp.over(sock);
+    // setStompClient(stompClient);
+    // stompClient.connect(
+    //   { Authorization: `Bearer ${Cookies.get('accessToken')}`, 'Content-Type': 'application/json', reconnectDelay: 5000, heartbeatIncoming: 4000, heartbeatOutgoing: 4000 },
+    //   () => {
+    //     console.log('subscribe 전');
+    //     console.log(coupleId, '커플아이디');
+    //     stompClient.subscribe(`/api/sub/chat/${coupleId}`, (message: any) => {
+    //       console.log('subscribe 후');
+    //       const newMessage: WebSocketMessage = JSON.parse(message.body);
+    //       setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+    //     });
+    //   },
+    //   (error: any) => {
+    //     console.log('stompClient connect error:', error);
+    //   }
+    // );
+    console.log("coupleId", coupleId)
+    console.log("socketUrl : ", socketUrl)
+    const SockJs = SockJS(socketUrl);
+    client.current = new Client({
+      webSocketFactory: () => SockJs,
+      debug: str => console.log(str),
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+
+      onConnect: () => {
+        console.log("야 성공했니")
+        client.current?.subscribe(`/api/sub/chat/${coupleId}`, msg => {
+          console.log("야 성공했니?????????????????")
+          const newMessage: WebSocketMessage = JSON.parse(msg.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-        });
+          console.log(newMessage)
+        }, { Authorization: `Bearer ${Cookies.get('accessToken')}` })
       },
-      (error: any) => {
-        console.log('stompClient connect error:', error);
-      }
-    );
+
+    })
+    client.current?.activate()
     return () => {
       disconnect();
     };
   }, [userInfo, coupleId]);
 
   useEffect(() => {
-    if (!stompClient || !stompClient.connected) return;
+    if (!client) return;
     if (isFirstConnect) {
       console.log('!!! 들어왔ㄴ어??? firstconnect');
-      handleEnterChat();
+      //handleEnterChat();
       setIsFirstConnect(false);
     }
-  }, [stompClient, stompClient?.connected]);
+  }, [client]);
 
-  useEffect(() => {
-    if (!stompClient) return;
-    if (isOut !== isClickedOut) {
-      console.log('방을 나가겠습니다');
-      disconnect();
-      setIsOut(isClickedOut);
-    }
-  }, [isClickedOut]);
+  // useEffect(() => {
+  //   if (!client) return;
+  //   if (isOut !== isClickedOut) {
+  //     console.log('방을 나가겠습니다');
+  //     disconnect();
+  //     setIsOut(isClickedOut);
+  //   }
+  // }, [isClickedOut]);
 
   const disconnect = () => {
-    if (!stompClient) return;
-    stompClient.disconnect();
+    if (!client) return;
+    client.current?.deactivate();
     setIsOpenChat(false);
     setIsFirstConnect(true);
     console.log('연결을 종료합니다. ', 'isOpenChat', isOpenChat, 'isFirstConnect', isFirstConnect);
@@ -101,7 +125,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   // 채팅방 접속
   const handleEnterChat = async () => {
     console.log('handleEnterChat 채팅방에 들어왔습니다.');
-    if (!stompClient || !stompClient.connected) {
+    if (!client || !client.current) {
       console.error('handleEnterChat : STOMP client is not connected.');
       return;
     }
@@ -115,7 +139,12 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       msg: '',
       date: '',
     };
-    stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    client.current!.publish({
+      destination: '/api/pub/chat/message',
+      body: JSON.stringify(newMessage),
+    })
+    // stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+
 
     // 채팅방 메세지 불러오기
     console.log('현재 가지고 있는 메세지 수', chatMessages.length);
@@ -135,7 +164,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   // 메세지 전송 버튼 눌렀을 때
   const handleSendMessage = () => {
     console.log('handleSendMessage 메세지를 보냈습니다.');
-    if (!stompClient || !stompClient.connected) {
+    if (!client || !client.current) {
       console.error('handleSendMessage : STOMP client is not connected.');
       return;
     }
@@ -150,14 +179,18 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       date: '',
     };
 
-    stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    client.current!.publish({
+      destination: '/api/pub/chat/message',
+      body: JSON.stringify(newMessage),
+    })
+    // stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     setMessage('');
   };
 
   // enter key 눌렀을 때
   const handleEnterPress = (msg: string) => {
     console.log('handleEnterPress 엔터키를 눌러 메세지를 보냈습니다.');
-    if (!stompClient || !stompClient.connected) {
+    if (!client || !client.current) {
       console.error('handleEnterPress : STOMP client is not connected.');
       return;
     }
@@ -172,7 +205,13 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       date: '',
     };
 
-    stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    client.current!.publish({
+      destination: '/api/pub/chat/message',
+      body: JSON.stringify(newMessage),
+    })
+    //stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+
+    console.log("전송?")
     setMessage('');
   };
 
