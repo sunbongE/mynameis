@@ -28,7 +28,7 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         log.info("** preSend 실행");
         StompHeaderAccessor accessor= StompHeaderAccessor.wrap(message);
-//        log.info("accessor:{}",accessor);
+        log.info("StopmCommand :{}",accessor.getCommand());
 //        log.info("message Header:{}",message.getHeaders());
 //        log.info("message Payload:{}",message.getPayload());
         if(StompCommand.CONNECT == accessor.getCommand()){
