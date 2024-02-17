@@ -33,7 +33,7 @@ public class RedisSubscriber implements MessageListener{		// 1.
             log.info("아이디 : {}, 메시지 : {}", chatMessage.getRoomId(), chatMessage.getMsg());
 
             // 채팅방을 구독한 클라이언트에게 메시지 발송
-            messagingTemplate.convertAndSend("/sub/chat/" + chatMessage.getRoomId(), chatMessage);
+            messagingTemplate.convertAndSend("/api/sub/chat/" + chatMessage.getRoomId(), chatMessage);
         } catch (Exception e) {
             log.error("Exception {}", e);
         }

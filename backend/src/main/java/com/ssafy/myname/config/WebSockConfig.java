@@ -18,8 +18,8 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/sub"); // 구독 요청할 때
-        config.setApplicationDestinationPrefixes("/pub");   // 메시지를 발행.
+        config.enableSimpleBroker("/api/sub"); // 구독 요청할 때
+        config.setApplicationDestinationPrefixes("/api/pub");   // 메시지를 발행.
     }
 
     @Override
@@ -27,7 +27,7 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws-stomp")
                 .setAllowedOrigins(
                         "http://localhost:3000", "http://localhost:8081",
-                        "https://i10c207.p.ssafy.io", "https://mynameis.site/**")
+                        "https://i10c207.p.ssafy.io", "https://mynameis.site")
                 .setAllowedOriginPatterns(
                         "http://localhost:3000/**", "http://localhost:8081/**",
                         "https://i10c207.p.ssafy.io/**", "https://mynameis.site/**")
