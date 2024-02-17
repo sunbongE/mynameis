@@ -27,7 +27,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler  {
     public void afterConnectionEstablished(WebSocketSession session) {
         sessions.add(session);
 
-        System.out.println("새 클라이언트와 연결되었습니다.");
+        log.info("새 클라이언트와 연결되었습니다.");
     }
 
     @Override
@@ -48,6 +48,6 @@ public class WebSocketChatHandler extends TextWebSocketHandler  {
                                       CloseStatus status) {
         sessions.remove(session);
 
-        System.out.println("특정 클라이언트와의 연결이 해제되었습니다.");
+        log.info("특정 클라이언트와의 연결이 해제되었습니다.");
     }
 }
