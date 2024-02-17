@@ -16,7 +16,7 @@ RUN ./gradlew bootJar
 FROM openjdk:17
 WORKDIR /back
 COPY --from=builder /back/build/libs/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=prod", "-jar", "app.jar"]
 VOLUME /tmp
 
 #
