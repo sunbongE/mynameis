@@ -47,7 +47,7 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
 //                        .requestMatchers().permitAll()
-                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat").permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat/**","/pub/**","/sub/**").permitAll()
                         .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
