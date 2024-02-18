@@ -44,7 +44,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const [isOut, setIsOut] = useState<boolean>(false);
-  const socketUrl = 'http://localhost:8080/ws-stomp';
+  const socketUrl = 'http://mynameis.site/ws/stomp';
   const [isFirstConnect, setIsFirstConnect] = useState<boolean>(true); // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       () => {
         console.log('subscribe 전');
         console.log(coupleId, '커플아이디');
-        stompClient.subscribe(`/sub/chat/${coupleId}`, (message: any) => {
+        stompClient.subscribe(`/api/sub/chat/${coupleId}`, (message: any) => {
           console.log('subscribe 후');
           const newMessage: WebSocketMessage = JSON.parse(message.body);
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -115,7 +115,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       msg: '',
       date: '',
     };
-    stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
 
     // 채팅방 메세지 불러오기
     console.log('현재 가지고 있는 메세지 수', chatMessages.length);
@@ -150,7 +150,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       date: '',
     };
 
-    stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     setMessage('');
   };
 
@@ -172,7 +172,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       date: '',
     };
 
-    stompClient.send('/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
+    stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     setMessage('');
   };
 
