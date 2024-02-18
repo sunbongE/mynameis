@@ -47,11 +47,11 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
 //                        .requestMatchers().permitAll()
-                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat/**","/pub/**","/sub/**").permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws/chat/**","/pub/**","/sub/**").permitAll()
                         .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/refresh/**","/api/users/**","/matching/**","/couple/**","/chat/**","/history/**","/coin/**").hasRole("USER")
+                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws/stomp/**").hasRole("USER")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 )
@@ -76,11 +76,15 @@ public class WebSecurityConfig {
                         "https://i10c207.p.ssafy.io/**", "https://mynameis.site/**"));
         configuration.setAllowedMethods(Collections.singletonList("*"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
-//        configuration.addExposedHeader(JwtTokenUtil.HEADER_STRING);
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
+
+
+        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 
