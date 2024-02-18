@@ -73,6 +73,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
     console.log("coupleId", coupleId)
     console.log("socketUrl : ", socketUrl)
     const SockJs = SockJS(socketUrl);
+    console.log("이거 accessToken =>>", Cookies.get('accessToken'))
     client.current = new Client({
       webSocketFactory: () => SockJs,
       debug: str => console.log(str),
