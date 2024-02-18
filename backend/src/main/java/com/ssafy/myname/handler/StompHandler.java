@@ -33,6 +33,7 @@ public class StompHandler implements ChannelInterceptor {
 //        log.info("message Payload:{}",message.getPayload());
         if(StompCommand.CONNECT == accessor.getCommand()){
             log.info("** CONNECT 실행~~~~");
+            log.info("** accessor.getFirstNativeHeader(\"Authorization\") :{} ",accessor.getFirstNativeHeader("Authorization"));
             String token = accessor.getFirstNativeHeader("Authorization").substring(7);
 
             log.info("CONNECT {}",token);
