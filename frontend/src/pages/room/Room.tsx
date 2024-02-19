@@ -55,32 +55,39 @@ const Room = () => {
     nOV.enableProdMode();
   };
 
+  // useEffect(() => {
+  //   if (initMyData.mySessionId === '') {
+  //     initOV();
+  //   }
+  // }, [initMyData.mySessionId]);
+
   useEffect(() => {
-    if (initMyData.mySessionId === '') {
+    if (!OV) {
+      console.log('openvidu 객체 생성이 안되어있어요. 생성할게요.');
       initOV();
     }
-  }, [initMyData.mySessionId]);
+  }, [OV]);
 
   useEffect(() => {
     if (session) {
-      console.log('누군가 왓나요?');
+      console.log('왔어...요?');
       joinSession();
     }
   }, [session, subscribers]);
 
   useEffect(() => {
     console.log('updated subscibers', subscribers);
-    // if (!session) return;
-    // // 2. session에서 나간 사용자 삭제
-    // session.on('streamDestroyed', (event: StreamEvent) => {
-    //   if (event.stream.typeOfVideo === 'CUSTOM') {
-    //     deleteSubscriber(event.stream.streamManager);
-    //   }
-    // });
-    // // 3. 예외처리
-    // session.on('exception', (exception: ExceptionEvent) => {
-    //   console.warn(exception);
-    // });
+    if (!session) return;
+    // 2. session에서 나간 사용자 삭제
+    session.on('streamDestroyed', (event: StreamEvent) => {
+      if (event.stream.typeOfVideo === 'CUSTOM') {
+        deleteSubscriber(event.stream.streamManager);
+      }
+    });
+    // 3. 예외처리
+    session.on('exception', (exception: ExceptionEvent) => {
+      console.warn(exception);
+    });
   }, [subscribers]);
 
   // 새로고침
@@ -167,34 +174,34 @@ const Room = () => {
               };
 
               // 녹화 종료했을 때
-              mediaRecorder.onstop = (event) => {
-                console.log('녹화를 종료합니다.', event);
-                const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
-                const file = blobToFile(recordBlob, `${initMyData.myUserId}_${curId}.mp4`); // blob 데이터 파일로 변환
-                console.log('녹화 결과', recordBlob);
+              // mediaRecorder.onstop = (event) => {
+              //   console.log('녹화를 종료합니다.', event);
+              //   const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
+              //   const file = blobToFile(recordBlob, `${initMyData.myUserId}_${curId}.mp4`); // blob 데이터 파일로 변환
+              //   console.log('녹화 결과', recordBlob);
 
-                // 서버에 녹화 업로드 하는 부분
-                if (param.roomId) {
-                  sendRecordingFile(file, param.roomId, initMyData.myUserId);
-                }
-              };
+              //   // 서버에 녹화 업로드 하는 부분
+              //   if (param.roomId) {
+              //     sendRecordingFile(file, param.roomId, initMyData.myUserId);
+              //   }
+              // };
 
-              console.log('녹화를 시작할게요, 녹화 번호: ', curId);
+              // console.log('녹화를 시작할게요, 녹화 번호: ', curId);
 
-              mediaRecorder.start(); // 녹화시작
+              // mediaRecorder.start(); // 녹화시작
 
-              // 여기서는 일단 5분 녹화
-              const newIntervalId = setInterval(
-                () => {
-                  mediaRecorder.stop(); // 녹화 종료
-                  setCurId(curId + 1);
-                  recordArray = []; // 이전 녹화 내역 초기화
-                  console.log('다시 녹화 시작, 녹화 번호: ', curId);
-                  mediaRecorder.start(); // 다시 녹화 시작
-                },
-                5 * 60 * 1000 // 5분
-              );
-              setIntervalId(newIntervalId);
+              // // 여기서는 일단 5분 녹화
+              // const newIntervalId = setInterval(
+              //   () => {
+              //     mediaRecorder.stop(); // 녹화 종료
+              //     setCurId(curId + 1);
+              //     recordArray = []; // 이전 녹화 내역 초기화
+              //     console.log('다시 녹화 시작, 녹화 번호: ', curId);
+              //     mediaRecorder.start(); // 다시 녹화 시작
+              //   },
+              //   5 * 60 * 1000 // 5분
+              // );
+              // setIntervalId(newIntervalId);
 
               // 신고 끝
             });
@@ -230,17 +237,6 @@ const Room = () => {
       setSubscribers(newSubscribers);
       console.log('들어온 후 subscriber', subscribers);
       setSession(session);
-    });
-
-    session.on('streamDestroyed', (event: StreamEvent) => {
-      if (event.stream.typeOfVideo === 'CUSTOM') {
-        deleteSubscriber(event.stream.streamManager);
-      }
-    });
-
-    // 3. 예외처리
-    session.on('exception', (exception: ExceptionEvent) => {
-      console.warn(exception);
     });
   };
 
