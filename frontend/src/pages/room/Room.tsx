@@ -209,7 +209,10 @@ const Room = () => {
       });
     };
     connection();
+  };
 
+  useEffect(() => {
+    if (!session) return;
     // subscribe 과정
     // 다른 사용자 파악
     // 1. session에 참가한 사용자 추가
@@ -228,7 +231,7 @@ const Room = () => {
 
       setSubscribers(newSubscribers);
     });
-  };
+  }, [StreamEvent]);
 
   /// 세션에서 나간 사람들 삭제
   const deleteSubscriber = (streamManager: StreamManager) => {
