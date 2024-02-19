@@ -236,7 +236,7 @@ const Room = () => {
 
       setSubscribers(newSubscribers);
       console.log('들어온 후 subscriber', subscribers);
-      setSession(session);
+      // setSession(session);
     });
   };
 
