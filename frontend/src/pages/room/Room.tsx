@@ -53,27 +53,28 @@ const Room = () => {
     setSession(nSession);
     // openvidu log 멈춰!!
     nOV.enableProdMode();
+    joinSession();
   };
 
-  // useEffect(() => {
-  //   if (initMyData.mySessionId === '') {
-  //     initOV();
-  //   }
-  // }, [initMyData.mySessionId]);
-
   useEffect(() => {
-    if (!OV) {
-      console.log('openvidu 객체 생성이 안되어있어요. 생성할게요.');
+    if (initMyData.mySessionId === '') {
       initOV();
     }
-  }, [OV]);
+  }, [initMyData.mySessionId]);
 
-  useEffect(() => {
-    if (session) {
-      console.log('왔어...요?');
-      joinSession();
-    }
-  }, [session, subscribers]);
+  // useEffect(() => {
+  //   if (!OV) {
+  //     console.log('openvidu 객체 생성이 안되어있어요. 생성할게요.');
+  //     initOV();
+  //   }
+  // }, [OV]);
+
+  // useEffect(() => {
+  //   if (session) {
+  //     console.log('왔어...요?');
+  //     joinSession();
+  //   }
+  // }, [session, subscribers]);
 
   useEffect(() => {
     console.log('updated subscibers', subscribers);
