@@ -13,6 +13,7 @@ export const sendRecordingFile = async (recordingFile: File, roomId: string, use
 
   console.log('전송할 데이터 params', fData);
   const data = await uploadVideo(fData);
+
   console.log('녹화 파일 전송 결과', data);
 };
 

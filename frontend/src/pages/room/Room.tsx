@@ -150,50 +150,50 @@ const Room = () => {
                 setPublisher(newPublisher);
               });
 
-              // 신고 녹화 시작
-              const options = {
-                audioBitsPerSecond: 128000,
-                videoBitsPerSecond: 2500000,
-              };
+              // // 신고 녹화 시작
+              // const options = {
+              //   audioBitsPerSecond: 128000,
+              //   videoBitsPerSecond: 2500000,
+              // };
 
-              const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
-              setMediaRecorder(mediaRecorder);
+              // const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
+              // setMediaRecorder(mediaRecorder);
 
-              // 데이터를 수집하여 사용 가능할 때
-              mediaRecorder.ondataavailable = (event) => {
-                console.log('event.data', event.data);
-                recordArray.push(event.data);
-              };
+              // // 데이터를 수집하여 사용 가능할 때
+              // mediaRecorder.ondataavailable = (event) => {
+              //   console.log('event.data', event.data);
+              //   recordArray.push(event.data);
+              // };
 
-              // 녹화 종료했을 때
-              mediaRecorder.onstop = (event) => {
-                console.log('녹화를 종료합니다.', event);
-                const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
-                const file = blobToFile(recordBlob, `${initMyData.myUserId}_${curId}.mp4`); // blob 데이터 파일로 변환
-                console.log('녹화 결과', recordBlob);
+              // // 녹화 종료했을 때
+              // mediaRecorder.onstop = (event) => {
+              //   console.log('녹화를 종료합니다.', event);
+              //   const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
+              //   const file = blobToFile(recordBlob, `${initMyData.myUserId}_${curId}.mp4`); // blob 데이터 파일로 변환
+              //   console.log('녹화 결과', recordBlob);
 
-                // 서버에 녹화 업로드 하는 부분
-                if (param.roomId) {
-                  sendRecordingFile(file, param.roomId, initMyData.myUserId);
-                }
-              };
+              //   // 서버에 녹화 업로드 하는 부분
+              //   if (param.roomId) {
+              //     sendRecordingFile(file, param.roomId, initMyData.myUserId);
+              //   }
+              // };
 
-              console.log('녹화를 시작할게요, 녹화 번호: ', curId);
+              // console.log('녹화를 시작할게요, 녹화 번호: ', curId);
 
-              mediaRecorder.start(); // 녹화시작
+              // mediaRecorder.start(); // 녹화시작
 
-              // 여기서는 일단 5분 녹화
-              const newIntervalId = setInterval(
-                () => {
-                  mediaRecorder.stop(); // 녹화 종료
-                  setCurId(curId + 1);
-                  recordArray = []; // 이전 녹화 내역 초기화
-                  console.log('다시 녹화 시작, 녹화 번호: ', curId);
-                  mediaRecorder.start(); // 다시 녹화 시작
-                },
-                5 * 60 * 1000 // 5분
-              );
-              setIntervalId(newIntervalId);
+              // // 여기서는 일단 5분 녹화
+              // const newIntervalId = setInterval(
+              //   () => {
+              //     mediaRecorder.stop(); // 녹화 종료
+              //     setCurId(curId + 1);
+              //     recordArray = []; // 이전 녹화 내역 초기화
+              //     console.log('다시 녹화 시작, 녹화 번호: ', curId);
+              //     mediaRecorder.start(); // 다시 녹화 시작
+              //   },
+              //   5 * 60 * 1000 // 5분
+              // );
+              // setIntervalId(newIntervalId);
 
               // 신고 끝
             });
