@@ -223,6 +223,7 @@ const Room = () => {
 
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
       const newSubscribers = [...subscribers, newSubscriber];
+      console.log('몇명이에요?', newSubscribers);
 
       setSubscribers(newSubscribers);
     });
