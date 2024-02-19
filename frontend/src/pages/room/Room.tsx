@@ -231,6 +231,17 @@ const Room = () => {
       console.log('들어온 후 subscriber', subscribers);
       setSession(session);
     });
+
+    session.on('streamDestroyed', (event: StreamEvent) => {
+      if (event.stream.typeOfVideo === 'CUSTOM') {
+        deleteSubscriber(event.stream.streamManager);
+      }
+    });
+
+    // 3. 예외처리
+    session.on('exception', (exception: ExceptionEvent) => {
+      console.warn(exception);
+    });
   };
 
   /// 세션에서 나간 사람들 삭제
