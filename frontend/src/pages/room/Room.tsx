@@ -63,9 +63,10 @@ const Room = () => {
 
   useEffect(() => {
     if (session) {
+      console.log('누군가 왔나요?');
       joinSession();
     }
-  }, [session]);
+  }, [session, subscribers]);
 
   useEffect(() => {
     if (!session) return;
