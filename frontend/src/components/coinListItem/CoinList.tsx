@@ -148,7 +148,6 @@ function CoinList(props: CoinProps) {
         }));
 
 
-
         const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800');
         // navigate('/payresult')
 

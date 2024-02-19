@@ -104,9 +104,7 @@ function Login() {
   const [user, setUser] = useRecoilState(userInfoState)
 
   const onLogin = async () => {
-    console.log(user)
     try {
-      // console.log('logindata', loginData);
       const response = await userLogin(loginData);
       console.log('response.data : ', response);
 

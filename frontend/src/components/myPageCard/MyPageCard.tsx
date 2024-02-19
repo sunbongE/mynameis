@@ -5,9 +5,11 @@ import { Star, Triangle } from '../../config/IconName';
 import Button from '../button/Button';
 import { Person, Cake, Bag, Location, Coin, Crown } from '../../config/IconName';
 import { addCommaInNumber, formatDate } from '../../utils/numberUtil';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { column } from 'stylis';
+import { getCoupleBreakUp } from '../../apis/services/user/room';
+import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
 
 interface MyPageCardProps {
   isCoinOpenPage: boolean;
@@ -121,10 +123,21 @@ const TriangleContainer = styled.div`
 `;
 
 const MyPageCard = (props: MyPageCardProps) => {
-  // recoil에서 회원 정보 가져오기?
-  // const user = { name: '한소희', coin: 1000, gender: false, birth: '20000814', area: '광주광역시', job: '개발자', tag: ['여행가기', '노래'], religion: '기독교', coupleId: null, isValid: 'true' };
-
+  
   const [userInfo, setuser] = useRecoilState(userInfoState);
+  const accessToken = useRecoilValue(TokenAtom)
+
+  const handleBreakUp = async () => {
+    try {
+      
+    const response = await getCoupleBreakUp(accessToken)
+    console.log('헤어지기 성공', response)
+
+    } catch (error) {
+      console.error('헤어지기 실패.. 이어가세여..')
+    }
+
+  }
 
 
   return (
@@ -184,13 +197,6 @@ const MyPageCard = (props: MyPageCardProps) => {
                       ))}
                     </div>
                   </UserDetailBodyItem>
-                  {/* <StyledText $fontSize='12px'># {userInfo.tag[0]}</StyledText>
-                  <UserDetailBodyItem width='100%'>
-                    <StyledText $fontSize='12px'># {userInfo.tag[1]}</StyledText>
-                  </UserDetailBodyItem>
-                  <UserDetailBodyItem width='100%'>
-                    <StyledText $fontSize='12px'># {userInfo.tag[2]}</StyledText>
-                  </UserDetailBodyItem> */}
                 </UserDetailBody>
               </UserDetailContainer>
               <UserDetailContainer width='42%' $backgroundColor='#FF9393' padding='10px'>
@@ -224,9 +230,7 @@ const MyPageCard = (props: MyPageCardProps) => {
                 </UserDetailContainer>
                 <UserDetailContainer
                   width='48%'
-                  onClick={() => {
-                    console.log('헤어져');
-                  }}
+                  onClick={handleBreakUp}
                 >
                   <TextContainer>헤어지기</TextContainer>
                 </UserDetailContainer>
