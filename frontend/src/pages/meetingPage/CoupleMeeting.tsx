@@ -188,6 +188,9 @@ const CoupleMeeting = () => {
       setSubscribers(newSubscribers);
       console.log('들어온 사용자 subscribers ', newSubscribers);
     });
+
+    session.on('reconnecting', () => {});
+    session.on('reconnected', () => {});
   };
 
   /// 세션에서 나간 사람들 삭제
