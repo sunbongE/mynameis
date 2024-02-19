@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/button/Button';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { userInfoState } from '../../recoil/atoms/userState';
 import { getUserInfo } from '../../apis/services/user/user';
 import toast from 'react-simple-toasts';
 import Timer from '../../components/timer/Timer';
+import { Subscriber } from 'openvidu-browser';
 
 interface SuccessModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface SuccessModalProps {
   coupleId: number;
   state: string;
   setState: React.Dispatch<React.SetStateAction<string>>;
+  selectedValue: Subscriber | undefined;
 }
 
 interface BoxStyleProps {
@@ -67,17 +69,30 @@ const SuccessModal = (props: SuccessModalProps) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useRecoilState(userInfoState);
+  const [isApproveClicked, setIsApproveClicked] = useState(false);
+  const [isRefuseClicked, setIsRefuseClicked] = useState(false);
 
   const handleApprove = async () => {
     // 커플 수락 요청 보내기
-    const params = { coupleId: props.coupleId, answer: true };
-    await acceptCouple(params);
+    console.log(isApproveClicked);
+    if (!isApproveClicked) {
+      setIsApproveClicked(true);
+      // 커플 수락 요청 보내기
+      const params = { coupleId: props.coupleId, answer: true };
+      await acceptCouple(params);
+      toast('수락하였습니다!', { theme: 'dark' });
+    }
   };
 
   const handlRefuse = async () => {
     // 커플 거절 요쳥 보내기
-    const params = { coupleId: props.coupleId, answer: false };
-    await acceptCouple(params);
+    if (!isRefuseClicked) {
+      setIsRefuseClicked(true);
+      // 커플 거절 요쳥 보내기
+      const params = { coupleId: props.coupleId, answer: false };
+      await acceptCouple(params);
+      toast('거절하였습니다!', { theme: 'dark' });
+    }
   };
 
   useEffect(() => {
@@ -92,7 +107,7 @@ const SuccessModal = (props: SuccessModalProps) => {
       <StyledText fontSize='28px'>매칭이 성사되었습니다</StyledText>
       <StyledBox marginTop='15px'>
         <StyledText>🎉 축하합니다!</StyledText>
-        <StyledText>당신과 [영호]님 사이에 서로에게 호감이 느껴졌어요.</StyledText>
+        <StyledText>당신과 [{JSON.parse(JSON.parse(props.selectedValue!.stream.connection.data).clientData).myUserName}]님 사이에 서로에게 호감이 느껴졌어요.</StyledText>
         <StyledText>커플이 되면 다음과 같은 기능을 사용할 수 있습니다.</StyledText>
       </StyledBox>
       <StyledBox marginTop='20px' padding='20px 30px' backgroundColor='#F4F4F4' borderRadius='10px'>
