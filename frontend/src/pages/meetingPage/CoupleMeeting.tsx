@@ -28,7 +28,7 @@ const CoupleMeeting = () => {
   const [OV, setOV] = useState<OpenVidu | null>(null);
   const [session, setSession] = useState<OVSession | undefined>(undefined);
   const [initMyData, setInitMyData] = useState({
-    mySessionId: '',
+    mySessionId: myInfo?.coupleId,
     myUserName: myInfo?.name,
   });
   const [mainStreamManager, setMainStreamManager] = useState<StreamManager | undefined>(undefined); // 방장?!
@@ -59,7 +59,9 @@ const CoupleMeeting = () => {
   };
 
   useEffect(() => {
+    console.log('openvidu 초기화');
     if (initMyData.mySessionId === '') {
+      console.log('initMyData.mySessionId가 비어있음');
       initOV();
     }
   }, [initMyData.mySessionId]);
@@ -220,22 +222,8 @@ const CoupleMeeting = () => {
     try {
       if (myInfo && myInfo.coupleId) {
         console.log('getToken 커플아이디 : ', myInfo.coupleId);
+
         const data = await getCoupleRoomToken({ coupleId: parseInt(myInfo.coupleId) });
-
-        // console.log('data token 받았어요', data.token);
-        // console.log('data 받아', data);
-        // console.log('data ---- getToken', data.videoId, data.name);
-
-        // const updateData: MyData = {
-        //   mySessionId: data.videoId,
-        //   myUserName: data.name,
-        // };
-        // console.log('getToken ---  updateData', updateData);
-
-        // setInitMyData(updateData);
-
-        // console.log('getToken', initMyData);
-        // return data.token;
 
         return data.token;
       }
@@ -281,7 +269,7 @@ const CoupleMeeting = () => {
     <CoupleMeetingRoomContainer>
       <NoticeContainer>
         <NoticeBox noticeText={notice} />
-        <Button $backgroundColor='#e1a4b4' width='145px' height='43px' $borderRadius='30px' $fontColor='white' onButtonClick={handleGameBtn} $children={"커플 게임"} />
+        <Button $backgroundColor='#e1a4b4' width='145px' height='43px' $borderRadius='30px' $fontColor='white' onButtonClick={handleGameBtn} $children={'커플 게임'} />
       </NoticeContainer>
       <VideoContainer>
         {session && (
@@ -303,7 +291,7 @@ const CoupleMeeting = () => {
             <>
               {subscribers.map((sub, i) => (
                 <StreamContainer key={i}>
-                  <VideoCard streamManager={sub} userType={1} width='360px' height='270px'>
+                  <VideoCard streamManager={sub} userType={1} width='280px' height='210px'>
                     <UserInfoContainer>
                       <HashtagButton backgroundColor='#E1A4B4' padding='10px 30px' fontSize='18px'>
                         {JSON.parse(JSON.parse(sub.stream.connection.data).clientData).myUserName}
@@ -359,7 +347,7 @@ const VideoContainer = styled.div`
 const PublisherStreamContainer = styled.div``;
 const StreamContainer = styled.div`
   position: absolute;
-  right: 20px;
+  right: 10px;
   bottom: 0;
 `;
 
