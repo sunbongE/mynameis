@@ -4,7 +4,7 @@ import MeetingRoom from '../../modules/roomModules/MeetingRoom';
 import MeetingReady from '../../modules/roomModules/MeetingReady';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
-import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, SignalEvent, Connection } from 'openvidu-browser';
+import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, SignalEvent, Connection, ConnectionEvent } from 'openvidu-browser';
 import { createCouple, matchingCancel, matchingCheck, matchingExit } from '../../apis/services/matching/matching';
 import { getSessionId } from '../../utils/numberUtil';
 import Cookies from 'js-cookie';
@@ -213,6 +213,7 @@ const Room = () => {
     // 다른 사용자 파악
     // 1. session에 참가한 사용자 추가
     session.on('streamCreated', (event: StreamEvent) => {
+      console.log('streamCreated', '스트림이 생성됐다는데요?');
       const subscriberOptions = {
         insertMode: 'APPEND',
         mirror: false,
@@ -227,7 +228,7 @@ const Room = () => {
       setSubscribers(newSubscribers);
     });
 
-    session.on('connectionCreated', (event) => {
+    session.on('connectionCreated', (event: ConnectionEvent) => {
       console.log('새로운 유저 들어왔대요');
       console.log(event);
     });
