@@ -134,7 +134,6 @@ const MyPageCard = (props: MyPageCardProps) => {
         setuser((prevData) => ({
           ...prevData!,
           coupleId: null,
-          userId: prevData!.userId || '',
         }));
 
         console.log('헤어지기 성공', response);
