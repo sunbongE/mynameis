@@ -81,13 +81,13 @@ const SuccessModal = (props: SuccessModalProps) => {
   };
 
   useEffect(() => {
-    toast('커플이 성사되었습니다! 5초 이내에 수락 혹은 거절버튼을 눌러 최종 선택을  해주세요!', { theme: 'dark' });
+    toast('커플이 성사되었습니다! 10초 이내에 수락 혹은 거절버튼을 눌러 최종 선택을  해주세요!', { theme: 'dark' });
   }, []);
 
   return (
     <StyledBox padding='20px'>
       <VoteTimerContainer>
-        <Timer time={5} state={props.state} setState={props.setState} repeatCount={0} />
+        <Timer time={10} state={props.state} setState={props.setState} repeatCount={0} />
       </VoteTimerContainer>
       <StyledText fontSize='28px'>매칭이 성사되었습니다</StyledText>
       <StyledBox marginTop='15px'>
@@ -104,8 +104,8 @@ const SuccessModal = (props: SuccessModalProps) => {
         <StyledText underline={true}>수락시 1:1 화상채팅으로 이동합니다.</StyledText>
       </StyledBox>
       <ButtonContainer>
-        <Button onButtonClick={handlRefuse} $backgroundColor={'white'} width={'160px'} height={'60px'} $borderRadius={'8px'} $borderColor='#e1a4b4' $children={"거절하기"} />
-        <Button onButtonClick={handleApprove} $backgroundColor={'#E1A4B4'} width={'160px'} height={'60px'} $borderRadius={'8px'} $fontColor='white' $children={"수락하기"} />
+        <Button onButtonClick={handlRefuse} $backgroundColor={'white'} width={'160px'} height={'60px'} $borderRadius={'8px'} $borderColor='#e1a4b4' $children={'거절하기'} />
+        <Button onButtonClick={handleApprove} $backgroundColor={'#E1A4B4'} width={'160px'} height={'60px'} $borderRadius={'8px'} $fontColor='white' $children={'수락하기'} />
       </ButtonContainer>
     </StyledBox>
   );
