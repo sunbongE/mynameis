@@ -43,7 +43,7 @@ const Room = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
   const [curId, setCurId] = useState<number>(0);
-
+  const newSubscribers: any = [];
   const initOV = () => {
     // 1. OpenVidu 객체 생성
     const nOV = new OpenVidu();
@@ -224,7 +224,8 @@ const Room = () => {
 
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
       console.log('제가 바로 그 새로운 생성자입니다.', newSubscriber);
-      const newSubscribers = [...subscribers, newSubscriber];
+      // const newSubscribers = [...subscribers, newSubscriber];
+      newSubscribers.push(newSubscriber);
       console.log('새로운 생성자들', newSubscribers);
 
       setSubscribers(newSubscribers);
