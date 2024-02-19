@@ -123,20 +123,26 @@ const TriangleContainer = styled.div`
 `;
 
 const MyPageCard = (props: MyPageCardProps) => {
-  
-  const [userInfo, setuser] = useRecoilState(userInfoState);
 
+  const [userInfo, setuser] = useRecoilState(userInfoState);
 
   const handleBreakUp = async () => {
     try {
-    const response = await getCoupleBreakUp()
-    console.log('헤어지기 성공', response)
+      const response = await getCoupleBreakUp();
 
+      if (response) {
+        setuser((prevData) => ({
+          ...prevData!,
+          coupleId: null,
+          userId: prevData!.userId || '',
+        }));
+
+        console.log('헤어지기 성공', response);
+      }
     } catch (error) {
-      console.error('헤어지기 실패.. 이어가세여..')
+      console.error('헤어지기 실패.. 다시하세여..');
     }
-  }
-
+  };
 
   return (
     <>
@@ -154,7 +160,7 @@ const MyPageCard = (props: MyPageCardProps) => {
             <UserDetailContainer width='100%'>
               <UserDetailHeader>
                 <UserDetailTitle>회원정보</UserDetailTitle>
-                <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={"수정"} />
+                <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={'수정'} />
               </UserDetailHeader>
               <UserDetailBody>
                 <UserDetailBodyItem width='50%'>
@@ -183,7 +189,7 @@ const MyPageCard = (props: MyPageCardProps) => {
               <UserDetailContainer width='55%'>
                 <UserDetailHeader>
                   <UserDetailTitle>나를 표현하는 단어</UserDetailTitle>
-                  <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={"수정"} />
+                  <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={'수정'} />
                 </UserDetailHeader>
                 <UserDetailBody>
                   <UserDetailBodyItem width='100%'>
@@ -212,7 +218,7 @@ const MyPageCard = (props: MyPageCardProps) => {
                   </StyledText>
                 </TextContainer>
                 <CoinButtonContainer>
-                  <Button $backgroundColor={'white'} width={'64px'} height={'30px'} $borderRadius={'12px'} $fontColor='#FF9393' $fontSize='12px' onButtonClick={props.onCoinClick} $children={"충전"} />
+                  <Button $backgroundColor={'white'} width={'64px'} height={'30px'} $borderRadius={'12px'} $fontColor='#FF9393' $fontSize='12px' onButtonClick={props.onCoinClick} $children={'충전'} />
                 </CoinButtonContainer>
               </UserDetailContainer>
             </UserDetailBox>
@@ -226,10 +232,7 @@ const MyPageCard = (props: MyPageCardProps) => {
                 >
                   <TextContainer>커플 채팅방</TextContainer>
                 </UserDetailContainer>
-                <UserDetailContainer
-                  width='48%'
-                  onClick={handleBreakUp}
-                >
+                <UserDetailContainer width='48%' onClick={handleBreakUp}>
                   <TextContainer>헤어지기</TextContainer>
                 </UserDetailContainer>
               </UserDetailBox>
