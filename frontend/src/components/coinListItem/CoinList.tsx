@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import Icon from '../icon/Icon';
 import Button from '../button/Button';
-import { userCoinPaymentRequest, userCoinPaymentConfirm, pgTokenReceive } from '../../apis/services/user/user';
+import { userCoinPaymentRequest, userCoinPaymentConfirm } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 import { paymentState } from '../../recoil/atoms/paymentState';
 

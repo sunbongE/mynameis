@@ -125,18 +125,16 @@ const TriangleContainer = styled.div`
 const MyPageCard = (props: MyPageCardProps) => {
   
   const [userInfo, setuser] = useRecoilState(userInfoState);
-  const accessToken = useRecoilValue(TokenAtom)
+
 
   const handleBreakUp = async () => {
     try {
-      
-    const response = await getCoupleBreakUp(accessToken)
+    const response = await getCoupleBreakUp()
     console.log('헤어지기 성공', response)
 
     } catch (error) {
       console.error('헤어지기 실패.. 이어가세여..')
     }
-
   }
 
 

@@ -10,8 +10,8 @@ export const getCoupleRoomToken = async (params: { coupleId: number }) => {
   return response.data;
 };
 
-export const getCoupleBreakUp = async (params: {token: string}) => {
-  console.log('헤어지기 로직 들어가기전에',params)
-  const response = await loginInstance.delete(`${authUrl}/break-up`, { params });
+export const getCoupleBreakUp = async () => {
+
+  const response = await loginInstance.delete(`${authUrl}/break-up`);
   return response.data;
 }
