@@ -67,20 +67,20 @@ const Room = () => {
     }
   }, [session]);
 
-  useEffect(() => {
-    if (!session) return;
-    // 2. session에서 나간 사용자 삭제
-    session.on('streamDestroyed', (event: StreamEvent) => {
-      if (event.stream.typeOfVideo === 'CUSTOM') {
-        deleteSubscriber(event.stream.streamManager);
-      }
-    });
+  // useEffect(() => {
+  //   if (!session) return;
+  //   // 2. session에서 나간 사용자 삭제
+  //   session.on('streamDestroyed', (event: StreamEvent) => {
+  //     if (event.stream.typeOfVideo === 'CUSTOM') {
+  //       deleteSubscriber(event.stream.streamManager);
+  //     }
+  //   });
 
-    // 3. 예외처리
-    session.on('exception', (exception: ExceptionEvent) => {
-      console.warn(exception);
-    });
-  }, [subscribers]);
+  //   // 3. 예외처리
+  //   session.on('exception', (exception: ExceptionEvent) => {
+  //     console.warn(exception);
+  //   });
+  // }, [subscribers]);
 
   // 새로고침
   const beforeUnLoad = (event: BeforeUnloadEvent) => {
