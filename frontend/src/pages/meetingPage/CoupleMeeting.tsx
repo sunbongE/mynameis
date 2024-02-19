@@ -28,7 +28,7 @@ const CoupleMeeting = () => {
   const [OV, setOV] = useState<OpenVidu | null>(null);
   const [session, setSession] = useState<OVSession | undefined>(undefined);
   const [initMyData, setInitMyData] = useState({
-    mySessionId: myInfo?.coupleId,
+    mySessionId: '',
     myUserName: myInfo?.name,
   });
   const [mainStreamManager, setMainStreamManager] = useState<StreamManager | undefined>(undefined); // 방장?!
@@ -62,6 +62,7 @@ const CoupleMeeting = () => {
     console.log('openvidu 초기화');
     if (initMyData.mySessionId === '') {
       console.log('initMyData.mySessionId가 비어있음');
+      // setInitMyData({ mySessionId: myInfo?, myUserName: myInfo?.name });
       initOV();
     }
   }, [initMyData.mySessionId]);
