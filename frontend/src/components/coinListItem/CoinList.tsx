@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import Icon from '../icon/Icon';
 import Button from '../button/Button';
-import { userCoinPaymentRequest, userCoinPaymentConfirm, pgTokenReceive } from '../../apis/services/user/user';
+import { userCoinPaymentRequest, userCoinPaymentConfirm } from '../../apis/services/user/user';
 import { useNavigate } from 'react-router-dom';
 import { paymentState } from '../../recoil/atoms/paymentState';
 
@@ -146,7 +146,6 @@ function CoinList(props: CoinProps) {
           payUrl: response.next_redirect_pc_url,
           partner_order_id: coinPaymentData.partner_order_id
         }));
-
 
 
         const popup = window.open(response.next_redirect_pc_url, '_blank', 'width=600,height=800');

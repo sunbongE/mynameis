@@ -17,10 +17,6 @@ export const fileInstance = axios.create({
   baseURL: `${BASEURL}`,
 });
 
-export const pgTokenInstance = axios.create({
-  baseURL: 'http://lvh.me:8080',
-});
-
 const setCommonHeaders = async (config: any) => {
   config.headers['Content-Type'] = 'application/json';
   return config;

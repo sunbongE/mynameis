@@ -5,9 +5,11 @@ import { Star, Triangle } from '../../config/IconName';
 import Button from '../button/Button';
 import { Person, Cake, Bag, Location, Coin, Crown } from '../../config/IconName';
 import { addCommaInNumber, formatDate } from '../../utils/numberUtil';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { column } from 'stylis';
+import { getCoupleBreakUp } from '../../apis/services/user/room';
+import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
 
 interface MyPageCardProps {
   isCoinOpenPage: boolean;
@@ -101,6 +103,7 @@ const TextContainer = styled.div<BoxStyleProps>`
   text-align: center;
   width: ${(props) => (props.width ? props.width : '100%')};
   padding: ${(props) => (props.padding ? props.padding : '0')};
+  cursor: pointer;
 
   :hover {
     cursor: pointer;
@@ -121,11 +124,25 @@ const TriangleContainer = styled.div`
 `;
 
 const MyPageCard = (props: MyPageCardProps) => {
-  // recoil에서 회원 정보 가져오기?
-  // const user = { name: '한소희', coin: 1000, gender: false, birth: '20000814', area: '광주광역시', job: '개발자', tag: ['여행가기', '노래'], religion: '기독교', coupleId: null, isValid: 'true' };
 
   const [userInfo, setuser] = useRecoilState(userInfoState);
 
+  const handleBreakUp = async () => {
+    try {
+      const response = await getCoupleBreakUp();
+
+      if (response) {
+        setuser((prevData) => ({
+          ...prevData!,
+          coupleId: null,
+        }));
+
+        console.log('헤어지기 성공', response);
+      }
+    } catch (error) {
+      console.error('헤어지기 실패.. 다시하세여..');
+    }
+  };
 
   return (
     <>
@@ -143,7 +160,7 @@ const MyPageCard = (props: MyPageCardProps) => {
             <UserDetailContainer width='100%'>
               <UserDetailHeader>
                 <UserDetailTitle>회원정보</UserDetailTitle>
-                <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={"수정"} />
+                <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={'수정'} />
               </UserDetailHeader>
               <UserDetailBody>
                 <UserDetailBodyItem width='50%'>
@@ -172,7 +189,7 @@ const MyPageCard = (props: MyPageCardProps) => {
               <UserDetailContainer width='55%'>
                 <UserDetailHeader>
                   <UserDetailTitle>나를 표현하는 단어</UserDetailTitle>
-                  <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={"수정"} />
+                  <Button $backgroundColor='white' width='38px' height='18px' $borderRadius='8px' $borderColor='#e1a4b4' $fontColor='#e1a4b4' $fontSize='9px' $children={'수정'} />
                 </UserDetailHeader>
                 <UserDetailBody>
                   <UserDetailBodyItem width='100%'>
@@ -184,13 +201,6 @@ const MyPageCard = (props: MyPageCardProps) => {
                       ))}
                     </div>
                   </UserDetailBodyItem>
-                  {/* <StyledText $fontSize='12px'># {userInfo.tag[0]}</StyledText>
-                  <UserDetailBodyItem width='100%'>
-                    <StyledText $fontSize='12px'># {userInfo.tag[1]}</StyledText>
-                  </UserDetailBodyItem>
-                  <UserDetailBodyItem width='100%'>
-                    <StyledText $fontSize='12px'># {userInfo.tag[2]}</StyledText>
-                  </UserDetailBodyItem> */}
                 </UserDetailBody>
               </UserDetailContainer>
               <UserDetailContainer width='42%' $backgroundColor='#FF9393' padding='10px'>
@@ -208,7 +218,7 @@ const MyPageCard = (props: MyPageCardProps) => {
                   </StyledText>
                 </TextContainer>
                 <CoinButtonContainer>
-                  <Button $backgroundColor={'white'} width={'64px'} height={'30px'} $borderRadius={'12px'} $fontColor='#FF9393' $fontSize='12px' onButtonClick={props.onCoinClick} $children={"충전"} />
+                  <Button $backgroundColor={'white'} width={'64px'} height={'30px'} $borderRadius={'12px'} $fontColor='#FF9393' $fontSize='12px' onButtonClick={props.onCoinClick} $children={'충전'} />
                 </CoinButtonContainer>
               </UserDetailContainer>
             </UserDetailBox>
@@ -222,12 +232,7 @@ const MyPageCard = (props: MyPageCardProps) => {
                 >
                   <TextContainer>커플 채팅방</TextContainer>
                 </UserDetailContainer>
-                <UserDetailContainer
-                  width='48%'
-                  onClick={() => {
-                    console.log('헤어져');
-                  }}
-                >
+                <UserDetailContainer width='48%' onClick={handleBreakUp}>
                   <TextContainer>헤어지기</TextContainer>
                 </UserDetailContainer>
               </UserDetailBox>

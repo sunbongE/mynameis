@@ -9,3 +9,9 @@ export const getCoupleRoomToken = async (params: { coupleId: number }) => {
   console.log('axios 통신 결과', response);
   return response.data;
 };
+
+export const getCoupleBreakUp = async () => {
+
+  const response = await loginInstance.delete(`${authUrl}/break-up`);
+  return response.data;
+}

@@ -18,7 +18,7 @@ const StyledSignUpPage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const StyledSignUpContainer = styled.div`
   width: 537px;
@@ -59,12 +59,12 @@ const StyledColumnContainerGap = styled.div`
 
 const StyledRowContainer = styled.div`
   display: flex;
-`;
+`
 
 const StyledRowContainerGap = styled.div`
   display: flex;
   gap: 10px;
-`;
+`
 
 const StyledLabel = styled.label`
   color: #b0a9a9;
@@ -74,6 +74,7 @@ const StyledLabel = styled.label`
   font-weight: 400;
   line-height: normal;
 `;
+
 
 function SignUp() {
   const isLogin = useRecoilValue(isLoginSelector);
@@ -287,7 +288,7 @@ function SignUp() {
 
   const handleSignUp = async () => {
     try {
-      const booleanGender = selectedGender === 'true' ? true : false;
+      const booleanGender = (selectedGender === 'true') ? true : false;
       const { gender, tag, ...restData } = registrationData;
 
       const response = await userSignUp({ gender: booleanGender, tags: registrationData.tag, ...restData });
@@ -363,7 +364,7 @@ function SignUp() {
             <StyledLabel htmlFor='email'>이메일</StyledLabel>
             <StyledRowContainerGap>
               <SimpleInput placeholder='이메일 계정' id='email' value={registrationData.email} onInputChange={handleEmailChange} width='165px' />
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>@</div>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>@</div>
               <CustomDropdown options={['이메일 선택', 'gmail.com', 'naver.com', 'hanmail.net', 'kakao.com']} width='103px' onSelected={(value) => handleEmailDropdown(value)} />
             </StyledRowContainerGap>
           </StyledColumnContainer>
@@ -377,18 +378,17 @@ function SignUp() {
               <CustomRadioButton values={genderValues} version='gender' selected={selectedGender} setSelected={setSelectedGender} onSelected={handleGenderChange} />
             </StyledRowContainer>
           </StyledColumnContainerGap>
-          <StyledLabel htmlFor='birth'>생년월일</StyledLabel>
-          <StyledRowContainerGap>
-            <CustomDropdown options={birthYearOptions} width='94px' onSelected={(value) => handleBirthDropdownChange(value, 'year')} />
-            <CustomDropdown options={birthMonthOptions} width='94px' onSelected={(value) => handleBirthDropdownChange(value, 'month')} />
-            <CustomDropdown options={birthDayOptions} width='94px' onSelected={(value) => handleBirthDropdownChange(value, 'day')} />
-          </StyledRowContainerGap>
+            <StyledLabel htmlFor='birth'>생년월일</StyledLabel>
+            <StyledRowContainerGap>
+              <CustomDropdown options={birthYearOptions} width='94px' onSelected={(value) => handleBirthDropdownChange(value, 'year')} />
+              <CustomDropdown options={birthMonthOptions} width='94px' onSelected={(value) => handleBirthDropdownChange(value, 'month')} />
+              <CustomDropdown options={birthDayOptions} width='94px' onSelected={(value) => handleBirthDropdownChange(value, 'day')} />
+            </StyledRowContainerGap>
           <StyledColumnContainerGap>
             <StyledLabel htmlFor='phoneAuth'>휴대폰 인증</StyledLabel>
             <StyledRowContainerGap>
               <SimpleInput placeholder='전화번호를 입력하세요' id='phoneAuth' value={registrationData.phone} onInputChange={handlePhoneChange} width='220px' />
-
-              <Button width='70px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' $fontSize='12px' onButtonClick={handleBeforePhoneAuth} $children={requestCount ? '재요청' : '요청'} />
+              <Button width='70px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' $fontSize='12px' onButtonClick={handleBeforePhoneAuth} $children={ requestCount ? "재요청":"요청"} />
             </StyledRowContainerGap>
             <ConfirmationCodeInput placeholder='인증번호를 입력하고 엔터를 눌러주세요' value={phoneAuthNumber} onInputChange={handlePhoneAuthChange} onEnterKeyUp={handleAfterPhoneAuth} />
           </StyledColumnContainerGap>
@@ -413,7 +413,7 @@ function SignUp() {
             <StyledLabel htmlFor='religion'>종교</StyledLabel>
             <CustomDropdown options={['종교를 선택하세요', '무교', '기독교', '천주교', '불교']} width='300px' onSelected={(value) => handleReligionChange(value, 'religion')} />
           </StyledColumnContainer>
-          <Button width='300px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' onButtonClick={isPhoneAuth ? handleSignUp : undefined} disabled={!isPhoneAuth} $children={'입력 완료'} />
+          <Button width='300px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' onButtonClick={isPhoneAuth ? handleSignUp : undefined} disabled={!isPhoneAuth} $children={"입력 완료"} />
         </StyledSignUpInputContainer>
       </StyledSignUpContainer>
       <Footer />
