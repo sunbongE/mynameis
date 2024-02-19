@@ -108,11 +108,10 @@ function SignUp() {
 
   const [coinOpen, setCoinOpen] = useState<boolean>(false);
   const handleCoinPage = () => {
-    setCoinOpen(!coinOpen)
-  }
+    setCoinOpen(!coinOpen);
+  };
 
   const [scrolling, setScrolling] = useState<boolean>(false);
-
 
   const navigate = useNavigate();
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -305,10 +304,10 @@ function SignUp() {
     }
   };
 
-  const [requestCount, setRequestCount] = useState(0)
-  
+  const [requestCount, setRequestCount] = useState(0);
+
   const handleBeforePhoneAuth = async () => {
-    setRequestCount(requestCount + 1)
+    setRequestCount(requestCount + 1);
     try {
       const response = await userPhoneNumberSubmit({ phoneId: submitPhoneNumber });
       console.log('휴대폰 인증 전송', response, submitPhoneNumber);
@@ -389,11 +388,7 @@ function SignUp() {
             <StyledLabel htmlFor='phoneAuth'>휴대폰 인증</StyledLabel>
             <StyledRowContainerGap>
               <SimpleInput placeholder='전화번호를 입력하세요' id='phoneAuth' value={registrationData.phone} onInputChange={handlePhoneChange} width='220px' />
-
-
               <Button width='70px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' $fontSize='12px' onButtonClick={handleBeforePhoneAuth} $children={ requestCount ? "재요청":"요청"} />
-            
-            
             </StyledRowContainerGap>
             <ConfirmationCodeInput placeholder='인증번호를 입력하고 엔터를 눌러주세요' value={phoneAuthNumber} onInputChange={handlePhoneAuthChange} onEnterKeyUp={handleAfterPhoneAuth} />
           </StyledColumnContainerGap>

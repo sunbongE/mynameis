@@ -4,7 +4,7 @@ import MeetingRoom from '../../modules/roomModules/MeetingRoom';
 import MeetingReady from '../../modules/roomModules/MeetingReady';
 import { useRecoilState } from 'recoil';
 import { MatchingInfo, matchingInfoState } from '../../recoil/atoms/matchingState';
-import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, SignalEvent, Connection } from 'openvidu-browser';
+import { OpenVidu, Subscriber, Publisher, Session as OVSession, StreamManager, StreamEvent, ExceptionEvent, SignalEvent, Connection, ConnectionEvent } from 'openvidu-browser';
 import { createCouple, matchingCancel, matchingCheck, matchingExit } from '../../apis/services/matching/matching';
 import { getSessionId } from '../../utils/numberUtil';
 import Cookies from 'js-cookie';
@@ -43,7 +43,7 @@ const Room = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
   const [curId, setCurId] = useState<number>(0);
-
+  const newSubscribers: any = [];
   const initOV = () => {
     // 1. OpenVidu 객체 생성
     const nOV = new OpenVidu();
@@ -63,10 +63,9 @@ const Room = () => {
 
   useEffect(() => {
     if (session) {
-      console.log('누군가 왔나요?');
       joinSession();
     }
-  }, [session, subscribers]);
+  }, [session]);
 
   useEffect(() => {
     if (!session) return;
@@ -151,50 +150,50 @@ const Room = () => {
                 setPublisher(newPublisher);
               });
 
-              // 신고 녹화 시작
-              const options = {
-                audioBitsPerSecond: 128000,
-                videoBitsPerSecond: 2500000,
-              };
+              // // 신고 녹화 시작
+              // const options = {
+              //   audioBitsPerSecond: 128000,
+              //   videoBitsPerSecond: 2500000,
+              // };
 
-              const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
-              setMediaRecorder(mediaRecorder);
+              // const mediaRecorder = new MediaRecorder(mediaStream, options); // MediaRecorder 객체 생성
+              // setMediaRecorder(mediaRecorder);
 
-              // 데이터를 수집하여 사용 가능할 때
-              mediaRecorder.ondataavailable = (event) => {
-                console.log('event.data', event.data);
-                recordArray.push(event.data);
-              };
+              // // 데이터를 수집하여 사용 가능할 때
+              // mediaRecorder.ondataavailable = (event) => {
+              //   console.log('event.data', event.data);
+              //   recordArray.push(event.data);
+              // };
 
-              // 녹화 종료했을 때
-              mediaRecorder.onstop = (event) => {
-                console.log('녹화를 종료합니다.', event);
-                const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
-                const file = blobToFile(recordBlob, `${initMyData.myUserId}_${curId}.mp4`); // blob 데이터 파일로 변환
-                console.log('녹화 결과', recordBlob);
+              // // 녹화 종료했을 때
+              // mediaRecorder.onstop = (event) => {
+              //   console.log('녹화를 종료합니다.', event);
+              //   const recordBlob = new Blob(recordArray, { type: 'video/mp4' });
+              //   const file = blobToFile(recordBlob, `${initMyData.myUserId}_${curId}.mp4`); // blob 데이터 파일로 변환
+              //   console.log('녹화 결과', recordBlob);
 
-                // 서버에 녹화 업로드 하는 부분
-                if (param.roomId) {
-                  sendRecordingFile(file, param.roomId, initMyData.myUserId);
-                }
-              };
+              //   // 서버에 녹화 업로드 하는 부분
+              //   if (param.roomId) {
+              //     sendRecordingFile(file, param.roomId, initMyData.myUserId);
+              //   }
+              // };
 
-              console.log('녹화를 시작할게요, 녹화 번호: ', curId);
+              // console.log('녹화를 시작할게요, 녹화 번호: ', curId);
 
-              mediaRecorder.start(); // 녹화시작
+              // mediaRecorder.start(); // 녹화시작
 
-              // 여기서는 일단 5분 녹화
-              const newIntervalId = setInterval(
-                () => {
-                  mediaRecorder.stop(); // 녹화 종료
-                  setCurId(curId + 1);
-                  recordArray = []; // 이전 녹화 내역 초기화
-                  console.log('다시 녹화 시작, 녹화 번호: ', curId);
-                  mediaRecorder.start(); // 다시 녹화 시작
-                },
-                5 * 60 * 1000 // 5분
-              );
-              setIntervalId(newIntervalId);
+              // // 여기서는 일단 5분 녹화
+              // const newIntervalId = setInterval(
+              //   () => {
+              //     mediaRecorder.stop(); // 녹화 종료
+              //     setCurId(curId + 1);
+              //     recordArray = []; // 이전 녹화 내역 초기화
+              //     console.log('다시 녹화 시작, 녹화 번호: ', curId);
+              //     mediaRecorder.start(); // 다시 녹화 시작
+              //   },
+              //   5 * 60 * 1000 // 5분
+              // );
+              // setIntervalId(newIntervalId);
 
               // 신고 끝
             });
@@ -209,14 +208,12 @@ const Room = () => {
       });
     };
     connection();
-  };
 
-  useEffect(() => {
-    if (!session) return;
     // subscribe 과정
     // 다른 사용자 파악
     // 1. session에 참가한 사용자 추가
     session.on('streamCreated', (event: StreamEvent) => {
+      console.log('streamCreated', '스트림이 생성됐다는데요?');
       const subscriberOptions = {
         insertMode: 'APPEND',
         mirror: false,
@@ -226,12 +223,19 @@ const Room = () => {
       };
 
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
-      const newSubscribers = [...subscribers, newSubscriber];
-      console.log('몇명이에요?', newSubscribers);
+      console.log('제가 바로 그 새로운 생성자입니다.', newSubscriber);
+      // const newSubscribers = [...subscribers, newSubscriber];
+      newSubscribers.push(newSubscriber);
+      console.log('새로운 생성자들', newSubscribers);
 
       setSubscribers(newSubscribers);
     });
-  }, [StreamEvent]);
+
+    session.on('connectionCreated', (event: ConnectionEvent) => {
+      console.log('새로운 유저 들어왔대요');
+      console.log(event);
+    });
+  };
 
   /// 세션에서 나간 사람들 삭제
   const deleteSubscriber = (streamManager: StreamManager) => {
