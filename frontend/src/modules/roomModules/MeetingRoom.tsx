@@ -91,6 +91,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setNotice('공개된 정보인 [직업]을 통해 1명당 5분씩 질의응답 시간을 가져 보세요.');
       setTime(10);
       setRepeatCount(0);
+      console.log(props.state);
     } else if (props.state === 'step123_vote') {
       setModalTime(10);
       setVoteModalOpen(true);
@@ -106,7 +107,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setModalTime(10);
       setVoteModalOpen(true);
     }
-  }, [props.state, repeatCount]);
+  }, [props.state]);
 
   const [voteModalOpen, setVoteModalOpen] = useState(false);
 
