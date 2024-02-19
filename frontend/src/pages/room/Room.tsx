@@ -63,7 +63,7 @@ const Room = () => {
 
   useEffect(() => {
     if (session) {
-      console.log('누군가 왔나요?');
+      console.log('누군가 왓나요?');
       joinSession();
     }
   }, [session, subscribers]);
@@ -209,10 +209,7 @@ const Room = () => {
       });
     };
     connection();
-  };
 
-  useEffect(() => {
-    if (!session) return;
     // subscribe 과정
     // 다른 사용자 파악
     // 1. session에 참가한 사용자 추가
@@ -225,13 +222,16 @@ const Room = () => {
         subscriberUserName: event.stream.connection.data,
       };
 
+      console.log('들어오기 전 subscriber', subscribers);
       const newSubscriber = session.subscribe(event.stream, JSON.parse(event.stream.connection.data).clientData, subscriberOptions);
       const newSubscribers = [...subscribers, newSubscriber];
       console.log('몇명이에요?', newSubscribers);
 
       setSubscribers(newSubscribers);
+      console.log('들어온 후 subscriber', subscribers);
+      setSession(session);
     });
-  }, [StreamEvent]);
+  };
 
   /// 세션에서 나간 사람들 삭제
   const deleteSubscriber = (streamManager: StreamManager) => {
