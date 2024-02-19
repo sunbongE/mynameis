@@ -28,6 +28,7 @@ public class CoupleVideoProvider {
     public static String coupleVideo(String coupleId) throws OpenViduJavaClientException, OpenViduHttpException {
         Session activeRoom = openvidu.getActiveSession(coupleId);
 
+
         // 활성화된 방이 없으면 만들기
         if(activeRoom==null){
             log.info("coupleId :{}",coupleId);
