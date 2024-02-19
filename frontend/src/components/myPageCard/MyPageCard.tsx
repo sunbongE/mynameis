@@ -103,6 +103,7 @@ const TextContainer = styled.div<BoxStyleProps>`
   text-align: center;
   width: ${(props) => (props.width ? props.width : '100%')};
   padding: ${(props) => (props.padding ? props.padding : '0')};
+  cursor: pointer;
 
   :hover {
     cursor: pointer;
