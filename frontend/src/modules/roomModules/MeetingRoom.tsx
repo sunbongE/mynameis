@@ -34,8 +34,8 @@ interface MeetingRoomProps {
 
 const MeetingRoom = (props: MeetingRoomProps) => {
   const [notice, setNotice] = useState<string>('공개된 정보인 [배정된 이름, 나이, 지역]만을 통해 60초씩 본인을 소개해주세요.');
-  const [time, setTime] = useState<number>(60); // 공지 부분 타이머 시간, 초단위
-  const [repeatCount, setRepeatCount] = useState<number>(0); // 공지 부분 타이머 반복 횟수
+  const [time, setTime] = useState<number>(10); // 공지 부분 타이머 시간, 초단위
+  const [repeatCount, setRepeatCount] = useState<number>(4); // 공지 부분 타이머 반복 횟수
   const [modalTime, setModalTime] = useState<number>(10); // 투표 모달 타이머 시간, 초단위
   const [exitModalOpen, setExitModalOpen] = useState(false);
   const matchingInfo = useRecoilValue(matchingInfoState);
@@ -51,8 +51,8 @@ const MeetingRoom = (props: MeetingRoomProps) => {
   });
 
   const balanceGame = [
-    '아프지만 말하지 않는 연인 vs 아프지 않지만 항상 아프다고 말하는 연인',
-    '돈을 잃어도 화를 내는 연인 vs 돈을 아끼는 데 최고인 연인',
+    '알아서 잘하는 연애고수 vs 하나부터 열까지 가르쳐야 하는 연애초보',
+    '전남친(전여친)과 술 마시는 애인 vs 남사친(여사친)과 1박 2일 놀러가는 애인',
     '싸움 뒤에 모든 것을 얘기하는 연인 vs 싸움 뒤에 전혀 영향받지 않는 듯한 연인',
   ];
 
@@ -62,6 +62,8 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     if (balanceGame.length > 1) {
       balanceGame.shift();
       setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
+      console.log(balanceGame);
+      console.log(balanceGame[0]);
     } else {
       clearInterval(intervalId!);
     }
@@ -73,7 +75,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         () => {
           updateBalanceGame();
         },
-        time * 1000 + 500
+        time * 1000 + 200
       );
     }
   }, [time]);
@@ -82,7 +84,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
     if (props.state === 'step12') {
       setNotice('공개된 정보인 [키워드]를 통해 10분동안 자유롭게 대화를 나눠보세요.');
       setTime(10);
-      setRepeatCount(4);
+      setRepeatCount(0);
     } else if (props.state === 'step12_vote') {
       setModalTime(10); // 모달 시간 설정
       setVoteModalOpen(true);
@@ -90,13 +92,13 @@ const MeetingRoom = (props: MeetingRoomProps) => {
       setVoteModalOpen(false);
       setNotice('공개된 정보인 [직업]을 통해 1명당 5분씩 질의응답 시간을 가져 보세요.');
       setTime(5);
-      setRepeatCount(0);
+      setRepeatCount(4);
     } else if (props.state === 'step123_vote') {
       setModalTime(10);
       setVoteModalOpen(true);
     } else if (props.state === 'step1234') {
       setNotice('참여자 분들의 얼굴이 공개되었습니다! 1명당 5분씩 자유롭게 질문 시간을 가져보세요. 질문 시간 후에는 밸런스 게임이 시작됩니다.');
-      setTime(10);
+      setTime(5);
       setRepeatCount(4);
     } else if (props.state === 'step12345') {
       setTime(10);
