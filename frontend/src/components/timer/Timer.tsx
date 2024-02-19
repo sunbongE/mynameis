@@ -76,6 +76,7 @@ const Timer = (props: TimerProps) => {
   };
 
   useEffect(() => {
+    console.log(props.state, '의 repeatcount와 time은', props.repeatCount, props.time);
     const initialTime = props.time;
     let currentTime = initialTime;
 

@@ -81,23 +81,23 @@ const MeetingRoom = (props: MeetingRoomProps) => {
   useEffect(() => {
     if (props.state === 'step12') {
       setNotice('공개된 정보인 [키워드]를 통해 10분동안 자유롭게 대화를 나눠보세요.');
-      setTime(30);
-      setRepeatCount(0);
+      setTime(10);
+      setRepeatCount(4);
     } else if (props.state === 'step12_vote') {
       setModalTime(10); // 모달 시간 설정
       setVoteModalOpen(true);
     } else if (props.state === 'step123') {
       setVoteModalOpen(false);
       setNotice('공개된 정보인 [직업]을 통해 1명당 5분씩 질의응답 시간을 가져 보세요.');
-      setTime(30);
-      setRepeatCount(0);
+      setTime(10);
+      setRepeatCount(4);
     } else if (props.state === 'step123_vote') {
       setModalTime(10);
       setVoteModalOpen(true);
     } else if (props.state === 'step1234') {
       setNotice('참여자 분들의 얼굴이 공개되었습니다! 1명당 5분씩 자유롭게 질문 시간을 가져보세요. 질문 시간 후에는 밸런스 게임이 시작됩니다.');
       setTime(20);
-      setRepeatCount(0);
+      setRepeatCount(4);
     } else if (props.state === 'step12345') {
       setTime(20);
       setNotice(`이번 주제는 “${balanceGame[0]}” 입니다. 10분 동안 대화를 나눠보세요!`);
