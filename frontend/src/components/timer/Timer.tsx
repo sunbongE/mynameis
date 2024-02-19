@@ -89,7 +89,7 @@ const Timer = (props: TimerProps) => {
     } else {
       repeatTimer(initialTime, 1);
     }
-  }, [props.state]);
+  }, [props.state, props.repeatCount, props.time]);
 
   return (
     <StyledTimer>
