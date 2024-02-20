@@ -43,6 +43,10 @@ const Room = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
   const [curId, setCurId] = useState<number>(0);
+
+  // const [videoOn, setVideoOn] = useState<boolean>(false);
+  const [audioOn, setAudioOn] = useState<boolean>(true);
+
   const newSubscribers: any = [];
   const initOV = () => {
     // 1. OpenVidu 객체 생성
@@ -111,7 +115,7 @@ const Room = () => {
       let cameraStream = {
         audioSource: undefined, // The source of audio. If undefined default microphone
         videoSource: undefined, // The source of video. If undefined default webcam
-        publishAudio: false, // Whether you want to start publishing with your audio unmuted or not
+        publishAudio: audioOn, // Whether you want to start publishing with your audio unmuted or not
         publishVideo: true, // Whether you want to start publishing with your video enabled or not
         resolution: '640x480', // The resolution of your video
         frameRate: 30, // The frame rate of your video
@@ -124,7 +128,7 @@ const Room = () => {
       let publisherStream = {
         audioSource: undefined,
         videoSource: undefined as MediaStreamTrack | undefined,
-        publishAudio: false,
+        publishAudio: audioOn,
         publishVideo: true,
         resolution: '640x480',
         frameRate: 30,
@@ -290,6 +294,22 @@ const Room = () => {
     });
   };
 
+  const toggleAudio = () => {
+    if (['loading', 'ready'].includes(state)) {
+      setMediaVisibility(true, false);
+    } else if (['step1234', 'step12345'].includes(state)) {
+      setMediaVisibility(true, audioOn);
+    } else if (state.includes('vote')) {
+      setMediaVisibility(false, false);
+    } else {
+      setMediaVisibility(false, audioOn);
+    }
+  };
+
+  useEffect(() => {
+    toggleAudio();
+  }, [audioOn]);
+
   // state가 변경될 때마다 비디오/오디오 표시 여부 업데이트
   useEffect(() => {
     if (['loading', 'ready'].includes(state)) {
@@ -320,19 +340,20 @@ const Room = () => {
     const checkStatus = async () => {
       const data = await matchingCheck();
       if (state !== ('loading' || '' || 'finish') && data.status === 202) {
-        // 녹화 종료해야함
-        if (mediaRecorder) {
-          mediaRecorder.stop();
-          setMediaRecorder(null);
-        }
-        if (intervalId) {
-          clearInterval(intervalId);
-          setIntervalId(null);
-        }
-        toast('과반수가 퇴장하여 매칭이 취소되었습니다.', { theme: 'dark' });
-        toast('메인페이지로 이동합니다.', { theme: 'dark' });
+        // // 녹화 종료해야함
+        // if (mediaRecorder) {
+        //   mediaRecorder.stop();
+        //   setMediaRecorder(null);
+        // }
+        // if (intervalId) {
+        //   clearInterval(intervalId);
+        //   setIntervalId(null);
+        // }
+        toast('매칭이 종료되었습니다.', { theme: 'dark' });
         leaveSession();
-        navigate('/');
+        setTimeout(() => {
+          navigate('/');
+        }, 500);
       }
     };
     checkStatus();
@@ -535,6 +556,8 @@ const Room = () => {
           receivedCount={receivedCount}
           roomId={param.roomId}
           curId={curId}
+          audioOn={audioOn}
+          setAudioOn={setAudioOn}
         />
       )}
       {state.includes('ready') && <MeetingReady leaveSession={leaveSession} streamManager={publisher} userType={0} state={state} setState={setState} />}

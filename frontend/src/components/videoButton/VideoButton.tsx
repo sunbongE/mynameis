@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Icon from '../icon/Icon';
 import { EtcDots, Vector, MicOn, MicOff, RoomOut, VideoOn, VideoOff } from '../../config/IconName';
@@ -6,6 +6,8 @@ import { EtcDots, Vector, MicOn, MicOff, RoomOut, VideoOn, VideoOff } from '../.
 interface VideoButtonProps {
   exitModalOpen: boolean;
   setExitModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  audioOn?: boolean;
+  setAudioOn?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const StyleVideoButtonContainer = styled.div<ButtonItemProps>`
@@ -32,11 +34,14 @@ const StylevideoButtonItem = styled.div<ButtonItemProps>`
 `;
 
 const VideoButton = (props: VideoButtonProps) => {
-  const [isMicRunning, setIsMicRunning] = useState(false);
+  const [isMicRunning, setIsMicRunning] = useState(true);
   const [isVideoRunning, setIsVideoRunning] = useState(false);
 
   const handleMicToggle = () => {
     setIsMicRunning((prev) => !prev);
+    if (props.setAudioOn) {
+      props.setAudioOn(!props.audioOn);
+    }
   };
 
   const handleVideoToggle = () => {

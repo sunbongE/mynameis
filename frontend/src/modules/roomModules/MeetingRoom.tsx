@@ -30,6 +30,8 @@ interface MeetingRoomProps {
   receivedCount: number;
   roomId: string | undefined;
   curId: number;
+  audioOn: boolean;
+  setAudioOn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MeetingRoom = (props: MeetingRoomProps) => {
@@ -240,7 +242,7 @@ const MeetingRoom = (props: MeetingRoomProps) => {
         ))}
       </VideoContainer>
       <VideoButtonContainer>
-        <VideoButton exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
+        <VideoButton audioOn={props.audioOn} setAudioOn={props.setAudioOn} exitModalOpen={exitModalOpen} setExitModalOpen={setExitModalOpen} />
       </VideoButtonContainer>
       <MyModal isOpen={voteModalOpen} setIsOpen={setVoteModalOpen}>
         <VoteModal
