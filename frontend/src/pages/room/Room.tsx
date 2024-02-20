@@ -504,7 +504,7 @@ const Room = () => {
     if (state === '') {
       const timeoutId = setTimeout(() => {
         checkResult();
-      }, 500);
+      }, 1000);
 
       return () => clearTimeout(timeoutId);
     }
@@ -541,7 +541,7 @@ const Room = () => {
       {state === '' && (
         <div>
           <MyModal isOpen={successModalOpen} setIsOpen={setSuccessModalOpen}>
-            <SuccessModal state={state} setState={setState} coupleId={coupleId} leaveSession={leaveSession} isOpen={successModalOpen} setIsOpen={setSuccessModalOpen} />
+            <SuccessModal selectedValue={selectedValue} state={state} setState={setState} coupleId={coupleId} leaveSession={leaveSession} isOpen={successModalOpen} setIsOpen={setSuccessModalOpen} />
           </MyModal>
           <MyModal isOpen={failModalOpen} setIsOpen={setFailModalOpen}>
             <FailModal leaveSession={leaveSession} isOpen={failModalOpen} setIsOpen={setFailModalOpen} />
