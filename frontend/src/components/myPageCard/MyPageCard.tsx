@@ -124,7 +124,6 @@ const TriangleContainer = styled.div`
 `;
 
 const MyPageCard = (props: MyPageCardProps) => {
-
   const [userInfo, setuser] = useRecoilState(userInfoState);
 
   const handleBreakUp = async () => {
@@ -138,6 +137,7 @@ const MyPageCard = (props: MyPageCardProps) => {
         }));
 
         console.log('헤어지기 성공', response);
+        console.log('헤어지기 userInfo', response);
       }
     } catch (error) {
       console.error('헤어지기 실패.. 다시하세여..');

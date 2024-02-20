@@ -144,6 +144,8 @@ const CoupleMeeting = () => {
       getToken().then(async (token: string) => {
         console.log('가져온 token', token);
         console.log('내 정보', initMyData);
+        // session.reconnectionStream = true;
+        // session.reconnectBrokenStreams() : void = true;
         session
           .connect(token, { clientData: JSON.stringify(initMyData) })
           .then(async () => {
@@ -363,7 +365,7 @@ const VideoButtonContainer = styled.div`
 
 const UserInfoContainer = styled.div`
   position: absolute;
-  top: 30px;
-  left: 30px;
+  top: 8px;
+  left: 8px;
 `;
 export default CoupleMeeting;

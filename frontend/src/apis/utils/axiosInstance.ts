@@ -57,6 +57,27 @@ const handleResponseError = async (error: AxiosError) => {
   }
 };
 
+const handleBrokeResponseError = async (error: AxiosError) => {
+  if (!error.response) return Promise.reject(error);
+  const { status, data } = error.response as { status: number; data: any };
+  console.log('status :', status, data);
+
+  switch (status) {
+    case 400:
+      // alert('이미 매칭에 참여 중입니다');
+      break;
+    case 401:
+    // TODO
+    // 로그아웃 로직타기
+    case 500:
+      // alert('');
+      break;
+    default:
+      console.error(error);
+      return Promise.reject(error);
+  }
+};
+
 const handleResponseSuccess = (response: AxiosResponse<any>) => {
   console.log('Success response: ' + response.config.url);
   return response;
