@@ -31,7 +31,7 @@ const Timer = (props: TimerProps) => {
 
   const setState = () => {
     if (props.state === 'step1') {
-      props.setState('step12');
+      props.setState('step12345');
     } else if (props.state === 'step12') {
       props.setState('step12_vote');
     } else if (props.state === 'step12_vote') {

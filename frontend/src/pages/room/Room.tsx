@@ -504,7 +504,7 @@ const Room = () => {
     if (state === '') {
       const timeoutId = setTimeout(() => {
         checkResult();
-      }, 500);
+      }, 1000);
 
       return () => clearTimeout(timeoutId);
     }
