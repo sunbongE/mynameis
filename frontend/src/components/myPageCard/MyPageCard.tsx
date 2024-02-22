@@ -129,14 +129,15 @@ const MyPageCard = (props: MyPageCardProps) => {
   const handleBreakUp = async () => {
     try {
       const response = await getCoupleBreakUp();
+      console.log('헤어지기 성공', response);
 
       if (response) {
+        console.log('헤어지기 userInfo', userInfo);
         setuserInfo((prevData) => ({
           ...prevData!,
           coupleId: null,
         }));
 
-        console.log('헤어지기 성공', response);
         console.log('헤어지기 userInfo', userInfo);
       }
     } catch (error) {
