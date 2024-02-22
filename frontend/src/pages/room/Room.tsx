@@ -117,7 +117,7 @@ const Room = () => {
         videoSource: undefined, // The source of video. If undefined default webcam
         publishAudio: audioOn, // Whether you want to start publishing with your audio unmuted or not
         publishVideo: true, // Whether you want to start publishing with your video enabled or not
-        resolution: '640x480', // The resolution of your video
+        resolution: '320x240', // The resolution of your video
         frameRate: 30, // The frame rate of your video
         insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
         mirror: true,
@@ -130,7 +130,7 @@ const Room = () => {
         videoSource: undefined as MediaStreamTrack | undefined,
         publishAudio: audioOn,
         publishVideo: true,
-        resolution: '640x480',
+        resolution: '320x240',
         frameRate: 30,
         insertMode: 'APPEND',
         mirror: true,
@@ -454,10 +454,14 @@ const Room = () => {
           setMyInfo(userInfo);
           if (userInfo.coupleId) {
             toast('축하드립니다! 최종 커플이 성사되었습니다!', { theme: 'dark' });
-            toast('연인과 함께 커플만이 사용할 수 있는 기능들을 즐겨보세요!', { theme: 'dark' });
+            setTimeout(() => {
+              toast('연인과 함께 커플만이 사용할 수 있는 기능들을 즐겨보세요!', { theme: 'dark' });
+            }, 200);
           } else {
             toast('아쉽지만 최종 커플이 되지 못하였습니다.', { theme: 'dark' });
-            toast('새로운 매칭을 시도해보세요.', { theme: 'dark' });
+            setTimeout(() => {
+              toast('새로운 매칭을 시도해보세요.', { theme: 'dark' });
+            }, 200);
           }
           navigate('/');
         }
