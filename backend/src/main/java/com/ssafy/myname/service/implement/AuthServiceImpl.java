@@ -100,7 +100,7 @@ public class AuthServiceImpl implements AuthService {
             // 회원 저장.
             // 리프레시토큰 저장.
             String token = jwtProvider.create(userId, "RT");
-//            redisService.setDataExpire(userId,token,60*60*24*15); // 15일
+            redisService.setDataExpire(userId,token,60*60*24*15); // 15일
 
 
         }catch (Exception exception){

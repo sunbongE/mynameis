@@ -47,11 +47,11 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
 //                        .requestMatchers().permitAll()
-                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws/chat/**","/pub/**","/sub/**").permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/pub/**","/sub/**").permitAll()
                         .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws/stomp/**").hasRole("USER")
+                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws/stomp/**","/ws/chat/**").hasRole("USER")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 )
