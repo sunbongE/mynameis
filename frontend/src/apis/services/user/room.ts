@@ -11,6 +11,7 @@ export const getCoupleRoomToken = async (params: { coupleId: number }) => {
 };
 
 export const getCoupleBreakUp = async () => {
+  console.log('헤어지기 api 실행');
   const response = await loginInstance.delete(`${authUrl}/break-up`);
   return response.data;
 };
