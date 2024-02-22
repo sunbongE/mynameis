@@ -5,7 +5,7 @@ import { Star, Triangle } from '../../config/IconName';
 import Button from '../button/Button';
 import { Person, Cake, Bag, Location, Coin, Crown } from '../../config/IconName';
 import { addCommaInNumber, formatDate } from '../../utils/numberUtil';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/atoms/userState';
 import { column } from 'stylis';
 import { getCoupleBreakUp } from '../../apis/services/user/room';
@@ -124,7 +124,9 @@ const TriangleContainer = styled.div`
 `;
 
 const MyPageCard = (props: MyPageCardProps) => {
-  const [userInfo, setuserInfo] = useRecoilState(userInfoState);
+  // const [userInfo, setuserInfo] = useRecoilState(userInfoState);
+  const userInfo = useRecoilValue(userInfoState);
+  const setUserInfo = useSetRecoilState(userInfoState);
 
   const handleBreakUp = async () => {
     try {
@@ -132,11 +134,12 @@ const MyPageCard = (props: MyPageCardProps) => {
       console.log('헤어지기 성공', response);
 
       if (response) {
-        console.log('헤어지기 userInfo', userInfo);
-        setuserInfo((prevData) => ({
-          ...prevData!,
-          coupleId: null,
-        }));
+        // console.log('헤어지기 userInfo', userInfo);
+
+        const updateUserInfo = { ...userInfo, coupleId: null };
+        // const updateUserInfo = { ...preData, coupleId: null };
+        // setUserInfo(updateUserInfo);
+        console.log('업데이트 할 값', updateUserInfo);
 
         console.log('헤어지기 userInfo', userInfo);
       }
