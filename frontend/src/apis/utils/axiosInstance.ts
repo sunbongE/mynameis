@@ -12,6 +12,12 @@ export const loginInstance = axios.create({
   // baseURL: 'http://localhost:8080',
   baseURL: `${BASEURL}`,
 });
+
+// export const coupleInstance = axios.create({
+//   // baseURL: 'http://localhost:8080',
+//   baseURL: `${BASEURL}`,
+// });
+
 export const fileInstance = axios.create({
   // baseURL: 'http://localhost:8080',
   baseURL: `${BASEURL}`,

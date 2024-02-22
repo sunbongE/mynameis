@@ -124,23 +124,23 @@ const TriangleContainer = styled.div`
 `;
 
 const MyPageCard = (props: MyPageCardProps) => {
-  const [userInfo, setuser] = useRecoilState(userInfoState);
+  const [userInfo, setuserInfo] = useRecoilState(userInfoState);
 
   const handleBreakUp = async () => {
     try {
       const response = await getCoupleBreakUp();
 
       if (response) {
-        setuser((prevData) => ({
+        setuserInfo((prevData) => ({
           ...prevData!,
           coupleId: null,
         }));
 
         console.log('헤어지기 성공', response);
-        console.log('헤어지기 userInfo', response);
+        console.log('헤어지기 userInfo', userInfo);
       }
     } catch (error) {
-      console.error('헤어지기 실패.. 다시하세여..');
+      console.error('헤어지지 못했습니다');
     }
   };
 
