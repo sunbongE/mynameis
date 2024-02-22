@@ -10,6 +10,7 @@ import { userInfoState } from '../../recoil/atoms/userState';
 import { column } from 'stylis';
 import { getCoupleBreakUp } from '../../apis/services/user/room';
 import { TokenAtom } from '../../recoil/atoms/userAuthAtom';
+import { getUserInfo } from '../../apis/services/user/user';
 
 interface MyPageCardProps {
   isCoinOpenPage: boolean;
@@ -127,6 +128,7 @@ const MyPageCard = (props: MyPageCardProps) => {
   // const [userInfo, setuserInfo] = useRecoilState(userInfoState);
   const userInfo = useRecoilValue(userInfoState);
   const setUserInfo = useSetRecoilState(userInfoState);
+  const [user, setUser] = useRecoilState(userInfoState);
 
   const handleBreakUp = async () => {
     try {
@@ -134,14 +136,18 @@ const MyPageCard = (props: MyPageCardProps) => {
       console.log('헤어지기 성공', response);
 
       if (response) {
+        // // console.log('헤어지기 userInfo', userInfo);
+        // const updateUserInfo = { ...userInfo, coupleId: null };
+        // // const updateUserInfo = { ...preData, coupleId: null };
+        // // setUserInfo(updateUserInfo);
+        // console.log('업데이트 할 값', updateUserInfo);
         // console.log('헤어지기 userInfo', userInfo);
 
-        const updateUserInfo = { ...userInfo, coupleId: null };
-        // const updateUserInfo = { ...preData, coupleId: null };
-        // setUserInfo(updateUserInfo);
-        console.log('업데이트 할 값', updateUserInfo);
+        const userInfo = await getUserInfo();
+        setUser(userInfo);
 
         console.log('헤어지기 userInfo', userInfo);
+        console.log('user값 바뀌었니?', user);
       }
     } catch (error) {
       console.error('헤어지지 못했습니다');

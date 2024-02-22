@@ -80,8 +80,8 @@ function Login() {
 
   const [coinOpen, setCoinOpen] = useState<boolean>(false);
   const handleCoinPage = () => {
-    setCoinOpen(!coinOpen)
-  }
+    setCoinOpen(!coinOpen);
+  };
 
   const [scrolling, setScrolling] = useState<boolean>(false);
 
@@ -101,7 +101,7 @@ function Login() {
     navigate('/signup');
   };
 
-  const [user, setUser] = useRecoilState(userInfoState)
+  const [user, setUser] = useRecoilState(userInfoState);
 
   const onLogin = async () => {
     try {
@@ -149,7 +149,7 @@ function Login() {
           <SimpleInput placeholder='아이디' value={loginData.userId} onInputChange={handleUserIdChange} />
           <PasswordInput placeholder='비밀번호' value={loginData.password} onInputChange={handlePasswordChange} onEnterKeyUp={onLogin} />
           <StyledLoginText onClick={goToEmailAuth}>비밀번호를 잊어버리셨나요?</StyledLoginText>
-          <Button width='300px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' onButtonClick={onLogin} $children={"로그인"} />
+          <Button width='300px' height='50px' $borderRadius='10px' $backgroundColor='#E1A4B4' $fontColor='#FFF' onButtonClick={onLogin} $children={'로그인'} />
         </StyledLoginInputContainer>
         <StyledLoginText onClick={goToSignUp}>계정이 없으신가요? 회원가입하러 가기</StyledLoginText>
       </StyledLoginContainer>

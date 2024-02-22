@@ -2,7 +2,10 @@ import { userInfo } from 'os';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-const { persistAtom } = recoilPersist();
+const { persistAtom } = recoilPersist({
+  key: 'sessionStorage',
+  storage: sessionStorage,
+});
 
 export interface UserInfo {
   userId: string;
@@ -17,6 +20,7 @@ export interface UserInfo {
   isValid: boolean;
   coupleId: null | string; // 커플 여부 coupleId가 null이 아니면 couple
 }
+
 export const userInfoState = atom<UserInfo | null>({
   key: 'userInfoState',
   default: {
