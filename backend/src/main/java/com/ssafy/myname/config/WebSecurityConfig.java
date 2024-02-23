@@ -46,14 +46,12 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(request -> request
-//                        .requestMatchers().permitAll()
-                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/api/pub/**","/api/sub/**").permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/test/**").permitAll()
                         .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws/stomp/**","/ws/chat/**").hasRole("USER")
+                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws/stomp/**","/ws/chat/**","/api/pub/**","/api/sub/**").hasRole("USER")
                         .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
@@ -69,22 +67,20 @@ public class WebSecurityConfig {
 //        configuration.addAllowedOriginPattern("*");
         configuration.setAllowedOrigins(
                 List.of("http://localhost:3000", "http://localhost:8081",
-                        "https://i10c207.p.ssafy.io", "https://mynameis.site"));
+                        "https://i10c207.p.ssafy.io",
+                        "https://mynameis.site"));
 
         configuration.setAllowedOriginPatterns(
                 List.of("http://localhost:3000/**", "http://localhost:8081/**",
-                        "https://i10c207.p.ssafy.io/**", "https://mynameis.site/**"));
+                        "https://i10c207.p.ssafy.io/**",
+                        "https://mynameis.site/**"));
         configuration.setAllowedMethods(Collections.singletonList("*"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
+//        configuration.addExposedHeader(JwtTokenUtil.HEADER_STRING);
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-
-
-        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
 
