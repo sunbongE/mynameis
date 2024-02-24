@@ -76,7 +76,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   }, [userInfo, coupleId]);
 
   useEffect(() => {
-    if (!stompClient || !stompClient.connected) return;
+    // if (!stompClient || !stompClient.connected) return;
     if (isFirstConnect) {
       console.log('!!! 들어왔ㄴ어??? firstconnect');
       handleEnterChat();
