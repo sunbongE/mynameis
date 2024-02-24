@@ -176,6 +176,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
 
     stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     setMessage('');
+    console.log('chatMessages 채팅 메세지 내역', chatMessages);
   };
 
   return (
