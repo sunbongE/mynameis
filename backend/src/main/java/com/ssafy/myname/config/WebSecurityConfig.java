@@ -66,22 +66,24 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.addAllowedOrigin("*");
-//        configuration.addAllowedOriginPattern("*");
-        configuration.setAllowedOrigins(
-                List.of("http://localhost:3000", "http://localhost:8081",
-                        "https://i10c207.p.ssafy.io",
-                        "https://mynameis.site"));
+
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         configuration.setAllowedOriginPatterns(
                 List.of("http://localhost:3000/**", "http://localhost:8081/**",
                         "https://i10c207.p.ssafy.io/**",
                         "https://mynameis.site/**"));
-        configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-//        configuration.addExposedHeader(JwtTokenUtil.HEADER_STRING);
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
+
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:3000", "http://localhost:8081",
+                        "https://i10c207.p.ssafy.io",
+                        "https://mynameis.site"));
+
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
