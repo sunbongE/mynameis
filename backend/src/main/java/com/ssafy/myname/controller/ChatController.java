@@ -4,6 +4,7 @@ import com.ssafy.myname.db.repository.CoupleChatRoomRepository;
 import com.ssafy.myname.dto.request.chat.ChatDto;
 import com.ssafy.myname.dto.request.chat.ChatRoomDto;
 //import com.ssafy.myname.service.ChatService;
+import com.ssafy.myname.dto.request.chat.MessageType;
 import com.ssafy.myname.provider.JwtProvider;
 import com.ssafy.myname.service.ChatService;
 import com.ssafy.myname.service.RedisPublisher;
@@ -27,16 +28,19 @@ public class ChatController {
     private final CoupleChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
     private final JwtProvider jwtProvider;
-    private final RedisTemplate<String,Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
     @MessageMapping("/chat/message")
-    public void messages(ChatDto msg, @Header("Authorization") String token){
+    public void messages(ChatDto msg, @Header("Authorization") String token) {
         log.info("** messageController 실행");
         String userId = jwtProvider.validate(token.substring(7));
 
         msg.setSender(userId);
         // 방번호로 채팅을 저장한다.
-        chatService.saveMessage(msg);
-        log.info("msg: {} ",msg);
+        if (msg.getType().equals(MessageType.TALK)) {
+            chatService.saveMessage(msg);
+        }
+        log.info("msg: {} ", msg);
         chatService.sendMessage(msg);
         log.info("레디스로 발행함.");
     }
