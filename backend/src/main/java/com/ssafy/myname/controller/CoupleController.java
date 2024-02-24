@@ -145,4 +145,17 @@ public class CoupleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfo(Principal principal){
+
+        try {
+            String userId = principal.getName();
+            String info = coupleService.getInfo(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(info);
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

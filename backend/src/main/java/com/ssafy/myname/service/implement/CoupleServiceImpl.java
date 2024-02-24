@@ -158,4 +158,17 @@ public class CoupleServiceImpl implements CoupleService {
 
          return ResponseEntity.status(HttpStatus.OK).body(body);
     }
+
+    @Override
+    public String getInfo(String userId) {
+        String info = null;
+        User user = userRepository.findByUserId(userId);
+        Couple coupleinfo = user.getCouple();
+        if(user.getGender()){ // 남자
+            info = coupleinfo.getUserW().getName();
+        }else { // 여자
+            info = coupleinfo.getUserM().getName();
+        }
+        return info;
+    }
 }
