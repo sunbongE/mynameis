@@ -82,6 +82,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       heartbeatOutgoing: 4000,
 
       onConnect: () => {
+        console.log('origin now', location.origin);
         console.log('야 성공했니');
         client.current?.subscribe(
           `/api/sub/chat/${coupleId}`,
