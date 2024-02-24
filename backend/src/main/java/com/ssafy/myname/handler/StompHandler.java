@@ -40,12 +40,17 @@ public class StompHandler implements ChannelInterceptor {
             jwtProvider.validate(token);
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             log.info("** SUBSCRIBE 실행됨");
+
             // header 정보에서 구독 destination정보를 얻어 roomId추출
             String roomId = chatService.getRoom(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
+
             // 채팅방에 들어온 클라 세션ID를  roomId와 매칭함.=>나중에 특정세션이 어떤 채팅방에 들어가있는지 알 수 있다.
             String sessionId = (String) message.getHeaders().get("simpSessionId");
+
             log.info("sessionId :{} , roomId : {}",sessionId,roomId);
+
             coupleChatRoomRepository.setUserEnterInfo(sessionId,roomId);
+
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
             log.info("message : {}",message);
 //            chatService.sendChatMessage(ChatDto.builder().type(ChatMessage.MessageType.ENTER).roomId(roomId).sender(name).build());
