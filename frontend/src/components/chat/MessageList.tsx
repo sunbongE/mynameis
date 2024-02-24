@@ -51,6 +51,7 @@ const MessageList = () => {
       }
     }
   };
+
   return (
     <StyledMsgListContainer ref={messagesEndRef} onScroll={handleScroll}>
       {chatMessages.length > 0 && (

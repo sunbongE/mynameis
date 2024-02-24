@@ -102,6 +102,15 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   };
   // 채팅방 접속
   const handleEnterChat = async () => {
+    // 채팅방 메세지 불러오기
+    console.log('현재 가지고 있는 메세지 수', chatMessages.length);
+    const loadedMessages = await getMessages(chatMessages.length);
+    // console.log('messages 받아왔어요', loadedMessages.reverse());
+    // const filteredData = loadedMessages.filter((item: any) => item.type !== 'ENTER').reverse();
+    // console.log('filteredData', filteredData);
+    const reversedLoadedMessages = loadedMessages;
+    console.log('reversed', reversedLoadedMessages);
+    setChatMessages(reversedLoadedMessages);
     console.log('handleEnterChat 채팅방에 들어왔습니다.');
     if (!stompClient || !stompClient.connected) {
       console.error('handleEnterChat : STOMP client is not connected.');
@@ -118,16 +127,6 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
       date: '',
     };
     stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
-
-    // 채팅방 메세지 불러오기
-    console.log('현재 가지고 있는 메세지 수', chatMessages.length);
-    const loadedMessages = await getMessages(chatMessages.length);
-    // console.log('messages 받아왔어요', loadedMessages.reverse());
-    // const filteredData = loadedMessages.filter((item: any) => item.type !== 'ENTER').reverse();
-    // console.log('filteredData', filteredData);
-    const reversedLoadedMessages = loadedMessages;
-    console.log('reversed', reversedLoadedMessages);
-    setChatMessages(reversedLoadedMessages);
   };
 
   const handleMessageChange = (msg: string) => {

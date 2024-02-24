@@ -148,13 +148,13 @@ const MainHero = ({ isOpenChat, setIsOpenChat, scrollToRef, stepRef }: MainHeroP
 
             {userInfo.coupleId && (
               <StyledHeroBtnContainer>
-                <Button $backgroundColor='#E1A4B4' width='100px' height='40px' $borderRadius='15px' $fontColor='white' onButtonClick={handleChatBtn} $children={"채탕하기"} />
-                <Button $backgroundColor='#fff' width='100px' height='40px' $borderRadius='15px' $fontColor='#E1A4B4' onButtonClick={handleVideoBtn} $children={"화상채팅"} />
+                <Button $backgroundColor='#E1A4B4' width='100px' height='40px' $borderRadius='15px' $fontColor='white' onButtonClick={handleChatBtn} $children={'채팅하기'} />
+                <Button $backgroundColor='#fff' width='100px' height='40px' $borderRadius='15px' $fontColor='#E1A4B4' onButtonClick={handleVideoBtn} $children={'화상채팅'} />
               </StyledHeroBtnContainer>
             )}
             {!userInfo.coupleId && (
               <>
-                <Button onButtonClick={handleStartBtn} $backgroundColor='#E1A4B4' width='100px' height='40px' $borderRadius='15px' $fontColor='white' $children={"시작하기"} />
+                <Button onButtonClick={handleStartBtn} $backgroundColor='#E1A4B4' width='100px' height='40px' $borderRadius='15px' $fontColor='white' $children={'시작하기'} />
 
                 <MyModal isOpen={startModalOpen} setIsOpen={setStartModalOpen}>
                   <StartModal isOpen={startModalOpen} setIsOpen={setStartModalOpen} />
