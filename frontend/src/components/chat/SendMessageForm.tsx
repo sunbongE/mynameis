@@ -40,7 +40,7 @@ interface WebSocketMessage {
 const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgFormProps) => {
   const [chatMessages, setChatMessages] = useRecoilState<ChatMessage[]>(chatMessagesState);
   const userInfo: UserInfo | null = useRecoilValue(userInfoState);
-  const [coupleId, setCoupleId] = useState<string | null>('1');
+  const [coupleId, setCoupleId] = useState<string | null>(userInfo?.coupleId || '1');
   const [message, setMessage] = useState('');
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const [isOut, setIsOut] = useState<boolean>(false);
