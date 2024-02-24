@@ -292,12 +292,9 @@ function SignUp() {
       const { gender, tag, ...restData } = registrationData;
 
       const response = await userSignUp({ gender: booleanGender, tags: registrationData.tag, ...restData });
-      console.log(registrationData);
-      console.log('회원가입 성공:', response);
       alert('회원가입 되었습니다. 로그인 페이지로 이동합니다.');
       navigate('/login'); // 로그인 페이지 이동
     } catch (error) {
-      console.log(registrationData);
       console.log('회원가입 실패:', error);
       alert('정보를 입력 안한 부분이 있는지 확인해보세요!');
       // 회원가입 실패 후 처리 : 에러 메시지 표시, 로그인 페이지 이동 등
