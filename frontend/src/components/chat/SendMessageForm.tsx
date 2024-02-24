@@ -43,10 +43,10 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
   const userInfo: UserInfo | null = useRecoilValue(userInfoState);
   const [coupleId, setCoupleId] = useState<string | null>('1');
   const [message, setMessage] = useState('');
-  const client = useRef<Client | null>(null)
+  const client = useRef<Client | null>(null);
   // const [stompClient, setStompClient] = useState<CompatClient | null>(null);
   const [isOut, setIsOut] = useState<boolean>(false);
-  const socketUrl = 'https://mynameis.site/ws/stomp';
+  const socketUrl = 'https://mynameis.site/ws-stomp';
   const [isFirstConnect, setIsFirstConnect] = useState<boolean>(true); // 처음 방에 들어갈 때인지 판단하려고 > disconnect 할 때 true 다시 만들어줘.
 
   useEffect(() => {
@@ -70,29 +70,32 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
     //     console.log('stompClient connect error:', error);
     //   }
     // );
-    console.log("coupleId", coupleId)
-    console.log("socketUrl : ", socketUrl)
+    console.log('coupleId', coupleId);
+    console.log('socketUrl : ', socketUrl);
     const SockJs = SockJS(socketUrl);
-    console.log("이거 accessToken =>>", Cookies.get('accessToken'))
+    console.log('이거 accessToken =>>', Cookies.get('accessToken'));
     client.current = new Client({
       webSocketFactory: () => SockJs,
-      debug: str => console.log(str),
+      debug: (str) => console.log(str),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
 
       onConnect: () => {
-        console.log("야 성공했니")
-        client.current?.subscribe(`/api/sub/chat/${coupleId}`, msg => {
-          console.log("야 성공했니?????????????????")
-          const newMessage: WebSocketMessage = JSON.parse(msg.body);
-          setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-          console.log(newMessage)
-        }, { Authorization: `Bearer ${Cookies.get('accessToken')}` })
+        console.log('야 성공했니');
+        client.current?.subscribe(
+          `/api/sub/chat/${coupleId}`,
+          (msg) => {
+            console.log('야 성공했니?????????????????');
+            const newMessage: WebSocketMessage = JSON.parse(msg.body);
+            setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+            console.log(newMessage);
+          },
+          { Authorization: `Bearer ${Cookies.get('accessToken')}` }
+        );
       },
-
-    })
-    client.current?.activate()
+    });
+    client.current?.activate();
     return () => {
       disconnect();
     };
@@ -143,9 +146,8 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
     client.current!.publish({
       destination: '/api/pub/chat/message',
       body: JSON.stringify(newMessage),
-    })
+    });
     // stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
-
 
     // 채팅방 메세지 불러오기
     console.log('현재 가지고 있는 메세지 수', chatMessages.length);
@@ -183,7 +185,7 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
     client.current!.publish({
       destination: '/api/pub/chat/message',
       body: JSON.stringify(newMessage),
-    })
+    });
     // stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
     setMessage('');
   };
@@ -209,10 +211,10 @@ const SenderMessageForm = ({ isOpenChat, isClickedOut, setIsOpenChat }: SendMsgF
     client.current!.publish({
       destination: '/api/pub/chat/message',
       body: JSON.stringify(newMessage),
-    })
+    });
     //stompClient.send('/api/pub/chat/message', { Authorization: `Bearer ${Cookies.get('accessToken')}` }, JSON.stringify(newMessage));
 
-    console.log("전송?")
+    console.log('전송?');
     setMessage('');
   };
 
