@@ -48,12 +48,12 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request -> request
 
 //                        .requestMatchers().permitAll()
-                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/api/pub/**","/api/sub/**").permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat/**","/api/pub/**","/api/sub/**").permitAll()
 
                         .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws-stomp/**","/ws/chat/**","/api/pub/**","/api/sub/**").hasRole("USER")
+                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
