@@ -53,7 +53,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws/stomp/**","/ws/chat/**","/api/pub/**","/api/sub/**").hasRole("USER")
+                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**","/ws-stomp/**","/ws/chat/**","/api/pub/**","/api/sub/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
