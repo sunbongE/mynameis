@@ -66,6 +66,7 @@ public class StompHandler implements ChannelInterceptor {
             coupleChatRoomRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
         }
+        log.info("이거 리턴된다 ==> {}",message);
         return message;
     }
 }
