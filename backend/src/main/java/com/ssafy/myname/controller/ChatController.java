@@ -37,9 +37,9 @@ public class ChatController {
 
         msg.setSender(userId);
         // 방번호로 채팅을 저장한다.
-        if (msg.getType().equals(MessageType.TALK)) {
+//        if (msg.getType().equals(MessageType.TALK)) {
             chatService.saveMessage(msg);
-        }
+//        }
         log.info("msg: {} ", msg);
         chatService.sendMessage(msg);
         log.info("레디스로 발행함.");
