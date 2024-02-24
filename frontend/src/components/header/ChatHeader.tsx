@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Icon from '../icon/Icon';
 import { Out, Blink, Video } from '../../config/IconName';
+import { useEffect, useState } from 'react';
+import { getCoupleName } from '../../apis/services/chatting/chatting';
 
 interface ChatHeaderProps {
   isClickedOutBtn: boolean;
@@ -53,12 +55,25 @@ const ChatHeader = ({ setIsClickedOutBtn, isClickedOutBtn }: ChatHeaderProps) =>
   const handleClickVideoBtn = () => {
     console.log('화상 버튼 클릭');
   };
+
+  const [coupleName, setCoupleName] = useState('');
+
+  useEffect(() => {
+    const fetchCoupleInfo = async () => {
+      const data = await getCoupleName();
+      setCoupleName(data);
+    };
+
+    fetchCoupleInfo();
+    console.log('커플 이름', coupleName);
+  }, []);
+
   return (
     <StyledHeaderContainer>
       <StyledHeaderLeft>
         <Icon src={Blink} />
         <StyledReceiverContainer>
-          <StyledReceiver>집 가고 싶어요</StyledReceiver>
+          <StyledReceiver>{coupleName}</StyledReceiver>
         </StyledReceiverContainer>
       </StyledHeaderLeft>
 
