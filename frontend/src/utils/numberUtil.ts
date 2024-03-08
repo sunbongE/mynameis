@@ -21,3 +21,19 @@ export const formatDate = (date: string) => {
 
   return formattedDate;
 };
+
+export const calcAge = (data: string) => {
+  const birthYear = parseInt(data.substring(0, 4));
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
+  return currentYear - birthYear + 1;
+};
+
+export const getSessionId = (data: string) => {
+  const urlParams = new URLSearchParams(data.split('?')[1]);
+  const sessionId = urlParams.get('sessionId');
+  console.log(sessionId);
+  return sessionId;
+};

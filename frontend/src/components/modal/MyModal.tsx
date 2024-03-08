@@ -30,7 +30,7 @@ const customStyles: ReactModal.Styles = {
 
 const MyModal = (props: ModalProps) => {
   return (
-    <Modal isOpen={props.isOpen} onRequestClose={() => props.setIsOpen(false)} style={customStyles}>
+    <Modal isOpen={props.isOpen} onRequestClose={() => props.setIsOpen(false)} shouldCloseOnOverlayClick={false} style={customStyles}>
       {props.children}
     </Modal>
   );

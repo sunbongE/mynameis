@@ -1,12 +1,17 @@
-import {atom} from "recoil";
+import { atom } from 'recoil';
+import { IMessage } from '@stomp/stompjs';
+export interface ChatMessage {
+  type: string;
+  roomId: string;
+  sender: string;
+  msg: string;
+  date: string;
+}
 
-export const textState = atom({
-    key : "todoState",
-    default : []
-})
-
-
-
+export const chatMessagesState = atom<ChatMessage[]>({
+  key: 'chatMessagesState',
+  default: [],
+});
 
 /*
 사용법 예시

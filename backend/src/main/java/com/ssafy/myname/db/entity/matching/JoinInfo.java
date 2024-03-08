@@ -19,15 +19,12 @@ public class JoinInfo {
     @Column(name = "join_id")
     private Long joinId;
 
-    @Lob
-    private String record; // stt 음성 기록.
-
     @NotNull
     @ColumnDefault("0")
     private int like_cnt;
 
     // 매칭번호.
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
@@ -36,4 +33,19 @@ public class JoinInfo {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // 방 입장토큰
+    private String token;
+
+    // 랜덤이름
+    private String randomName;
+
+    @Override
+    public String toString() {
+        return "JoinInfo{" +
+                "joinId=" + joinId +
+                ", like_cnt=" + like_cnt +
+                ", room=" + room +
+//                ", user=" + user +
+                '}';
+    }
 }

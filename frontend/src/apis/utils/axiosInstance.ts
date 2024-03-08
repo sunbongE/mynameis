@@ -1,7 +1,24 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import Cookies from 'js-cookie';
 
-const instance = axios.create({
-  baseURL: 'http://localhost:8080',
+const BASEURL = 'https://mynameis.site/api';
+
+export const instance = axios.create({
+  // baseURL: 'http://localhost:8080/',
+  baseURL: `${BASEURL}`,
+});
+
+export const loginInstance = axios.create({
+  // baseURL: 'http://localhost:8080',
+  baseURL: `${BASEURL}`,
+});
+export const fileInstance = axios.create({
+  // baseURL: 'http://localhost:8080',
+  baseURL: `${BASEURL}`,
+});
+
+export const pgTokenInstance = axios.create({
+  baseURL: 'http://lvh.me:8080',
 });
 
 const setCommonHeaders = async (config: any) => {
@@ -9,15 +26,28 @@ const setCommonHeaders = async (config: any) => {
   return config;
 };
 
+const setLoginCommonHeaders = async (config: any) => {
+  config.headers['Content-Type'] = 'application/json';
+  config.headers['Authorization'] = `Bearer ${Cookies.get('accessToken')}`;
+
+  return config;
+};
+
+const setFileCommonHeaders = async (config: any) => {
+  config.headers['Content-Type'] = 'multipart/form-data';
+  // config.headers['Authorization'] = `Bearer ${Cookies.get('accessToken')}`;
+
+  return config;
+};
+
 const handleResponseError = async (error: AxiosError) => {
   if (!error.response) return Promise.reject(error);
   const { status, data } = error.response as { status: number; data: any };
-  console.log('status :', status);
+  console.log('status :', status, data);
 
   switch (status) {
     case 400:
-      if (data['data_header']) alert(data['data_header'].result_message);
-      // else alert('잘못된 정보를 입력하셨습니다.\n다시 확인해주세요');
+      // alert('이미 매칭에 참여 중입니다');
       break;
     case 401:
     // TODO
@@ -43,5 +73,11 @@ const handleRequestError = (error: AxiosError) => {
 
 instance.interceptors.request.use(setCommonHeaders, handleRequestError);
 instance.interceptors.response.use(handleResponseSuccess, handleResponseError);
+
+loginInstance.interceptors.request.use(setLoginCommonHeaders, handleRequestError);
+loginInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
+
+fileInstance.interceptors.request.use(setFileCommonHeaders, handleRequestError);
+fileInstance.interceptors.response.use(handleResponseSuccess, handleResponseError);
 
 export default instance;

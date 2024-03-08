@@ -2,43 +2,42 @@ package com.ssafy.myname.service.implement;
 
 import com.ssafy.myname.commons.CertificationNumber;
 import com.ssafy.myname.db.entity.Certification;
-import com.ssafy.myname.db.entity.Tags;
 import com.ssafy.myname.db.entity.User;
 import com.ssafy.myname.db.repository.CertificationRepository;
-import com.ssafy.myname.db.repository.RefreshTokenRepository;
-import com.ssafy.myname.db.repository.TagRepository;
 import com.ssafy.myname.db.repository.UserRepository;
 import com.ssafy.myname.dto.request.auth.*;
 import com.ssafy.myname.dto.response.ResponseDto;
 import com.ssafy.myname.dto.response.auth.*;
+import com.ssafy.myname.dto.response.email.EmailResponseDto;
+//import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.provider.EmailProvider;
 import com.ssafy.myname.provider.JwtProvider;
+//import com.ssafy.myname.provider.PhoneProvider;
+import com.ssafy.myname.provider.PhoneProvider;
 import com.ssafy.myname.service.AuthService;
+//import com.ssafy.myname.service.RedisService;
 import com.ssafy.myname.service.RedisService;
-import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final CertificationRepository certificationRepository;
+    private final PhoneCertificationRepository phoneCertificationRepository;
     private final EmailProvider emailProvider;
     private final JwtProvider jwtProvider;
-//    private final RefreshTokenRepository refreshTokenRepository;
     private final RedisService redisService;
     private final TagRepository tagRepository;
 
@@ -46,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
-    private final Logger LOGGER =  LoggerFactory.getLogger(this.getClass());
+    private final Logger logger =  LoggerFactory.getLogger(this.getClass());
 
     @Override
     public ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto) {
@@ -66,71 +65,35 @@ public class AuthServiceImpl implements AuthService {
         return IdCheckResponseDto.success();
     }
 
-    @Override // 이메일로 인증번호 발급해준다.
-    public ResponseEntity<? super EmailCertificationResponseDto> emilCertification(EmailCertificationRequestDto dto) {
-        try{
 
-            String userId = dto.getUserId();
-            String email = dto.getEmail();
 
-            boolean isExistId = userRepository.existsByUserId(userId);
-            if(isExistId) return EmailCertificationResponseDto.duplicateId();
-
-            String certificationNumber = CertificationNumber.getCertificationNumber();
-            boolean isSuccess =emailProvider.sendCertificationMail(email,certificationNumber);
-            if(!isSuccess) return EmailCertificationResponseDto.mailSendFail();
-
-            Certification certification = new Certification(userId, email, certificationNumber );
-            certificationRepository.save(certification);
-
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-        return EmailCertificationResponseDto.success();
-    }
 
     @Override
-    public ResponseEntity<? super CheckCertificationResDto> checkCertification(CheckCertificationReqDto dto) {
+    public ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto) {
+        logger.info("signUp, dto:{}",dto.toString());
         try {
+
             String userId = dto.getUserId();
+            if(isExistUserId(userId)) return SignUpResDto.duplicateId();//이미 있는 아이디인경우.
+
             String email = dto.getEmail();
             String certificationNumber = dto.getCertificationNumber();
 
             Certification certification = certificationRepository.findByUserId(userId);
-            if(certification==null) return CheckCertificationResDto.fail();
-
+            System.out.println("certification.toString() = " + certification.toString());
+            System.out.println("SignUpReqDto = " + dto.toString());
             if(!isMatched(certification, email, certificationNumber)){
                 return SignUpResDto.fail();
             }
-//            boolean isMatched = certification.getEmail().equals(email) && certification.getCertificationNumber().equals(certificationNumber);
-//            if(!isMatched) return  CheckCertificationResDto.fail();
 
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return ResponseDto.databaseError();
-        }
-
-        return CheckCertificationResDto.success();
-    }
-
-    @Override // 회원가입
-    public ResponseEntity<? super SignUpResDto> signUp(SignUpReqDto dto) {
-        LOGGER.info("signUp, dto:{}",dto.toString());
-        try {
-            // 아이디 중복확인
-            String userId = dto.getUserId();
-            if(isExistUserId(userId)) return SignUpResDto.duplicateId();//이미 있는 아이디인경우.
-            // 이메일 중복확인
-            String email = dto.getEmail();
-            if(isExistUserEmail(email)) return SignUpResDto.duplicateEmail();//이미 있는 email인경우.
-
-            // 비밀번호 암호화.
             String password = dto.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             dto.setPassword(encodedPassword);
 
             User user = new User(dto);
+//            System.out.println("user = " + user.toString());
+//            System.out.println(user.getPassword().length());
+            LOGGER.info("[signUp], user:{}",user.toString());
             userRepository.save(user);
 
             List<String> tagNames = dto.getTags();
@@ -142,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
             // 회원 저장.
             // 리프레시토큰 저장.
             String token = jwtProvider.create(userId, "RT");
-            redisService.setDataExpire(userId,token,60*60*24*15); // 15일
+//            redisService.setDataExpire(userId,token,60*60*24*15); // 15일
 
 
         }catch (Exception exception){
@@ -153,25 +116,22 @@ public class AuthServiceImpl implements AuthService {
         return SignUpResDto.success();
     }
 
-
-
-    @Override // 로그인.
+    @Override
     public ResponseEntity<? super SignInResDto> signIn(SignInReqDto dto) {
         String token = null;
-        String refreshToken=null;
 
-        try {
-            // 회원아이디로 회원엔터티 조회
+        try{
+
             String userId = dto.getUserId();
             User user = userRepository.findByUserId(userId);
-            if (user == null) return SignInResDto.fail(); // 회원이 없으면 로그인 실패안내
+            if(user==null) return SignInResDto.fail();
 
-            // 입력받은 비밀번호 암호화 후 db의 비밀번호와 비교
             String password = dto.getPassword();
-            String encodedPassword = user.getPassword();
+            String encodedPassword =user.getPassword();
             boolean isMatched = passwordEncoder.matches(password, encodedPassword);
-            if (!isMatched) return SignInResDto.fail(); // 비번이 다르면 실패안내.
+            if(!isMatched) return SignInResDto.fail();
 
+            //=========================================================================
             // 엑세스 토큰 발급
             token = jwtProvider.create(userId, "AT");
 
@@ -183,16 +143,45 @@ public class AuthServiceImpl implements AuthService {
                 refreshToken = jwtProvider.createSaveRefreshToken(userId);
             }
 
+            //=========================================================================
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-        return SignInResDto.success(token, refreshToken);
+
+        return SignInResDto.success(token);
     }
 
+    @Override
+    public void emailUrl(String email) {
+        try{
+            boolean isSuccess = emailProvider.sendMail(email);
+            if(!isSuccess) {
+                logger.info("** 없는 이메일 ");
+            }
 
+        }catch (Exception e){
+            logger.info(e.getMessage());
 
-    // 회원 아이디가 존재하는지 확인
+        }
+        logger.info("** 이메일 전송");
+    }
+
+    @Override
+    public ResponseEntity<?> emailModify(String email, String password) {
+        try {
+            User user = userRepository.findByEmail(email);
+            String newPassword = passwordEncoder.encode(password);
+            user.setPassword(newPassword);
+            userRepository.save(user);
+
+            return ResponseDto.ok();
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseDto.databaseError();
+        }
+    }
+
     private  boolean isExistUserId(String userId){
         return userRepository.existsByUserId(userId);
     }
@@ -200,6 +189,11 @@ public class AuthServiceImpl implements AuthService {
     private boolean isExistUserEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+    // 회원 전화번호가 존재하는지 확인
+    private boolean isExistUserPhone(String phone) {
+        return userRepository.existsByPhone(phone);
+    }
+
     private boolean isMatched(Certification certification,String email, String CertificationNumber){
         return certification.getEmail().equals(email) &&
                 certification.getCertificationNumber().equals(CertificationNumber);

@@ -25,7 +25,13 @@ public class Room { // 매칭방
 
     @NotNull
     @ColumnDefault("0")
-    private int cnt;
+    @Column(name = "w_cnt")
+    private int Wcnt;
+
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "m_cnt")
+    private int Mcnt;
 
     @CreationTimestamp // insert할때 현재시각 입력. 자동으로..
     @Column(name = "start_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -37,11 +43,10 @@ public class Room { // 매칭방
     @Enumerated(EnumType.STRING) // 문자로 값 저장,
     private RoomType roomType;
 
-    @OneToMany(mappedBy = "room")
-    private List<JoinInfo> joinInfos;
+    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JoinInfo> joinInfos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "room") // 신고 목록.
-    private List<Record> records = new ArrayList<>();
+
 
 
 }

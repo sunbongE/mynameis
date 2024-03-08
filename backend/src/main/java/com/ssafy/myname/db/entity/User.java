@@ -33,7 +33,6 @@ public class User {
     @NotNull
     @Column(length = 20)
     private String name;
-
     @NotNull
     @Column(length = 10)
     private String birth;
@@ -43,7 +42,7 @@ public class User {
     @Column(length = 10)
     private String area; // 지역.
     @Column(length = 10)
-    private String religion; // 종교.
+    private String religion ; // 종교.
     @Column(length = 30)
     private String job;
 
@@ -63,10 +62,6 @@ public class User {
     @Column(name = "is_leave")
     private boolean isLeave;
 
-    @ColumnDefault("false")
-    @Column(name = "is_valid")
-    private boolean isValid;
-
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ROLE_USER'")
     private Roles role;
@@ -83,8 +78,7 @@ public class User {
     @ColumnDefault("'READY'")
     private MatchStatus matchStatus; // 매칭 여부.
 
-    @NotNull
-    @ColumnDefault("0")
+    @NotNull @ColumnDefault("0")
     private int reportPoint;
 
     @Column(length = 50, unique = true)
@@ -97,6 +91,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Tags> tags = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Social social;
 
     @OneToMany(mappedBy = "user")
     private List<ChatJoinInfo> chatJoinInfos;
@@ -105,17 +101,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<JoinInfo> joinInfos = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "couple_id")
+    private Couple couple;
+
     public User() {
     }
-
-//    public User(SignUpReqDto dto) {
-//        this.userId = dto.getUserId();
-//        this.password = dto.getPassword();
-//        this.name = dto.getName();
-//        this.birth = dto.getBirth();
-//        this.gender = dto.getGender();
-//        this.email = dto.getEmail();
-//    }
 
     public User(SignUpReqDto dto) {
         this.userId = dto.getUserId();
@@ -128,12 +119,35 @@ public class User {
         this.religion = dto.getReligion();
         this.job = dto.getJob();
         this.phone = dto.getPhone();
+        this.coin = 100;
         // tag들 저장.
     }
+
     // 출력
+
 
     @Override
     public String toString() {
-        return "User{" + "userId='" + userId + '\'' + ", password='" + password + '\'' + ", name='" + name + '\'' + ", birth='" + birth + '\'' + ", gender=" + gender + ", area='" + area + '\'' + ", religion='" + religion + '\'' + ", job='" + job + '\'' + ", coin=" + coin + ", joinDate=" + joinDate + ", updateDate=" + updateDate + ", isLeave=" + isLeave + ", isValid=" + isValid + ", role=" + role + ", phone='" + phone + '\'' + ", matchStatus=" + matchStatus + ", reportPoint=" + reportPoint + ", email='" + email + '\'' + '}';
+        return "\'{" +
+                "\"userId\":\"" + userId + "\"," +
+                "\"password\":\"" + password + "\"," +
+                "\"name\":\"" + name + "\"," +
+                "\"birth\":\"" + birth + "\"," +
+                "\"gender\":" + gender + "," +
+                "\"area\":\"" + area + "\"," +
+                "\"religion\":\"" + religion + "\"," +
+                "\"job\":\"" + job + "\"," +
+                "\"coin\":" + coin + "," +
+                "\"joinDate\":\"" + joinDate + "\"," +
+                "\"updateDate\":\"" + updateDate + "\"," +
+                "\"isLeave\":" + isLeave + "," +
+                "\"role\":" + role + "," +
+                "\"phone\":\"" + phone + "\"," +
+                "\"matchStatus\":" + matchStatus + "," +
+                "\"reportPoint\":" + reportPoint + "," +
+                "\"email\":\"" + email + "\"," +
+                "\"myAlarms\":" + myAlarms + "," +
+                "\"tags\":" + tags +
+                "}\'";
     }
 }

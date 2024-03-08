@@ -3,27 +3,29 @@ import styled from 'styled-components';
 
 interface RadioButtonProps extends RadioButtonStyleProps {
   values: Array<any>;
-  selected: string;
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
+  selected: any;
+  setSelected: React.Dispatch<React.SetStateAction<any>>;
 }
 
 interface RadioButtonStyleProps {
   version?: string;
   width?: string;
+  id?: string;
+  key?: string;
+  onSelected?: (value: any) => void;
 }
 
 const RadioInputBox = styled.div<RadioButtonStyleProps>`
   border: 1px solid #d9d9d9;
   border-radius: 10px;
   background-color: white;
-  width: ${(props) => (props.version === 'gender' ? '220px' : props.width)};
+  width: ${(props) => (props.version === 'gender' ? '145px' : props.width)};
   height: ${(props) => (props.version === 'gender' ? '66px' : '80px')};
-  margin: 0px 10px;
+  margin-right: 10px;
 `;
 
 const RadioInput = styled.input<RadioButtonStyleProps>`
-  width: 0.1px;
-  height: 1px;
+  display: none;
   margin: -1px;
   position: absolute;
 
@@ -38,7 +40,7 @@ const RadioInputLabel = styled.label<RadioButtonStyleProps>`
   cursor: pointer;
   color: ${(props) => (props.version === 'gender' ? '#B0A9A9' : 'black')};
   font-size: ${(props) => (props.version === 'gender' ? '15px' : '37px')};
-  width: ${(props) => (props.version === 'gender' ? '220px' : props.width)};
+  width: ${(props) => (props.version === 'gender' ? '145px' : props.width)};
   height: ${(props) => (props.version === 'gender' ? '66px' : '80px')};
   border-radius: 10px;
   display: flex;
@@ -62,8 +64,19 @@ export const CustomRadioButton = (props: RadioButtonProps) => {
   return (
     <>
       {props.values.map((value) => (
-        <RadioInputBox key={value.value} onClick={() => props.setSelected(value.value)} version={props.version} width={props.width}>
-          <RadioInput version={props.version} type='radio' id={value.value} name={value.name} value={value.value} checked={props.selected === value.value} onChange={() => props.setSelected(value.value)} />
+        <RadioInputBox
+          key={value.value}
+          onClick={() => {
+            props.setSelected(value.id);
+            if (props.onSelected) {
+              props.onSelected(value.id);
+            }
+          }}
+          version={props.version}
+          width={props.width}
+          onSelected={value.value}
+        >
+          <RadioInput version={props.version} type='radio' id={value.value} name={value.name} value={value.value} checked={props.selected === value.id} onChange={() => props.setSelected(value.id)} />
           <RadioInputLabel version={props.version} htmlFor={value.name} width={props.width}>
             {value.value}
           </RadioInputLabel>
@@ -83,11 +96,13 @@ const SimpleRadioBox = styled.div`
 
 const SimpleRadioInput = styled.input`
   margin-right: 5px;
+  width: 14px;
+  height: 14px;
 `;
 
 const SimpleRadioLabel = styled.label`
   font-family: 'Pretendard SemiBold';
-  font-size: 14px;
+  font-size: 16px;
 `;
 
 /**
@@ -101,7 +116,7 @@ export const SimpleRadioButton = (props: RadioButtonProps) => {
     <>
       {props.values.map((value) => (
         <SimpleRadioBox key={value.value}>
-          <SimpleRadioInput type='radio' name={value.name} />
+          <SimpleRadioInput type='radio' name={value.name} checked={props.selected === value.id} onChange={() => props.setSelected(value.id)} />
           <SimpleRadioLabel htmlFor={value.name}>{value.value}</SimpleRadioLabel>
         </SimpleRadioBox>
       ))}

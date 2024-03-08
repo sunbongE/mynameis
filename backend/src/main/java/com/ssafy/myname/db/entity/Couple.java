@@ -24,8 +24,16 @@ public class Couple {
     @Column(name = "matching_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime matchingDate;
 
-    @OneToMany(mappedBy = "couple")
-    private List<User> users = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_w")
+    private User userW;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_m")
+    private User userM;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isMatched;
 
     public Couple() {
     }

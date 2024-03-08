@@ -1,6 +1,5 @@
 package com.ssafy.myname.db.repository;
 
-import com.ssafy.myname.db.entity.Couple;
 import com.ssafy.myname.db.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,6 +11,6 @@ public interface UserRepository extends JpaRepository<User,String> {
 
     boolean existsByUserId(String userId);
     User findByUserId(String userId);
-    boolean existsByEmail(String email);
     User findByCouple(Couple couple);
+    User findByEmail(String email);
 }

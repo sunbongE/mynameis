@@ -5,9 +5,12 @@ import Icon from '../icon/Icon';
 
 interface ChipProps {
   keyword: string;
+  id: any;
+  onDeleteItem?: (value: string) => void;
 }
 
-const StyledChipContainer = styled.div`
+const StyledChipContainer = styled.span`
+  margin-right: 8px;
   border-radius: 20px;
   height: 27px;
   color: '#fff';
@@ -23,21 +26,22 @@ const StyledText = styled.p`
   font-size: 12px;
   color: #fff;
   font-family: 'Pretendard Regular';
-  width: 100%;
-  margin-right: 3px;
-`;
-const StyledDeleteBtn = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0 3px;
 `;
 
 const Chip = (props: ChipProps) => {
+  const onDelete = (id: any) => {
+    if (props.onDeleteItem) {
+      props.onDeleteItem(id);
+    }
+  };
+
   return (
     <StyledChipContainer>
       <StyledText>{props.keyword}</StyledText>
-
-      <Icon src={DelBtn} />
+      <div onClick={() => onDelete(props.id)}>
+        <Icon src={DelBtn} width='15px' />
+      </div>
     </StyledChipContainer>
   );
 };

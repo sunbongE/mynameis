@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -15,6 +16,8 @@ public class GetUserInfoResDto {
 
     @NotBlank
     private String name;
+    @NotBlank
+    private String userId;
 
     private int coin;
 
@@ -35,8 +38,6 @@ public class GetUserInfoResDto {
 
     private Long coupleId;
 
-    private Boolean isValid;
-
     public void addTags(List<Tags> tagsEntity){
         for (Tags tagEntity : tagsEntity) {
             this.tag.add(tagEntity.getTagName());
@@ -44,13 +45,13 @@ public class GetUserInfoResDto {
     }
 
     public GetUserInfoResDto(User user) {
+        this.userId = user.getUserId();
         this.name = user.getName();
         this.coin = user.getCoin();
         this.gender = user.getGender();
         this.birth = user.getBirth();
         this.area = user.getArea();
         this.job = user.getJob();
-
         this.religion = user.getReligion();
 
         if(user.getCouple() != null){
@@ -58,7 +59,22 @@ public class GetUserInfoResDto {
         }else{
             this.coupleId = null;
         }
-        this.isValid = user.isValid();
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":\"" + name + "\"," +
+                "\"coin\":" + coin + "," +
+                "\"gender\":" + gender + "," +
+                "\"birth\":\"" + birth + "\"," +
+                "\"area\":\"" + area + "\"," +
+                "\"job\":\"" + job + "\"," +
+                "\"tag\":[" + tag.stream().map(t -> "\"" + t + "\"").collect(Collectors.joining(", ")) + "]," +
+                "\"religion\":\"" + religion + "\"," +
+                "\"coupleId\":" + coupleId +
+                "}";
+    }
+
 }
 

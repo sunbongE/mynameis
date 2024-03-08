@@ -23,6 +23,7 @@ public class GetTranscribe {
         Scanner s = new Scanner(responseStream).useDelimiter("\\A");
         String response = s.hasNext() ? s.next() : "";
         s.close();
+
         //System.out.println(response);  // 응답 결과 테스트
 
         JSONObject jsonResponse = new JSONObject(response);
@@ -36,8 +37,10 @@ public class GetTranscribe {
                 allMsgs.append(msg).append("\n");
             }
             return allMsgs.toString();
-        } else if (status.equals("transcribing")){
+        } else if (status.equals("transcribing")) {
             return null;  // transcribing 중이므로 null 반환
+        } else if (status.equals("failed")) {
+            return "STT GETrequest is failed";
         } else {
             throw new Exception("STT_GET_Response error: " + status);  // 예상하지 못한 상태면 예외 발생
         }
