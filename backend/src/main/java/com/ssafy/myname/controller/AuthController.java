@@ -61,24 +61,24 @@ public class AuthController {
 
 
 
-//    @PostMapping("/phone-certification")
-//    public ResponseEntity<? super PhoneCertificationResponseDto> phonecerfitication(
-//            @RequestBody @Valid PhoneCertificationRequestDto requestBody
-//    ) {
-//        logger.info("requestBody : {}", requestBody);
-//        ResponseEntity<? super PhoneCertificationResponseDto> response =
-//                authService.phoneCertification(requestBody);
-//        return response;
-//    }
+    @PostMapping("/phone-certification")
+    public ResponseEntity<? super PhoneCertificationResponseDto> phonecerfitication(
+            @RequestBody @Valid PhoneCertificationRequestDto requestBody
+    ) {
+        logger.info("requestBody : {}", requestBody);
+        ResponseEntity<? super PhoneCertificationResponseDto> response =
+                authService.phoneCertification(requestBody);
+        return response;
+    }
 
 
-//    @PostMapping("/check-phonecertification")
-//    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(
-//            @RequestBody @Valid CheckPhoneCertificationReqDto requestBody
-//    ) {
-//        ResponseEntity<? super CheckPhoneCertificationResDto> response = authService.checkPhoneCertification(requestBody);
-//        return response;
-//    }
+    @PostMapping("/check-phonecertification")
+    public ResponseEntity<? super CheckPhoneCertificationResDto> checkPhoneCertification(
+            @RequestBody @Valid CheckPhoneCertificationReqDto requestBody
+    ) {
+        ResponseEntity<? super CheckPhoneCertificationResDto> response = authService.checkPhoneCertification(requestBody);
+        return response;
+    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<? super SignUpResDto> signUp(

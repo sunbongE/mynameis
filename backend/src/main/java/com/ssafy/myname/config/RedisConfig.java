@@ -38,7 +38,7 @@ public class RedisConfig {
      */
     @Bean
     public ChannelTopic channelTopic() {
-        return new ChannelTopic("/sub/chat");
+        return new ChannelTopic("/api/sub/chat");
     }
 
     /**

@@ -14,4 +14,5 @@ public interface CoupleService {
     ResponseEntity<?> breakCouple(String userId);
     ResponseEntity<?> coupleVideo(String userId , String coupleId) throws OpenViduJavaClientException, OpenViduHttpException;
 
+    String getInfo(String userId);
 }

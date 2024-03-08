@@ -106,6 +106,12 @@ public class CoupleServiceImpl implements CoupleService {
         User sender = userRepository.findByUserId(senderId);
         Couple couple = sender.getCouple();
 
+        if(couple == null){
+            Map<String,String> body = new HashMap<>();
+            body.put("msg","이 회원은 커플이 아닙니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+        }
+
         // 알림 받는 사람.
         User receiver = null;
         if(sender.equals(couple.getUserW())){
@@ -118,8 +124,10 @@ public class CoupleServiceImpl implements CoupleService {
         userRepository.save(sender);
         receiver.setCouple(null);
         userRepository.save(receiver);
+
         // 커플 데이터 삭제
         coupleRepository.delete(couple);
+
 
 
         //=== 알림 상대방에게 발송====
@@ -149,5 +157,18 @@ public class CoupleServiceImpl implements CoupleService {
         body.put("name",user.getName());
 
          return ResponseEntity.status(HttpStatus.OK).body(body);
+    }
+
+    @Override
+    public String getInfo(String userId) {
+        String info = null;
+        User user = userRepository.findByUserId(userId);
+        Couple coupleinfo = user.getCouple();
+        if(user.getGender()){ // 남자
+            info = coupleinfo.getUserW().getName();
+        }else { // 여자
+            info = coupleinfo.getUserM().getName();
+        }
+        return info;
     }
 }

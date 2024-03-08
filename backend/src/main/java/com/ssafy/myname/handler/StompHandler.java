@@ -28,18 +28,29 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         log.info("** preSend 실행");
         StompHeaderAccessor accessor= StompHeaderAccessor.wrap(message);
+        log.info("StopmCommand :{}",accessor.getCommand());
+//        log.info("message Header:{}",message.getHeaders());
+//        log.info("message Payload:{}",message.getPayload());
         if(StompCommand.CONNECT == accessor.getCommand()){
+            log.info("** CONNECT 실행~~~~");
+            log.info("** accessor.getFirstNativeHeader(\"Authorization\") :{} ",accessor.getFirstNativeHeader("Authorization"));
             String token = accessor.getFirstNativeHeader("Authorization").substring(7);
 
             log.info("CONNECT {}",token);
             jwtProvider.validate(token);
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
+            log.info("** SUBSCRIBE 실행됨");
+
             // header 정보에서 구독 destination정보를 얻어 roomId추출
             String roomId = chatService.getRoom(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
+
             // 채팅방에 들어온 클라 세션ID를  roomId와 매칭함.=>나중에 특정세션이 어떤 채팅방에 들어가있는지 알 수 있다.
             String sessionId = (String) message.getHeaders().get("simpSessionId");
+
             log.info("sessionId :{} , roomId : {}",sessionId,roomId);
+
             coupleChatRoomRepository.setUserEnterInfo(sessionId,roomId);
+
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
             log.info("message : {}",message);
 //            chatService.sendChatMessage(ChatDto.builder().type(ChatMessage.MessageType.ENTER).roomId(roomId).sender(name).build());
@@ -55,6 +66,7 @@ public class StompHandler implements ChannelInterceptor {
             coupleChatRoomRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
         }
+        log.info("이거 리턴된다 ==> {}",message);
         return message;
     }
 }

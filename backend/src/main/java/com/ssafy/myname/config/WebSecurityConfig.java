@@ -46,14 +46,15 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(request -> request
+
 //                        .requestMatchers().permitAll()
-                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat").permitAll()
+                        .requestMatchers("/css/", "/js/", "/images/**","/test/**","/ws-stomp/**","/ws/chat/**","/api/pub/**","/api/sub/**").permitAll()
+
                         .requestMatchers("/", "/api/auth/**","/couple/create","/api/matching/questions").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/refresh/**","/api/users/**","/matching/**","/couple/**","/chat/**","/history/**","/coin/**").hasRole("USER")
+                        .requestMatchers("/api/refresh/**","/api/users/**","/api/matching/**","/api/couple/**","/api/chat/**","/api/history/**","/api/coin/**").hasRole("USER")
                         .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
@@ -62,40 +63,32 @@ public class WebSecurityConfig {
         return httpSecurity.build();
     }
 
-//    @Bean
-//    protected CorsConfigurationSource corsConfigurationSource(){
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-////        corsConfiguration.addAllowedOrigin("*");
-//        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
-////        corsConfiguration.addAllowedHeader("*");
-//        corsConfiguration.setAllowedHeaders((Collections.singletonList("*")));
-////        corsConfiguration.setAllowCredentials(true);
-//        corsConfiguration.setMaxAge(3600L);
-////        corsConfiguration.addAllowedOrigin("http://localhost:3000");
-////        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/**","https://i10c207.p.ssafy.io/**"));
-////        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000","https://i10c207.p.ssafy.io"));
-//
-//        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-//        corsConfiguration.setAllowedOrigins(List.of("*"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**",corsConfiguration);
-//
-//        return source;
-//    }
-@Bean
-protected CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.addAllowedOriginPattern("*");
-    corsConfiguration.addAllowedMethod("*");
-    corsConfiguration.setExposedHeaders(List.of("*"));
-    corsConfiguration.addAllowedHeader("*");
-    corsConfiguration.setAllowCredentials(true);
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", corsConfiguration);
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
 
-    return source;
-}
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        configuration.setAllowedOriginPatterns(
+                List.of("http://localhost:3000/**", "http://localhost:8081/**",
+                        "https://i10c207.p.ssafy.io/**",
+                        "https://mynameis.site/**"));
+
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:3000", "http://localhost:8081",
+                        "https://i10c207.p.ssafy.io",
+                        "https://mynameis.site"));
+
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }
 class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint{
 
