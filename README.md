@@ -25,6 +25,8 @@
 5️⃣ 신고 기능 (텍스트, 영상)
 ## ERD 
 ![저의이름은_ERD](./image/저의이름은_ERD.png)
+## 아키텍처 
+![저의이름은_architecture](./image/저의이름은_architecture.png)
 ## 💌 기능 소개
 
 ### - 다대다 소개팅
